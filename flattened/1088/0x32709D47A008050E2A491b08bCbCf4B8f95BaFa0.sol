@@ -1,7 +1,400 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0 ^0.8.10;
+pragma solidity >=0.6.0 ^0.8.0 ^0.8.1;
 
-// lib/aave-v3-origin/src/contracts/dependencies/openzeppelin/ReentrancyGuard.sol
+// lib/solidity-utils/src/contracts/oz-common/Address.sol
+
+// OpenZeppelin Contracts (last updated v4.7.0) (utils/Address.sol)
+// From commit https://github.com/OpenZeppelin/openzeppelin-contracts/commit/8b778fa20d6d76340c5fac1ed66c80273f05b95a
+
+/**
+ * @dev Collection of functions related to the address type
+ */
+library Address {
+  /**
+   * @dev Returns true if `account` is a contract.
+   *
+   * [IMPORTANT]
+   * ====
+   * It is unsafe to assume that an address for which this function returns
+   * false is an externally-owned account (EOA) and not a contract.
+   *
+   * Among others, `isContract` will return false for the following
+   * types of addresses:
+   *
+   *  - an externally-owned account
+   *  - a contract in construction
+   *  - an address where a contract will be created
+   *  - an address where a contract lived, but was destroyed
+   * ====
+   *
+   * [IMPORTANT]
+   * ====
+   * You shouldn't rely on `isContract` to protect against flash loan attacks!
+   *
+   * Preventing calls from contracts is highly discouraged. It breaks composability, breaks support for smart wallets
+   * like Gnosis Safe, and does not provide security since it can be circumvented by calling from a contract
+   * constructor.
+   * ====
+   */
+  function isContract(address account) internal view returns (bool) {
+    // This method relies on extcodesize/address.code.length, which returns 0
+    // for contracts in construction, since the code is only stored at the end
+    // of the constructor execution.
+
+    return account.code.length > 0;
+  }
+
+  /**
+   * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
+   * `recipient`, forwarding all available gas and reverting on errors.
+   *
+   * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
+   * of certain opcodes, possibly making contracts go over the 2300 gas limit
+   * imposed by `transfer`, making them unable to receive funds via
+   * `transfer`. {sendValue} removes this limitation.
+   *
+   * https://diligence.consensys.net/posts/2019/09/stop-using-soliditys-transfer-now/[Learn more].
+   *
+   * IMPORTANT: because control is transferred to `recipient`, care must be
+   * taken to not create reentrancy vulnerabilities. Consider using
+   * {ReentrancyGuard} or the
+   * https://solidity.readthedocs.io/en/v0.5.11/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].
+   */
+  function sendValue(address payable recipient, uint256 amount) internal {
+    require(address(this).balance >= amount, 'Address: insufficient balance');
+
+    (bool success, ) = recipient.call{value: amount}('');
+    require(success, 'Address: unable to send value, recipient may have reverted');
+  }
+
+  /**
+   * @dev Performs a Solidity function call using a low level `call`. A
+   * plain `call` is an unsafe replacement for a function call: use this
+   * function instead.
+   *
+   * If `target` reverts with a revert reason, it is bubbled up by this
+   * function (like regular Solidity function calls).
+   *
+   * Returns the raw returned data. To convert to the expected return value,
+   * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].
+   *
+   * Requirements:
+   *
+   * - `target` must be a contract.
+   * - calling `target` with `data` must not revert.
+   *
+   * _Available since v3.1._
+   */
+  function functionCall(address target, bytes memory data) internal returns (bytes memory) {
+    return functionCallWithValue(target, data, 0, 'Address: low-level call failed');
+  }
+
+  /**
+   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`], but with
+   * `errorMessage` as a fallback revert reason when `target` reverts.
+   *
+   * _Available since v3.1._
+   */
+  function functionCall(
+    address target,
+    bytes memory data,
+    string memory errorMessage
+  ) internal returns (bytes memory) {
+    return functionCallWithValue(target, data, 0, errorMessage);
+  }
+
+  /**
+   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
+   * but also transferring `value` wei to `target`.
+   *
+   * Requirements:
+   *
+   * - the calling contract must have an ETH balance of at least `value`.
+   * - the called Solidity function must be `payable`.
+   *
+   * _Available since v3.1._
+   */
+  function functionCallWithValue(
+    address target,
+    bytes memory data,
+    uint256 value
+  ) internal returns (bytes memory) {
+    return functionCallWithValue(target, data, value, 'Address: low-level call with value failed');
+  }
+
+  /**
+   * @dev Same as {xref-Address-functionCallWithValue-address-bytes-uint256-}[`functionCallWithValue`], but
+   * with `errorMessage` as a fallback revert reason when `target` reverts.
+   *
+   * _Available since v3.1._
+   */
+  function functionCallWithValue(
+    address target,
+    bytes memory data,
+    uint256 value,
+    string memory errorMessage
+  ) internal returns (bytes memory) {
+    require(address(this).balance >= value, 'Address: insufficient balance for call');
+    (bool success, bytes memory returndata) = target.call{value: value}(data);
+    return verifyCallResultFromTarget(target, success, returndata, errorMessage);
+  }
+
+  /**
+   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
+   * but performing a static call.
+   *
+   * _Available since v3.3._
+   */
+  function functionStaticCall(address target, bytes memory data)
+    internal
+    view
+    returns (bytes memory)
+  {
+    return functionStaticCall(target, data, 'Address: low-level static call failed');
+  }
+
+  /**
+   * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],
+   * but performing a static call.
+   *
+   * _Available since v3.3._
+   */
+  function functionStaticCall(
+    address target,
+    bytes memory data,
+    string memory errorMessage
+  ) internal view returns (bytes memory) {
+    (bool success, bytes memory returndata) = target.staticcall(data);
+    return verifyCallResultFromTarget(target, success, returndata, errorMessage);
+  }
+
+  /**
+   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
+   * but performing a delegate call.
+   *
+   * _Available since v3.4._
+   */
+  function functionDelegateCall(address target, bytes memory data) internal returns (bytes memory) {
+    return functionDelegateCall(target, data, 'Address: low-level delegate call failed');
+  }
+
+  /**
+   * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],
+   * but performing a delegate call.
+   *
+   * _Available since v3.4._
+   */
+  function functionDelegateCall(
+    address target,
+    bytes memory data,
+    string memory errorMessage
+  ) internal returns (bytes memory) {
+    (bool success, bytes memory returndata) = target.delegatecall(data);
+    return verifyCallResultFromTarget(target, success, returndata, errorMessage);
+  }
+
+  /**
+   * @dev Tool to verify that a low level call to smart-contract was successful, and revert (either by bubbling
+   * the revert reason or using the provided one) in case of unsuccessful call or if target was not a contract.
+   *
+   * _Available since v4.8._
+   */
+  function verifyCallResultFromTarget(
+    address target,
+    bool success,
+    bytes memory returndata,
+    string memory errorMessage
+  ) internal view returns (bytes memory) {
+    if (success) {
+      if (returndata.length == 0) {
+        // only check isContract if the call was successful and the return data is empty
+        // otherwise we already know that it was a contract
+        require(isContract(target), 'Address: call to non-contract');
+      }
+      return returndata;
+    } else {
+      _revert(returndata, errorMessage);
+    }
+  }
+
+  /**
+   * @dev Tool to verify that a low level call was successful, and revert if it wasn't, either by bubbling the
+   * revert reason or using the provided one.
+   *
+   * _Available since v4.3._
+   */
+  function verifyCallResult(
+    bool success,
+    bytes memory returndata,
+    string memory errorMessage
+  ) internal pure returns (bytes memory) {
+    if (success) {
+      return returndata;
+    } else {
+      _revert(returndata, errorMessage);
+    }
+  }
+
+  function _revert(bytes memory returndata, string memory errorMessage) private pure {
+    // Look for revert reason and bubble it up if present
+    if (returndata.length > 0) {
+      // The easiest way to bubble the revert reason is using memory via assembly
+      /// @solidity memory-safe-assembly
+      assembly {
+        let returndata_size := mload(returndata)
+        revert(add(32, returndata), returndata_size)
+      }
+    } else {
+      revert(errorMessage);
+    }
+  }
+}
+
+// lib/solidity-utils/src/contracts/oz-common/interfaces/IERC20.sol
+
+// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC20/IERC20.sol)
+// From commit https://github.com/OpenZeppelin/openzeppelin-contracts/commit/a035b235b4f2c9af4ba88edc4447f02e37f8d124
+
+/**
+ * @dev Interface of the ERC20 standard as defined in the EIP.
+ */
+interface IERC20 {
+    /**
+     * @dev Emitted when `value` tokens are moved from one account (`from`) to
+     * another (`to`).
+     *
+     * Note that `value` may be zero.
+     */
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    /**
+     * @dev Emitted when the allowance of a `spender` for an `owner` is set by
+     * a call to {approve}. `value` is the new allowance.
+     */
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+
+    /**
+     * @dev Returns the amount of tokens in existence.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
+    function balanceOf(address account) external view returns (uint256);
+
+    /**
+     * @dev Moves `amount` tokens from the caller's account to `to`.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transfer(address to, uint256 amount) external returns (bool);
+
+    /**
+     * @dev Returns the remaining number of tokens that `spender` will be
+     * allowed to spend on behalf of `owner` through {transferFrom}. This is
+     * zero by default.
+     *
+     * This value changes when {approve} or {transferFrom} are called.
+     */
+    function allowance(address owner, address spender) external view returns (uint256);
+
+    /**
+     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * IMPORTANT: Beware that changing an allowance with this method brings the risk
+     * that someone may use both the old and the new allowance by unfortunate
+     * transaction ordering. One possible solution to mitigate this race
+     * condition is to first reduce the spender's allowance to 0 and set the
+     * desired value afterwards:
+     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+     *
+     * Emits an {Approval} event.
+     */
+    function approve(address spender, uint256 amount) external returns (bool);
+
+    /**
+     * @dev Moves `amount` tokens from `from` to `to` using the
+     * allowance mechanism. `amount` is then deducted from the caller's
+     * allowance.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transferFrom(
+        address from,
+        address to,
+        uint256 amount
+    ) external returns (bool);
+}
+
+// lib/solidity-utils/src/contracts/oz-common/interfaces/draft-IERC20Permit.sol
+
+// OpenZeppelin Contracts v4.4.1 (token/ERC20/extensions/draft-IERC20Permit.sol)
+// From commit https://github.com/OpenZeppelin/openzeppelin-contracts/commit/6bd6b76d1156e20e45d1016f355d154141c7e5b9
+
+/**
+ * @dev Interface of the ERC20 Permit extension allowing approvals to be made via signatures, as defined in
+ * https://eips.ethereum.org/EIPS/eip-2612[EIP-2612].
+ *
+ * Adds the {permit} method, which can be used to change an account's ERC20 allowance (see {IERC20-allowance}) by
+ * presenting a message signed by the account. By not relying on {IERC20-approve}, the token holder account doesn't
+ * need to send a transaction, and thus is not required to hold Ether at all.
+ */
+interface IERC20Permit {
+    /**
+     * @dev Sets `value` as the allowance of `spender` over ``owner``'s tokens,
+     * given ``owner``'s signed approval.
+     *
+     * IMPORTANT: The same issues {IERC20-approve} has related to transaction
+     * ordering also apply here.
+     *
+     * Emits an {Approval} event.
+     *
+     * Requirements:
+     *
+     * - `spender` cannot be the zero address.
+     * - `deadline` must be a timestamp in the future.
+     * - `v`, `r` and `s` must be a valid `secp256k1` signature from `owner`
+     * over the EIP712-formatted function arguments.
+     * - the signature must use ``owner``'s current nonce (see {nonces}).
+     *
+     * For more information on the signature format, see the
+     * https://eips.ethereum.org/EIPS/eip-2612#specification[relevant EIP
+     * section].
+     */
+    function permit(
+        address owner,
+        address spender,
+        uint256 value,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external;
+
+    /**
+     * @dev Returns the current nonce for `owner`. This value must be
+     * included whenever a signature is generated for {permit}.
+     *
+     * Every successful call to {permit} increases ``owner``'s nonce by one. This
+     * prevents a signature from being used multiple times.
+     */
+    function nonces(address owner) external view returns (uint256);
+
+    /**
+     * @dev Returns the domain separator used in the encoding of the signature for {permit}, as defined by {EIP712}.
+     */
+    // solhint-disable-next-line func-name-mixedcase
+    function DOMAIN_SEPARATOR() external view returns (bytes32);
+}
+
+// src/libs/ReentrancyGuard.sol
 
 // OpenZeppelin Contracts v4.4.1 (security/ReentrancyGuard.sol)
 
@@ -71,470 +464,49 @@ abstract contract ReentrancyGuard {
   }
 }
 
-// lib/aave-v3-origin/src/contracts/dependencies/openzeppelin/contracts/Address.sol
-
-// OpenZeppelin Contracts v4.4.1 (utils/Address.sol)
-
-/**
- * @dev Collection of functions related to the address type
- */
-library Address {
-  /**
-   * @dev Returns true if `account` is a contract.
-   *
-   * [IMPORTANT]
-   * ====
-   * It is unsafe to assume that an address for which this function returns
-   * false is an externally-owned account (EOA) and not a contract.
-   *
-   * Among others, `isContract` will return false for the following
-   * types of addresses:
-   *
-   *  - an externally-owned account
-   *  - a contract in construction
-   *  - an address where a contract will be created
-   *  - an address where a contract lived, but was destroyed
-   * ====
-   */
-  function isContract(address account) internal view returns (bool) {
-    // This method relies on extcodesize, which returns 0 for contracts in
-    // construction, since the code is only stored at the end of the
-    // constructor execution.
-
-    uint256 size;
-    assembly {
-      size := extcodesize(account)
-    }
-    return size > 0;
-  }
-
-  /**
-   * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
-   * `recipient`, forwarding all available gas and reverting on errors.
-   *
-   * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
-   * of certain opcodes, possibly making contracts go over the 2300 gas limit
-   * imposed by `transfer`, making them unable to receive funds via
-   * `transfer`. {sendValue} removes this limitation.
-   *
-   * https://diligence.consensys.net/posts/2019/09/stop-using-soliditys-transfer-now/[Learn more].
-   *
-   * IMPORTANT: because control is transferred to `recipient`, care must be
-   * taken to not create reentrancy vulnerabilities. Consider using
-   * {ReentrancyGuard} or the
-   * https://solidity.readthedocs.io/en/v0.5.11/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].
-   */
-  function sendValue(address payable recipient, uint256 amount) internal {
-    require(address(this).balance >= amount, 'Address: insufficient balance');
-
-    (bool success, ) = recipient.call{value: amount}('');
-    require(success, 'Address: unable to send value, recipient may have reverted');
-  }
-
-  /**
-   * @dev Performs a Solidity function call using a low level `call`. A
-   * plain `call` is an unsafe replacement for a function call: use this
-   * function instead.
-   *
-   * If `target` reverts with a revert reason, it is bubbled up by this
-   * function (like regular Solidity function calls).
-   *
-   * Returns the raw returned data. To convert to the expected return value,
-   * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].
-   *
-   * Requirements:
-   *
-   * - `target` must be a contract.
-   * - calling `target` with `data` must not revert.
-   *
-   * _Available since v3.1._
-   */
-  function functionCall(address target, bytes memory data) internal returns (bytes memory) {
-    return functionCall(target, data, 'Address: low-level call failed');
-  }
-
-  /**
-   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`], but with
-   * `errorMessage` as a fallback revert reason when `target` reverts.
-   *
-   * _Available since v3.1._
-   */
-  function functionCall(
-    address target,
-    bytes memory data,
-    string memory errorMessage
-  ) internal returns (bytes memory) {
-    return functionCallWithValue(target, data, 0, errorMessage);
-  }
-
-  /**
-   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
-   * but also transferring `value` wei to `target`.
-   *
-   * Requirements:
-   *
-   * - the calling contract must have an ETH balance of at least `value`.
-   * - the called Solidity function must be `payable`.
-   *
-   * _Available since v3.1._
-   */
-  function functionCallWithValue(
-    address target,
-    bytes memory data,
-    uint256 value
-  ) internal returns (bytes memory) {
-    return functionCallWithValue(target, data, value, 'Address: low-level call with value failed');
-  }
-
-  /**
-   * @dev Same as {xref-Address-functionCallWithValue-address-bytes-uint256-}[`functionCallWithValue`], but
-   * with `errorMessage` as a fallback revert reason when `target` reverts.
-   *
-   * _Available since v3.1._
-   */
-  function functionCallWithValue(
-    address target,
-    bytes memory data,
-    uint256 value,
-    string memory errorMessage
-  ) internal returns (bytes memory) {
-    require(address(this).balance >= value, 'Address: insufficient balance for call');
-    require(isContract(target), 'Address: call to non-contract');
-
-    (bool success, bytes memory returndata) = target.call{value: value}(data);
-    return verifyCallResult(success, returndata, errorMessage);
-  }
-
-  /**
-   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
-   * but performing a static call.
-   *
-   * _Available since v3.3._
-   */
-  function functionStaticCall(
-    address target,
-    bytes memory data
-  ) internal view returns (bytes memory) {
-    return functionStaticCall(target, data, 'Address: low-level static call failed');
-  }
-
-  /**
-   * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],
-   * but performing a static call.
-   *
-   * _Available since v3.3._
-   */
-  function functionStaticCall(
-    address target,
-    bytes memory data,
-    string memory errorMessage
-  ) internal view returns (bytes memory) {
-    require(isContract(target), 'Address: static call to non-contract');
-
-    (bool success, bytes memory returndata) = target.staticcall(data);
-    return verifyCallResult(success, returndata, errorMessage);
-  }
-
-  /**
-   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
-   * but performing a delegate call.
-   *
-   * _Available since v3.4._
-   */
-  function functionDelegateCall(address target, bytes memory data) internal returns (bytes memory) {
-    return functionDelegateCall(target, data, 'Address: low-level delegate call failed');
-  }
-
-  /**
-   * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],
-   * but performing a delegate call.
-   *
-   * _Available since v3.4._
-   */
-  function functionDelegateCall(
-    address target,
-    bytes memory data,
-    string memory errorMessage
-  ) internal returns (bytes memory) {
-    require(isContract(target), 'Address: delegate call to non-contract');
-
-    (bool success, bytes memory returndata) = target.delegatecall(data);
-    return verifyCallResult(success, returndata, errorMessage);
-  }
-
-  /**
-   * @dev Tool to verifies that a low level call was successful, and revert if it wasn't, either by bubbling the
-   * revert reason using the provided one.
-   *
-   * _Available since v4.3._
-   */
-  function verifyCallResult(
-    bool success,
-    bytes memory returndata,
-    string memory errorMessage
-  ) internal pure returns (bytes memory) {
-    if (success) {
-      return returndata;
-    } else {
-      // Look for revert reason and bubble it up if present
-      if (returndata.length > 0) {
-        // The easiest way to bubble the revert reason is using memory via assembly
-
-        assembly {
-          let returndata_size := mload(returndata)
-          revert(add(32, returndata), returndata_size)
-        }
-      } else {
-        revert(errorMessage);
-      }
-    }
-  }
-}
-
-// lib/aave-v3-origin/src/contracts/dependencies/openzeppelin/contracts/IAccessControl.sol
-
-/**
- * @dev External interface of AccessControl declared to support ERC165 detection.
- */
-interface IAccessControl {
-  /**
-   * @dev Emitted when `newAdminRole` is set as ``role``'s admin role, replacing `previousAdminRole`
-   *
-   * `DEFAULT_ADMIN_ROLE` is the starting admin for all roles, despite
-   * {RoleAdminChanged} not being emitted signaling this.
-   *
-   * _Available since v3.1._
-   */
-  event RoleAdminChanged(
-    bytes32 indexed role,
-    bytes32 indexed previousAdminRole,
-    bytes32 indexed newAdminRole
-  );
-
-  /**
-   * @dev Emitted when `account` is granted `role`.
-   *
-   * `sender` is the account that originated the contract call, an admin role
-   * bearer except when using {AccessControl-_setupRole}.
-   */
-  event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);
-
-  /**
-   * @dev Emitted when `account` is revoked `role`.
-   *
-   * `sender` is the account that originated the contract call:
-   *   - if using `revokeRole`, it is the admin role bearer
-   *   - if using `renounceRole`, it is the role bearer (i.e. `account`)
-   */
-  event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);
-
-  /**
-   * @dev Returns `true` if `account` has been granted `role`.
-   */
-  function hasRole(bytes32 role, address account) external view returns (bool);
-
-  /**
-   * @dev Returns the admin role that controls `role`. See {grantRole} and
-   * {revokeRole}.
-   *
-   * To change a role's admin, use {AccessControl-_setRoleAdmin}.
-   */
-  function getRoleAdmin(bytes32 role) external view returns (bytes32);
-
-  /**
-   * @dev Grants `role` to `account`.
-   *
-   * If `account` had not been already granted `role`, emits a {RoleGranted}
-   * event.
-   *
-   * Requirements:
-   *
-   * - the caller must have ``role``'s admin role.
-   */
-  function grantRole(bytes32 role, address account) external;
-
-  /**
-   * @dev Revokes `role` from `account`.
-   *
-   * If `account` had been granted `role`, emits a {RoleRevoked} event.
-   *
-   * Requirements:
-   *
-   * - the caller must have ``role``'s admin role.
-   */
-  function revokeRole(bytes32 role, address account) external;
-
-  /**
-   * @dev Revokes `role` from the calling account.
-   *
-   * Roles are often managed via {grantRole} and {revokeRole}: this function's
-   * purpose is to provide a mechanism for accounts to lose their privileges
-   * if they are compromised (such as when a trusted device is misplaced).
-   *
-   * If the calling account had been granted `role`, emits a {RoleRevoked}
-   * event.
-   *
-   * Requirements:
-   *
-   * - the caller must be `account`.
-   */
-  function renounceRole(bytes32 role, address account) external;
-}
-
-// lib/aave-v3-origin/src/contracts/dependencies/openzeppelin/contracts/IERC20.sol
-
-/**
- * @dev Interface of the ERC20 standard as defined in the EIP.
- */
-interface IERC20 {
-  /**
-   * @dev Returns the amount of tokens in existence.
-   */
-  function totalSupply() external view returns (uint256);
-
-  /**
-   * @dev Returns the amount of tokens owned by `account`.
-   */
-  function balanceOf(address account) external view returns (uint256);
-
-  /**
-   * @dev Moves `amount` tokens from the caller's account to `recipient`.
-   *
-   * Returns a boolean value indicating whether the operation succeeded.
-   *
-   * Emits a {Transfer} event.
-   */
-  function transfer(address recipient, uint256 amount) external returns (bool);
-
-  /**
-   * @dev Returns the remaining number of tokens that `spender` will be
-   * allowed to spend on behalf of `owner` through {transferFrom}. This is
-   * zero by default.
-   *
-   * This value changes when {approve} or {transferFrom} are called.
-   */
-  function allowance(address owner, address spender) external view returns (uint256);
-
-  /**
-   * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
-   *
-   * Returns a boolean value indicating whether the operation succeeded.
-   *
-   * IMPORTANT: Beware that changing an allowance with this method brings the risk
-   * that someone may use both the old and the new allowance by unfortunate
-   * transaction ordering. One possible solution to mitigate this race
-   * condition is to first reduce the spender's allowance to 0 and set the
-   * desired value afterwards:
-   * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
-   *
-   * Emits an {Approval} event.
-   */
-  function approve(address spender, uint256 amount) external returns (bool);
-
-  /**
-   * @dev Moves `amount` tokens from `sender` to `recipient` using the
-   * allowance mechanism. `amount` is then deducted from the caller's
-   * allowance.
-   *
-   * Returns a boolean value indicating whether the operation succeeded.
-   *
-   * Emits a {Transfer} event.
-   */
-  function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
-
-  /**
-   * @dev Emitted when `value` tokens are moved from one account (`from`) to
-   * another (`to`).
-   *
-   * Note that `value` may be zero.
-   */
-  event Transfer(address indexed from, address indexed to, uint256 value);
-
-  /**
-   * @dev Emitted when the allowance of a `spender` for an `owner` is set by
-   * a call to {approve}. `value` is the new allowance.
-   */
-  event Approval(address indexed owner, address indexed spender, uint256 value);
-}
-
-// lib/aave-v3-origin/src/contracts/misc/aave-upgradeability/VersionedInitializable.sol
+// src/libs/VersionedInitializable.sol
 
 /**
  * @title VersionedInitializable
- * @author Aave, inspired by the OpenZeppelin Initializable contract
- * @notice Helper contract to implement initializer functions. To use it, replace
+ *
+ * @dev Helper contract to support initializer functions. To use it, replace
  * the constructor with a function that has the `initializer` modifier.
- * @dev WARNING: Unlike constructors, initializer functions must be manually
+ * WARNING: Unlike constructors, initializer functions must be manually
  * invoked. This applies both to deploying an Initializable contract, as well
  * as extending an Initializable contract via inheritance.
  * WARNING: When used with inheritance, manual care must be taken to not invoke
  * a parent initializer twice, or ensure that all initializers are idempotent,
  * because this is not dealt with automatically as with constructors.
+ *
+ * @author Aave, inspired by the OpenZeppelin Initializable contract
  */
 abstract contract VersionedInitializable {
   /**
    * @dev Indicates that the contract has been initialized.
    */
-  uint256 private lastInitializedRevision = 0;
-
-  /**
-   * @dev Indicates that the contract is in the process of being initialized.
-   */
-  bool private initializing;
+  uint256 internal lastInitializedRevision = 0;
 
   /**
    * @dev Modifier to use in the initializer function of a contract.
    */
   modifier initializer() {
     uint256 revision = getRevision();
-    require(
-      initializing || isConstructor() || revision > lastInitializedRevision,
-      'Contract instance has already been initialized'
-    );
+    require(revision > lastInitializedRevision, 'Contract instance has already been initialized');
 
-    bool isTopLevelCall = !initializing;
-    if (isTopLevelCall) {
-      initializing = true;
-      lastInitializedRevision = revision;
-    }
+    lastInitializedRevision = revision;
 
     _;
-
-    if (isTopLevelCall) {
-      initializing = false;
-    }
   }
 
-  /**
-   * @notice Returns the revision number of the contract
-   * @dev Needs to be defined in the inherited class as a constant.
-   * @return The revision number
-   */
+  /// @dev returns the revision number of the contract.
+  /// Needs to be defined in the inherited class as a constant.
   function getRevision() internal pure virtual returns (uint256);
-
-  /**
-   * @notice Returns true if and only if the function is running in the constructor
-   * @return True if the function is running in the constructor
-   */
-  function isConstructor() private view returns (bool) {
-    // extcodesize checks the size of the code stored in an address, and
-    // address returns the current address. Since the code is still not
-    // deployed when running a constructor, any checks on its code size will
-    // yield zero, making it an effective way to detect if a contract is
-    // under construction or not.
-    uint256 cs;
-    //solium-disable-next-line
-    assembly {
-      cs := extcodesize(address())
-    }
-    return cs == 0;
-  }
 
   // Reserved storage space to allow for layout changes in the future.
   uint256[50] private ______gap;
 }
 
-// lib/aave-v3-origin/src/contracts/treasury/ICollector.sol
+// src/interfaces/ICollector.sol
 
 interface ICollector {
   struct Stream {
@@ -549,60 +521,10 @@ interface ICollector {
     bool isEntity;
   }
 
-  /**
-   * @dev Withdraw amount exceeds available balance
-   */
-  error BalanceExceeded();
-
-  /**
-   * @dev Deposit smaller than time delta
-   */
-  error DepositSmallerTimeDelta();
-
-  /**
-   * @dev Deposit not multiple of time delta
-   */
-  error DepositNotMultipleTimeDelta();
-
-  /**
-   * @dev Recipient cannot be the contract itself or msg.sender
-   */
-  error InvalidRecipient();
-
-  /**
-   * @dev Start time cannot be before block.timestamp
-   */
-  error InvalidStartTime();
-
-  /**
-   * @dev Stop time must be greater than startTime
-   */
-  error InvalidStopTime();
-
-  /**
-   * @dev Provided address cannot be the zero-address
-   */
-  error InvalidZeroAddress();
-
-  /**
-   * @dev Amount cannot be zero
-   */
-  error InvalidZeroAmount();
-
-  /**
-   * @dev Only caller with FUNDS_ADMIN role can call
-   */
-  error OnlyFundsAdmin();
-
-  /**
-   * @dev Only caller with FUNDS_ADMIN role or stream recipient can call
-   */
-  error OnlyFundsAdminOrRceipient();
-
-  /**
-   * @dev The provided ID does not belong to an existing stream
-   */
-  error StreamDoesNotExist();
+  /** @notice Emitted when the funds admin changes
+   * @param fundsAdmin The new funds admin.
+   **/
+  event NewFundsAdmin(address indexed fundsAdmin);
 
   /** @notice Emitted when the new stream is created
    * @param streamId The identifier of the stream.
@@ -647,38 +569,29 @@ interface ICollector {
     uint256 recipientBalance
   );
 
-  /**
-   * @notice FUNDS_ADMIN role granted by ACL Manager
-   **/
-  function FUNDS_ADMIN_ROLE() external view returns (bytes32);
-
-  /**
-   * @notice Address of the current ACL Manager.
-   **/
-  function ACL_MANAGER() external view returns (address);
-
   /** @notice Returns the mock ETH reference address
    * @return address The address
    **/
   function ETH_MOCK_ADDRESS() external pure returns (address);
 
   /** @notice Initializes the contracts
+   * @param fundsAdmin Funds admin address
    * @param nextStreamId StreamId to set, applied if greater than 0
    **/
-  function initialize(uint256 nextStreamId) external;
+  function initialize(address fundsAdmin, uint256 nextStreamId) external;
 
   /**
-   * @notice Checks if address is funds admin
-   * @return bool If the address has the funds admin role
+   * @notice Return the funds admin, only entity to be able to interact with this contract (controller of reserve)
+   * @return address The address of the funds admin
    **/
-  function isFundsAdmin(address admin) external view returns (bool);
+  function getFundsAdmin() external view returns (address);
 
   /**
    * @notice Returns the available funds for the given stream id and address.
    * @param streamId The id of the stream for which to query the balance.
    * @param who The address for which to query the balance.
    * @notice Returns the total funds allocated to `who` as uint256.
-   **/
+   */
   function balanceOf(uint256 streamId, address who) external view returns (uint256 balance);
 
   /**
@@ -696,6 +609,13 @@ interface ICollector {
    * @param amount Amount to transfer
    **/
   function transfer(IERC20 token, address recipient, uint256 amount) external;
+
+  /**
+   * @dev Transfer the ownership of the funds administrator role.
+          This function should only be callable by the current funds administrator.
+   * @param admin The address of the new funds administrator
+   */
+  function setFundsAdmin(address admin) external;
 
   /**
    * @notice Creates a new stream funded by this contracts itself and paid towards `recipient`.
@@ -758,9 +678,10 @@ interface ICollector {
   function getNextStreamId() external view returns (uint256);
 }
 
-// lib/aave-v3-origin/src/contracts/dependencies/openzeppelin/contracts/SafeERC20.sol
+// lib/solidity-utils/src/contracts/oz-common/SafeERC20.sol
 
-// OpenZeppelin Contracts v4.4.1 (token/ERC20/utils/SafeERC20.sol)
+// OpenZeppelin Contracts (last updated v4.7.0) (token/ERC20/utils/SafeERC20.sol)
+// From commit https://github.com/OpenZeppelin/openzeppelin-contracts/commit/3dac7bbed7b4c0dbf504180c33e8ed8e350b93eb
 
 /**
  * @title SafeERC20
@@ -772,77 +693,105 @@ interface ICollector {
  * which allows you to call the safe operations as `token.safeTransfer(...)`, etc.
  */
 library SafeERC20 {
-  using Address for address;
+    using Address for address;
 
-  function safeTransfer(IERC20 token, address to, uint256 value) internal {
-    _callOptionalReturn(token, abi.encodeWithSelector(token.transfer.selector, to, value));
-  }
-
-  function safeTransferFrom(IERC20 token, address from, address to, uint256 value) internal {
-    _callOptionalReturn(
-      token,
-      abi.encodeWithSelector(token.transferFrom.selector, from, to, value)
-    );
-  }
-
-  /**
-   * @dev Deprecated. This function has issues similar to the ones found in
-   * {IERC20-approve}, and its usage is discouraged.
-   *
-   * Whenever possible, use {safeIncreaseAllowance} and
-   * {safeDecreaseAllowance} instead.
-   */
-  function safeApprove(IERC20 token, address spender, uint256 value) internal {
-    // safeApprove should only be called when setting an initial allowance,
-    // or when resetting it to zero. To increase and decrease it, use
-    // 'safeIncreaseAllowance' and 'safeDecreaseAllowance'
-    require(
-      (value == 0) || (token.allowance(address(this), spender) == 0),
-      'SafeERC20: approve from non-zero to non-zero allowance'
-    );
-    _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, value));
-  }
-
-  function safeIncreaseAllowance(IERC20 token, address spender, uint256 value) internal {
-    uint256 newAllowance = token.allowance(address(this), spender) + value;
-    _callOptionalReturn(
-      token,
-      abi.encodeWithSelector(token.approve.selector, spender, newAllowance)
-    );
-  }
-
-  function safeDecreaseAllowance(IERC20 token, address spender, uint256 value) internal {
-    unchecked {
-      uint256 oldAllowance = token.allowance(address(this), spender);
-      require(oldAllowance >= value, 'SafeERC20: decreased allowance below zero');
-      uint256 newAllowance = oldAllowance - value;
-      _callOptionalReturn(
-        token,
-        abi.encodeWithSelector(token.approve.selector, spender, newAllowance)
-      );
+    function safeTransfer(
+        IERC20 token,
+        address to,
+        uint256 value
+    ) internal {
+        _callOptionalReturn(token, abi.encodeWithSelector(token.transfer.selector, to, value));
     }
-  }
 
-  /**
-   * @dev Imitates a Solidity high-level call (i.e. a regular function call to a contract), relaxing the requirement
-   * on the return value: the return value is optional (but if data is returned, it must not be false).
-   * @param token The token targeted by the call.
-   * @param data The call data (encoded using abi.encode or one of its variants).
-   */
-  function _callOptionalReturn(IERC20 token, bytes memory data) private {
-    // We need to perform a low level call here, to bypass Solidity's return data size checking mechanism, since
-    // we're implementing it ourselves. We use {Address.functionCall} to perform this call, which verifies that
-    // the target address contains contract code and also asserts for success in the low-level call.
-
-    bytes memory returndata = address(token).functionCall(data, 'SafeERC20: low-level call failed');
-    if (returndata.length > 0) {
-      // Return data is optional
-      require(abi.decode(returndata, (bool)), 'SafeERC20: ERC20 operation did not succeed');
+    function safeTransferFrom(
+        IERC20 token,
+        address from,
+        address to,
+        uint256 value
+    ) internal {
+        _callOptionalReturn(token, abi.encodeWithSelector(token.transferFrom.selector, from, to, value));
     }
-  }
+
+    /**
+     * @dev Deprecated. This function has issues similar to the ones found in
+     * {IERC20-approve}, and its usage is discouraged.
+     *
+     * Whenever possible, use {safeIncreaseAllowance} and
+     * {safeDecreaseAllowance} instead.
+     */
+    function safeApprove(
+        IERC20 token,
+        address spender,
+        uint256 value
+    ) internal {
+        // safeApprove should only be called when setting an initial allowance,
+        // or when resetting it to zero. To increase and decrease it, use
+        // 'safeIncreaseAllowance' and 'safeDecreaseAllowance'
+        require(
+            (value == 0) || (token.allowance(address(this), spender) == 0),
+            "SafeERC20: approve from non-zero to non-zero allowance"
+        );
+        _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, value));
+    }
+
+    function safeIncreaseAllowance(
+        IERC20 token,
+        address spender,
+        uint256 value
+    ) internal {
+        uint256 newAllowance = token.allowance(address(this), spender) + value;
+        _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
+    }
+
+    function safeDecreaseAllowance(
+        IERC20 token,
+        address spender,
+        uint256 value
+    ) internal {
+        unchecked {
+            uint256 oldAllowance = token.allowance(address(this), spender);
+            require(oldAllowance >= value, "SafeERC20: decreased allowance below zero");
+            uint256 newAllowance = oldAllowance - value;
+            _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
+        }
+    }
+
+    function safePermit(
+        IERC20Permit token,
+        address owner,
+        address spender,
+        uint256 value,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) internal {
+        uint256 nonceBefore = token.nonces(owner);
+        token.permit(owner, spender, value, deadline, v, r, s);
+        uint256 nonceAfter = token.nonces(owner);
+        require(nonceAfter == nonceBefore + 1, "SafeERC20: permit did not succeed");
+    }
+
+    /**
+     * @dev Imitates a Solidity high-level call (i.e. a regular function call to a contract), relaxing the requirement
+     * on the return value: the return value is optional (but if data is returned, it must not be false).
+     * @param token The token targeted by the call.
+     * @param data The call data (encoded using abi.encode or one of its variants).
+     */
+    function _callOptionalReturn(IERC20 token, bytes memory data) private {
+        // We need to perform a low level call here, to bypass Solidity's return data size checking mechanism, since
+        // we're implementing it ourselves. We use {Address.functionCall} to perform this call, which verifies that
+        // the target address contains contract code and also asserts for success in the low-level call.
+
+        bytes memory returndata = address(token).functionCall(data, "SafeERC20: low-level call failed");
+        if (returndata.length > 0) {
+            // Return data is optional
+            require(abi.decode(returndata, (bool)), "SafeERC20: ERC20 operation did not succeed");
+        }
+    }
 }
 
-// lib/aave-v3-origin/src/contracts/treasury/Collector.sol
+// src/contracts/Collector.sol
 
 /**
  * @title Collector
@@ -864,18 +813,14 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
   /*** Storage Properties ***/
 
   /**
+   * @notice Address of the current funds admin.
+   */
+  address internal _fundsAdmin;
+
+  /**
    * @notice Current revision of the contract.
    */
-  uint256 public constant REVISION = 6;
-
-  /// @inheritdoc ICollector
-  address public constant ETH_MOCK_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
-
-  /// @inheritdoc ICollector
-  bytes32 public constant FUNDS_ADMIN_ROLE = 'FUNDS_ADMIN';
-
-  /// @inheritdoc ICollector
-  address public immutable ACL_MANAGER;
+  uint256 public constant REVISION = 5;
 
   /**
    * @notice Counter for new stream ids.
@@ -887,15 +832,16 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
    */
   mapping(uint256 => Stream) private _streams;
 
+  /// @inheritdoc ICollector
+  address public constant ETH_MOCK_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+
   /*** Modifiers ***/
 
   /**
-   * @dev Throws if the caller does not have the FUNDS_ADMIN role
+   * @dev Throws if the caller is not the funds admin.
    */
   modifier onlyFundsAdmin() {
-    if (_onlyFundsAdmin() == false) {
-      revert OnlyFundsAdmin();
-    }
+    require(msg.sender == _fundsAdmin, 'ONLY_BY_FUNDS_ADMIN');
     _;
   }
 
@@ -904,9 +850,10 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
    * @param streamId The id of the stream to query.
    */
   modifier onlyAdminOrRecipient(uint256 streamId) {
-    if (_onlyFundsAdmin() == false && msg.sender != _streams[streamId].recipient) {
-      revert OnlyFundsAdminOrRceipient();
-    }
+    require(
+      msg.sender == _fundsAdmin || msg.sender == _streams[streamId].recipient,
+      'caller is not the funds admin or the recipient of the stream'
+    );
     _;
   }
 
@@ -914,22 +861,21 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
    * @dev Throws if the provided id does not point to a valid stream.
    */
   modifier streamExists(uint256 streamId) {
-    if (!_streams[streamId].isEntity) revert StreamDoesNotExist();
+    require(_streams[streamId].isEntity, 'stream does not exist');
     _;
-  }
-
-  constructor(address aclManager) {
-    if (aclManager == address(0)) revert InvalidZeroAddress();
-    ACL_MANAGER = aclManager;
   }
 
   /*** Contract Logic Starts Here */
 
   /// @inheritdoc ICollector
-  function initialize(uint256 nextStreamId) external virtual initializer {
+  function initialize(address fundsAdmin, uint256 nextStreamId) external initializer {
     if (nextStreamId != 0) {
       _nextStreamId = nextStreamId;
     }
+
+    // can be removed after first deployment
+    _initGuard();
+    _setFundsAdmin(fundsAdmin);
   }
 
   /*** View Functions ***/
@@ -940,8 +886,8 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
   }
 
   /// @inheritdoc ICollector
-  function isFundsAdmin(address admin) external view returns (bool) {
-    return IAccessControl(ACL_MANAGER).hasRole(FUNDS_ADMIN_ROLE, admin);
+  function getFundsAdmin() external view returns (address) {
+    return _fundsAdmin;
   }
 
   /// @inheritdoc ICollector
@@ -1036,7 +982,7 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
 
   /// @inheritdoc ICollector
   function transfer(IERC20 token, address recipient, uint256 amount) external onlyFundsAdmin {
-    if (recipient == address(0)) revert InvalidZeroAddress();
+    require(recipient != address(0), 'INVALID_0X_RECIPIENT');
 
     if (address(token) == ETH_MOCK_ADDRESS) {
       payable(recipient).sendValue(amount);
@@ -1045,8 +991,21 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     }
   }
 
-  function _onlyFundsAdmin() internal view returns (bool) {
-    return IAccessControl(ACL_MANAGER).hasRole(FUNDS_ADMIN_ROLE, msg.sender);
+  /// @dev needed in order to receive ETH from the Aave v1 ecosystem reserve
+  receive() external payable {}
+
+  /// @inheritdoc ICollector
+  function setFundsAdmin(address admin) external onlyFundsAdmin {
+    _setFundsAdmin(admin);
+  }
+
+  /**
+   * @dev Transfer the ownership of the funds administrator role.
+   * @param admin The address of the new funds administrator
+   */
+  function _setFundsAdmin(address admin) internal {
+    _fundsAdmin = admin;
+    emit NewFundsAdmin(admin);
   }
 
   struct CreateStreamLocalVars {
@@ -1075,21 +1034,21 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     uint256 startTime,
     uint256 stopTime
   ) external onlyFundsAdmin returns (uint256) {
-    if (recipient == address(0)) revert InvalidZeroAddress();
-    if (recipient == address(this)) revert InvalidRecipient();
-    if (recipient == msg.sender) revert InvalidRecipient();
-    if (deposit == 0) revert InvalidZeroAmount();
-    if (startTime < block.timestamp) revert InvalidStartTime();
-    if (stopTime <= startTime) revert InvalidStopTime();
+    require(recipient != address(0), 'stream to the zero address');
+    require(recipient != address(this), 'stream to the contract itself');
+    require(recipient != msg.sender, 'stream to the caller');
+    require(deposit > 0, 'deposit is zero');
+    require(startTime >= block.timestamp, 'start time before block.timestamp');
+    require(stopTime > startTime, 'stop time before the start time');
 
     CreateStreamLocalVars memory vars;
     vars.duration = stopTime - startTime;
 
     /* Without this, the rate per second would be zero. */
-    if (deposit < vars.duration) revert DepositSmallerTimeDelta();
+    require(deposit >= vars.duration, 'deposit smaller than time delta');
 
     /* This condition avoids dealing with remainders */
-    if (deposit % vars.duration > 0) revert DepositNotMultipleTimeDelta();
+    require(deposit % vars.duration == 0, 'deposit not multiple of time delta');
 
     vars.ratePerSecond = deposit / vars.duration;
 
@@ -1133,11 +1092,11 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     uint256 streamId,
     uint256 amount
   ) external nonReentrant streamExists(streamId) onlyAdminOrRecipient(streamId) returns (bool) {
-    if (amount == 0) revert InvalidZeroAmount();
+    require(amount > 0, 'amount is zero');
     Stream memory stream = _streams[streamId];
 
     uint256 balance = balanceOf(streamId, stream.recipient);
-    if (balance < amount) revert BalanceExceeded();
+    require(balance >= amount, 'amount exceeds the available balance');
 
     _streams[streamId].remainingBalance = stream.remainingBalance - amount;
 
@@ -1169,28 +1128,4 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     emit CancelStream(streamId, stream.sender, stream.recipient, senderBalance, recipientBalance);
     return true;
   }
-}
-
-// src/CollectorWithCustomImpl.sol
-
-/**
- * @title Collector
- * Custom modifications of this implementation:
- * - the initialize function manually alters private storage slots via assembly
- * - storage slot 51 is reset to 0
- * - storage slot 52 is set to 1 (which is the default state of the reentrancy guard)
- * @author BGD Labs
- **/
-contract CollectorWithCustomImpl is Collector {
-    constructor(address aclManager) Collector(aclManager) {
-        // intentionally left empty
-    }
-
-    /// @inheritdoc ICollector
-    function initialize(uint256) external virtual override initializer {
-        assembly {
-            sstore(51, 0) // this slot was _status, but is now part of the gap
-            sstore(52, 1) // this slot was the funds admin, but is now _status
-        }
-    }
 }

@@ -19,8 +19,8 @@ contract CollectorWithCustomImpl is Collector {
     /// @inheritdoc ICollector
     function initialize(uint256) external virtual override initializer {
         assembly {
-            sstore(53, 100000) // this slot was _fundsAdmin, but is now _nextStreamId
-            sstore(54, 0) // this slot was _nextStreamId, but is now _streams
+            sstore(51, 0) // this slot was _status, but is now part of the gap
+            sstore(52, 1) // this slot was the funds admin, but is now _status
         }
     }
 }
