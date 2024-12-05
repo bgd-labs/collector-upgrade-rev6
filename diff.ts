@@ -1,3 +1,4 @@
+import { AaveV3ZkSync } from "@bgd-labs/aave-address-book";
 import {
   AaveV3Avalanche,
   AaveV3Ethereum,
@@ -47,8 +48,9 @@ async function diffReference() {
 }
 
 (async function main() {
-  diffReference();
-  await snapshotPool(AaveV3Ethereum);
+  // diffReference();
+  // await snapshotPool(AaveV3Ethereum);
+  await snapshotPool(AaveV3ZkSync);
   // await snapshotPool(AaveV3Polygon);
   // await snapshotPool(AaveV3Avalanche);
 })();

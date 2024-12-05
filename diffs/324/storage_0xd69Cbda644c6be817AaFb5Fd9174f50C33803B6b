@@ -1,0 +1,9 @@
+| Name                    | Type                                         | Slot | Offset | Bytes | Contract                                                               |
+|-------------------------|----------------------------------------------|------|--------|-------|------------------------------------------------------------------------|
+| lastInitializedRevision | uint256                                      | 0    | 0      | 32    | flattened/324/0xF9C838BDec2fb25fa96f81c162A9B07f79056b8F.sol:Collector |
+| initializing            | bool                                         | 1    | 0      | 1     | flattened/324/0xF9C838BDec2fb25fa96f81c162A9B07f79056b8F.sol:Collector |
+| ______gap               | uint256[50]                                  | 2    | 0      | 1600  | flattened/324/0xF9C838BDec2fb25fa96f81c162A9B07f79056b8F.sol:Collector |
+| _status                 | uint256                                      | 52   | 0      | 32    | flattened/324/0xF9C838BDec2fb25fa96f81c162A9B07f79056b8F.sol:Collector |
+| _fundsAdmin             | address                                      | 53   | 0      | 20    | flattened/324/0xF9C838BDec2fb25fa96f81c162A9B07f79056b8F.sol:Collector |
+| _nextStreamId           | uint256                                      | 54   | 0      | 32    | flattened/324/0xF9C838BDec2fb25fa96f81c162A9B07f79056b8F.sol:Collector |
+| _streams                | mapping(uint256 => struct ICollector.Stream) | 55   | 0      | 32    | flattened/324/0xF9C838BDec2fb25fa96f81c162A9B07f79056b8F.sol:Collector |
