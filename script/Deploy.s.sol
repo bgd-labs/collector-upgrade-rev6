@@ -4,6 +4,9 @@ pragma solidity ^0.8.0;
 import {MiscEthereum} from "aave-address-book/MiscEthereum.sol";
 import {AaveV3Ethereum} from "aave-address-book/AaveV3Ethereum.sol";
 
+import {MiscPolygon} from "aave-address-book/MiscPolygon.sol";
+import {AaveV3Polygon} from "aave-address-book/AaveV3Polygon.sol";
+
 import {GovV3Helpers} from "aave-helpers/src/GovV3Helpers.sol";
 import {CollectorWithCustomImpl} from "../src/CollectorWithCustomImpl.sol";
 import {UpgradePayload} from "../src/UpgradePayload.sol";
@@ -28,6 +31,15 @@ library DeploymentLibrary {
                 address(AaveV3Ethereum.ACL_MANAGER),
                 address(AaveV3Ethereum.COLLECTOR),
                 MiscEthereum.PROXY_ADMIN
+            );
+    }
+
+    function deployPolygon() internal returns (address) {
+        return
+            _deploy(
+                address(AaveV3Polygon.ACL_MANAGER),
+                address(AaveV3Polygon.COLLECTOR),
+                MiscPolygon.PROXY_ADMIN
             );
     }
 }

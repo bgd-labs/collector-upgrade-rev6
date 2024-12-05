@@ -49,8 +49,24 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
         assertEq(uint256(vm.load(address(collector), bytes32(uint256(52)))), 1);
     }
 
+    function test_transfer_aclAdmin() external {
+        executePayload(vm, payload);
+
+        IPoolAddressesProvider provider = _getPool().ADDRESSES_PROVIDER();
+        address aclAdmin = provider.getACLAdmin();
+        Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
+
+        vm.startPrank(aclAdmin);
+        deal(address(collector), 100 ether);
+        collector.transfer(
+            IERC20(collector.ETH_MOCK_ADDRESS()),
+            address(this),
+            100 ether
+        );
+    }
+
     // ensures reentracy is not borked
-    function test_transfer() external {
+    function test_transfer_newAdmin() external {
         executePayload(vm, payload);
 
         IPoolAddressesProvider provider = _getPool().ADDRESSES_PROVIDER();
