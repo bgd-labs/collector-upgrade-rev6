@@ -1,0 +1,8 @@
+| Name                    | Type                                         | Slot | Offset | Bytes | Contract                          |
+|-------------------------|----------------------------------------------|------|--------|-------|-----------------------------------|
+| lastInitializedRevision | uint256                                      | 0    | 0      | 32    | flattened/Collector.sol:Collector |
+| initializing            | bool                                         | 1    | 0      | 1     | flattened/Collector.sol:Collector |
+| ______gap               | uint256[50]                                  | 2    | 0      | 1600  | flattened/Collector.sol:Collector |
+| _status                 | uint256                                      | 52   | 0      | 32    | flattened/Collector.sol:Collector |
+| _nextStreamId           | uint256                                      | 53   | 0      | 32    | flattened/Collector.sol:Collector |
+| _streams                | mapping(uint256 => struct ICollector.Stream) | 54   | 0      | 32    | flattened/Collector.sol:Collector |
