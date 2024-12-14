@@ -63,3 +63,4 @@ zksync = { key = "${ETHERSCAN_API_KEY_ZKSYNC}", chain = 324 }
 
 [fmt]
 tab_width = 2
+quote_style = 'single'

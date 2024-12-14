@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Collector, ICollector} from "aave-v3-origin/contracts/treasury/Collector.sol";
+import {Collector, ICollector} from 'aave-v3-origin/contracts/treasury/Collector.sol';
 
 /**
  * @title Collector
