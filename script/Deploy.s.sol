@@ -20,11 +20,11 @@ library DeploymentLibrary {
   function _deploy(address aclManager, address collector, address proxyAdmin) private returns (address) {
     address impl;
     if (block.chainid == ChainIds.ZKSYNC) {
-      impl = address(new CollectorWithCustomImplZkSync{salt: 'v1'}  (aclManager));
+      impl = address(new CollectorWithCustomImplZkSync{salt: 'v1'}(aclManager));
     } else {
       impl = GovV3Helpers.deployDeterministic(type(CollectorWithCustomImplZkSync).creationCode, abi.encode(aclManager));
     }
- 
+
     CollectorWithCustomImpl(impl).initialize(0);
     return address(new UpgradePayload(collector, impl, proxyAdmin));
   }
