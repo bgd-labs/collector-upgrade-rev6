@@ -21,12 +21,12 @@ contract UpgradeTest is ProtocolV3TestBase {
     super.setUp();
   }
 
-  function test_defaultExecution_zk() external {
+  function test_defaultExecution() external {
     defaultTest('zksync', _getPool(), payload, false);
   }
 
   // ensures stream id is in same position as before
-  function test_storageCorrectness_zk() external {
+  function test_storageCorrectness() external {
     Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
     uint256 nextStreamIdBefore = collector.getNextStreamId();
     
