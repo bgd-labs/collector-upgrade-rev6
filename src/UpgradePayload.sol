@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 import {ITransparentUpgradeableProxy, ProxyAdmin} from "solidity-utils/contracts/transparent-proxy/TransparentUpgradeableProxy.sol";
 import {IAccessControl} from "aave-v3-origin/contracts/dependencies/openzeppelin/contracts/IAccessControl.sol";
-import {ICollector} from "aave-v3-origin/contracts/treasury/ICollector.sol";
+import {Collector} from "aave-v3-origin/contracts/treasury/Collector.sol";
 
 contract UpgradePayload {
     address public immutable PROXY_ADMIN;
@@ -20,11 +20,15 @@ contract UpgradePayload {
         ProxyAdmin(PROXY_ADMIN).upgradeAndCall(
             ITransparentUpgradeableProxy(COLLECTOR),
             COLLECTOR_IMPL,
-            abi.encodeWithSelector(ICollector.initialize.selector, 0)
+            abi.encodeWithSelector(
+                Collector.initialize.selector,
+                0,
+                address(this)
+            )
         );
         // grant funds admin permissions to the executor
-        IAccessControl(ICollector(COLLECTOR).ACL_MANAGER()).grantRole(
-            ICollector(COLLECTOR).FUNDS_ADMIN_ROLE(),
+        IAccessControl(COLLECTOR).grantRole(
+            Collector(COLLECTOR).FUNDS_ADMIN_ROLE(),
             address(this)
         );
     }

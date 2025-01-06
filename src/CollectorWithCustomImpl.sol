@@ -12,15 +12,17 @@ import {Collector, ICollector} from "aave-v3-origin/contracts/treasury/Collector
  * @author BGD Labs
  **/
 contract CollectorWithCustomImpl is Collector {
-    constructor(address aclManager) Collector(aclManager) {
-        // intentionally left empty
-    }
-
-    /// @inheritdoc ICollector
-    function initialize(uint256) external virtual override initializer {
+    function initialize(
+        uint256,
+        address admin
+    ) external virtual override initializer {
         assembly {
+            sstore(0, 0) // this slot was revision, which is no longer used
             sstore(51, 0) // this slot was _status, but is now part of the gap
             sstore(52, 1) // this slot was the funds admin, but is now _status
         }
+        __AccessControl_init();
+        __ReentrancyGuard_init();
+        _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
 }

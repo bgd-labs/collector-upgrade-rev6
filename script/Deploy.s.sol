@@ -21,7 +21,6 @@ library DeploymentLibrary {
             type(CollectorWithCustomImpl).creationCode,
             abi.encode(aclManager)
         );
-        CollectorWithCustomImpl(impl).initialize(0);
         return address(new UpgradePayload(collector, impl, proxyAdmin));
     }
 

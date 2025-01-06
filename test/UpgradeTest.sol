@@ -39,8 +39,8 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
         executePayload(vm, payload);
 
         assertEq(nextStreamIdBefore, collector.getNextStreamId());
-        // revision should be 6
-        assertEq(uint256(vm.load(address(collector), bytes32(uint256(0)))), 6);
+        // deprecated revision should be 0
+        assertEq(uint256(vm.load(address(collector), bytes32(uint256(0)))), 0);
         // initializing should be false
         assertEq(vm.load(address(collector), bytes32(uint256(1))), 0x0);
         // last slot of gap should be empty
@@ -71,11 +71,10 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
 
         IPoolAddressesProvider provider = _getPool().ADDRESSES_PROVIDER();
         address aclAdmin = provider.getACLAdmin();
-        address aclManager = provider.getACLManager();
         Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
 
         vm.startPrank(aclAdmin);
-        IAccessControl(aclManager).grantRole(
+        IAccessControl(address(collector)).grantRole(
             collector.FUNDS_ADMIN_ROLE(),
             address(this)
         );
@@ -87,6 +86,16 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
             address(this),
             100 ether
         );
+    }
+
+    function test_revert_transfer_nonAdmin() external {
+        executePayload(vm, payload);
+
+        Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
+        address mockETH = collector.ETH_MOCK_ADDRESS();
+
+        vm.expectRevert(ICollector.OnlyFundsAdmin.selector);
+        collector.transfer(IERC20(mockETH), address(this), 100 ether);
     }
 
     function _getPayload() internal virtual returns (address);
