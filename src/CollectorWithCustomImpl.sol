@@ -17,7 +17,6 @@ contract CollectorWithCustomImpl is Collector {
     assembly {
       sstore(0, 0) // this slot was revision, which is no longer used
       sstore(51, 0) // this slot was _status, but is now part of the gap
-      sstore(52, 1) // this slot was the funds admin, but is now _status
     }
     __AccessControl_init();
     __ReentrancyGuard_init();
