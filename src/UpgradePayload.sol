@@ -4,9 +4,9 @@ pragma solidity ^0.8.0;
 import {
   ITransparentUpgradeableProxy,
   ProxyAdmin
-} from "solidity-utils/contracts/transparent-proxy/TransparentUpgradeableProxy.sol";
-import {IAccessControl} from "aave-v3-origin/contracts/dependencies/openzeppelin/contracts/IAccessControl.sol";
-import {Collector} from "aave-v3-origin/contracts/treasury/Collector.sol";
+} from 'solidity-utils/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
+import {IAccessControl} from 'aave-v3-origin/contracts/dependencies/openzeppelin/contracts/IAccessControl.sol';
+import {Collector} from 'aave-v3-origin/contracts/treasury/Collector.sol';
 
 contract UpgradePayload {
   address public immutable PROXY_ADMIN;
