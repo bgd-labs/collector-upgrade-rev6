@@ -12,33 +12,16 @@ import {CollectorWithCustomImpl} from "../src/CollectorWithCustomImpl.sol";
 import {UpgradePayload} from "../src/UpgradePayload.sol";
 
 library DeploymentLibrary {
-    function _deploy(
-        address aclManager,
-        address collector,
-        address proxyAdmin
-    ) private returns (address) {
-        address impl = GovV3Helpers.deployDeterministic(
-            type(CollectorWithCustomImpl).creationCode,
-            abi.encode(aclManager)
-        );
-        return address(new UpgradePayload(collector, impl, proxyAdmin));
-    }
+  function _deploy(address aclManager, address collector, address proxyAdmin) private returns (address) {
+    address impl = GovV3Helpers.deployDeterministic(type(CollectorWithCustomImpl).creationCode, abi.encode(aclManager));
+    return address(new UpgradePayload(collector, impl, proxyAdmin));
+  }
 
-    function deployMainnet() internal returns (address) {
-        return
-            _deploy(
-                address(AaveV3Ethereum.ACL_MANAGER),
-                address(AaveV3Ethereum.COLLECTOR),
-                MiscEthereum.PROXY_ADMIN
-            );
-    }
+  function deployMainnet() internal returns (address) {
+    return _deploy(address(AaveV3Ethereum.ACL_MANAGER), address(AaveV3Ethereum.COLLECTOR), MiscEthereum.PROXY_ADMIN);
+  }
 
-    function deployPolygon() internal returns (address) {
-        return
-            _deploy(
-                address(AaveV3Polygon.ACL_MANAGER),
-                address(AaveV3Polygon.COLLECTOR),
-                MiscPolygon.PROXY_ADMIN
-            );
-    }
+  function deployPolygon() internal returns (address) {
+    return _deploy(address(AaveV3Polygon.ACL_MANAGER), address(AaveV3Polygon.COLLECTOR), MiscPolygon.PROXY_ADMIN);
+  }
 }
