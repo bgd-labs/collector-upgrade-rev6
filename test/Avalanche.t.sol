@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {AaveV3Ethereum, IPool} from 'aave-address-book/AaveV3Ethereum.sol';
+import {AaveV3Avalanche, IPool} from 'aave-address-book/AaveV3Avalanche.sol';
 import {UpgradeTest} from './UpgradeTest.sol';
 import {DeploymentLibrary} from '../script/Deploy.s.sol';
 
-contract MainnetTest is UpgradeTest {
-  constructor() UpgradeTest('mainnet', 21336615) {}
+contract AvalancheTest is UpgradeTest {
+  constructor() UpgradeTest('avalanche', 55418905) {}
 
   function _getPayload() internal virtual override returns (address) {
-    return DeploymentLibrary.deployMainnet();
+    return DeploymentLibrary.deployAvalanche();
   }
 
   function _getPool() internal virtual override returns (IPool) {
-    return AaveV3Ethereum.POOL;
+    return AaveV3Avalanche.POOL;
   }
 }

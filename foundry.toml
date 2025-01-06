@@ -5,6 +5,21 @@ libs = ["lib"]
 fs_permissions = [{ access = "write", path = "./reports" }]
 ffi = true
 
+[profile.zksync]
+src = 'src'
+test = 'zksync'
+script = 'scripts'
+libs = ['lib']
+solc = '0.8.20'
+fs_permissions = [{ access = "write", path = "./reports" }]
+ffi = true
+evm_version = 'shanghai'
+
+[profile.zksync.zksync]
+compile = true
+optimizer_mode = '3'
+zksolc = '1.5.7'
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 [rpc_endpoints]
 mainnet = "${RPC_MAINNET}"
@@ -48,3 +63,4 @@ zksync = { key = "${ETHERSCAN_API_KEY_ZKSYNC}", chain = 324 }
 
 [fmt]
 tab_width = 2
+quote_style = 'single'
