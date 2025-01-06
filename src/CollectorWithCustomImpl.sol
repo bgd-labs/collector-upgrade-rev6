@@ -7,8 +7,8 @@ import {Collector, ICollector} from 'aave-v3-origin/contracts/treasury/Collector
  * @title Collector
  * Custom modifications of this implementation:
  * - the initialize function manually alters private storage slots via assembly
- * - storage slot 51 is reset to 0
- * - storage slot 52 is set to 1 (which is the default state of the reentrancy guard)
+ * - storage slot 0 (previously revision) is reset to zero
+ * - storage slot 51 (previously _status) is set to zero
  * @author BGD Labs
  *
  */
