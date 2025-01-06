@@ -39,8 +39,8 @@ contract UpgradeTest is ProtocolV3TestBase {
         executePayload(vm, payload);
 
         assertEq(nextStreamIdBefore, collector.getNextStreamId());
-        // revision should be 6
-        assertEq(uint256(vm.load(address(collector), bytes32(uint256(0)))), 6);
+        // revision should be 6 as  it's no longer used
+        assertEq(uint256(vm.load(address(collector), bytes32(uint256(0)))), 0);
         // initializing should be false
         assertEq(vm.load(address(collector), bytes32(uint256(1))), 0x0);
         // last slot of gap should be empty
