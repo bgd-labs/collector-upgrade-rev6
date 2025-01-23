@@ -27,12 +27,12 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
     payload = _getPayload();
   }
 
-  function test_defaultExecution() external {
+  function test_defaultExecution() external virtual {
     defaultTest(NETWORK, _getPool(), payload);
   }
 
   // ensures stream id is in same position as before
-  function test_storageCorrectness() external {
+  function test_storageCorrectness() external virtual {
     Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
     uint256 nextStreamIdBefore = collector.getNextStreamId();
 

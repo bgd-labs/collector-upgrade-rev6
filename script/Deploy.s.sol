@@ -34,9 +34,12 @@ import {AaveV3Gnosis} from 'aave-address-book/AaveV3Gnosis.sol';
 import {MiscZkSync} from 'aave-address-book/MiscZkSync.sol';
 import {AaveV3ZkSync} from 'aave-address-book/AaveV3ZkSync.sol';
 
+import {MiscLinea} from 'aave-address-book/MiscLinea.sol';
+import {AaveV3Linea} from 'aave-address-book/AaveV3Linea.sol';
+
 import {GovV3Helpers} from 'aave-helpers/src/GovV3Helpers.sol';
 import {CollectorWithCustomImpl} from '../src/CollectorWithCustomImpl.sol';
-import {CollectorWithCustomImplZkSync} from '../src/CollectorWithCustomImplZkSync.sol';
+import {CollectorWithCustomImplNewLayout} from '../src/CollectorWithCustomImplNewLayout.sol';
 import {UpgradePayload} from '../src/UpgradePayload.sol';
 
 library DeploymentLibrary {
@@ -45,8 +48,8 @@ library DeploymentLibrary {
     return address(new UpgradePayload(collector, impl, proxyAdmin));
   }
 
-  function _deployZk(address collector, address proxyAdmin) private returns (address) {
-    address impl = address(new CollectorWithCustomImplZkSync{salt: 'v1'}());
+  function _deployNewLayout(address collector, address proxyAdmin) private returns (address) {
+    address impl = address(new CollectorWithCustomImplNewLayout{salt: 'v1'}());
     return address(new UpgradePayload(collector, impl, proxyAdmin));
   }
 
@@ -90,9 +93,11 @@ library DeploymentLibrary {
     return _deploy(address(AaveV3Gnosis.COLLECTOR), MiscGnosis.PROXY_ADMIN);
   }
 
-  // zksync is special
+  function deployLinea() internal returns (address) {
+    return _deployNewLayout(address(AaveV3Linea.COLLECTOR), MiscLinea.PROXY_ADMIN);
+  }
 
   function deployZkSync() internal returns (address) {
-    return _deployZk(address(AaveV3ZkSync.COLLECTOR), MiscZkSync.PROXY_ADMIN);
+    return _deployNewLayout(address(AaveV3ZkSync.COLLECTOR), MiscZkSync.PROXY_ADMIN);
   }
 }

@@ -20,6 +20,9 @@ compile = true
 optimizer_mode = '3'
 zksolc = '1.5.7'
 
+[profile.linea]
+evm_version = 'london'
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 [rpc_endpoints]
 mainnet = "${RPC_MAINNET}"
@@ -45,6 +48,7 @@ gnosis = "${RPC_GNOSIS}"
 zkEVM = "${RPC_ZKEVM}"
 celo = "${RPC_CELO}"
 zksync = "${RPC_ZKSYNC}"
+linea = "${RPC_LINEA}"
 
 [etherscan]
 mainnet = { key = "${ETHERSCAN_API_KEY_MAINNET}", chain = 1 }
@@ -60,6 +64,7 @@ gnosis = { key = "${ETHERSCAN_API_KEY_GNOSIS}", chainId = 100 }
 bnb = { key = "${ETHERSCAN_API_KEY_BNB}", chainId = 56, url = 'https://api.bscscan.com/api' }
 scroll = { key = "${ETHERSCAN_API_KEY_SCROLL}", chainId = 534352 }
 zksync = { key = "${ETHERSCAN_API_KEY_ZKSYNC}", chain = 324 }
+linea = { key = "${ETHERSCAN_API_KEY_LINEA}", chain = 59144 }
 
 [fmt]
 tab_width = 2
