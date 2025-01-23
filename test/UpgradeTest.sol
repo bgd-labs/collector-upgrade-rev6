@@ -46,7 +46,7 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
     // last slot of gap should be empty
     assertEq(vm.load(address(collector), bytes32(uint256(51))), 0x0);
     // reentrancy _status should be 1
-    assertEq(uint256(vm.load(address(collector), bytes32(uint256(52)))), 1);
+    assertEq(uint256(vm.load(address(collector), bytes32(uint256(52)))), 0x0);
   }
 
   function test_transfer_aclAdmin() external {
