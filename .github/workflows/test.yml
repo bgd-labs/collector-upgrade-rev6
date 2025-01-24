@@ -37,16 +37,19 @@ jobs:
       # we simply use foundry zk for all jobs in this repo
       - name: Run Foundry setup
         uses: bgd-labs/github-workflows/.github/actions/foundry-setup@main
+        with:
+          ZKSYNC: "true"
 
       - name: Run Forge tests
         id: test
         uses: bgd-labs/github-workflows/.github/actions/foundry-test@main
 
-      - name: Run Gas report
-        uses: bgd-labs/github-workflows/.github/actions/foundry-gas-report@main
-
-      - name: Run Lcov report
-        uses: bgd-labs/github-workflows/.github/actions/foundry-lcov-report@main
+      - name: Run ZK tests
+        id: zktest
+        uses: bgd-labs/github-workflows/.github/actions/foundry-test@main
+        with:
+          ZKSYNC: true
+          ROOT_DIR: "zksync"
 
       - name: Store artifact
         uses: bgd-labs/github-workflows/.github/actions/comment-artifact@main
