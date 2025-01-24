@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {AaveV3ZkSync} from 'aave-address-book/AaveV3Zksync.sol';
+import {AaveV3ZkSync} from 'aave-address-book/AaveV3ZkSync.sol';
 import {ProtocolV3TestBase, IPool, IPoolAddressesProvider} from 'aave-helpers/zksync/src/ProtocolV3TestBase.sol';
 import {Collector, ICollector, IERC20} from 'aave-v3-origin/contracts/treasury/Collector.sol';
 import {IAccessControl} from 'aave-v3-origin/contracts/dependencies/openzeppelin/contracts/IAccessControl.sol';
