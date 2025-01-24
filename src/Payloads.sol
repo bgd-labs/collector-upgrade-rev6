@@ -10,4 +10,5 @@ library Payloads {
   address constant METIS = 0x04a8D477eE202aDCE1682F5902e1160455205b12;
   address constant BNB = 0x8b8bf083fD1837486c141681E10Ea61D0f3cD692; // explorer lag
   address constant LINEA = 0xd91d1331db4F436DaF47Ec9Dd86deCb8EEF946B4;
+  address constant ZKSYNC = 0xA1900dD73e46Ad013fA87f5f70072c472D8f4770;
 }
