@@ -3,13 +3,13 @@ pragma solidity ^0.8.0;
 
 import {AaveV3Scroll, IPool} from 'aave-address-book/AaveV3Scroll.sol';
 import {UpgradeTest} from './UpgradeTest.sol';
-import {DeploymentLibrary} from '../script/Deploy.s.sol';
+import {Payloads} from '../src/Payloads.sol';
 
 contract ScrollTest is UpgradeTest {
-  constructor() UpgradeTest('scroll', 12497606) {}
+  constructor() UpgradeTest('scroll', 12914491) {}
 
   function _getPayload() internal virtual override returns (address) {
-    return DeploymentLibrary.deployScroll();
+    return Payloads.SCROLL;
   }
 
   function _getPool() internal virtual override returns (IPool) {

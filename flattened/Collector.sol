@@ -1457,6 +1457,12 @@ contract Collector is AccessControlUpgradeable, ReentrancyGuardUpgradeable, ICol
   bytes32 public constant FUNDS_ADMIN_ROLE = 'FUNDS_ADMIN';
 
   // Reserved storage space to account for deprecated inherited storage
+  // 0 was lastInitializedRevision
+  // 1-50 were the ____gap
+  // 51 was the reentrancy guard _status
+  // 52 was the _fundsAdmin
+  // On some networks the layout was shifted by 1 due to `initializing` being on slot 1
+  // The upgrade proposal would in this case manually shift the storage layout to properly align the networks
   uint256[53] private ______gap;
 
   /**
@@ -1758,22 +1764,19 @@ contract Collector is AccessControlUpgradeable, ReentrancyGuardUpgradeable, ICol
  * @title Collector
  * Custom modifications of this implementation:
  * - the initialize function manually alters private storage slots via assembly
- * - storage slot 51 is reset to 0
- * - storage slot 52 is set to 1 (which is the default state of the reentrancy guard)
+ * - storage slot 0 (previously revision) is reset to zero
+ * - storage slot 51 (previously _status) is set to zero
  * @author BGD Labs
- **/
+ *
+ */
 contract CollectorWithCustomImpl is Collector {
-    function initialize(
-        uint256,
-        address admin
-    ) external virtual override initializer {
-        assembly {
-            sstore(0, 0) // this slot was revision, which is no longer used
-            sstore(51, 0) // this slot was _status, but is now part of the gap
-            sstore(52, 1) // this slot was the funds admin, but is now _status
-        }
-        __AccessControl_init();
-        __ReentrancyGuard_init();
-        _grantRole(DEFAULT_ADMIN_ROLE, admin);
+  function initialize(uint256, address admin) external virtual override initializer {
+    assembly {
+      sstore(0, 0) // this slot was revision, which is no longer used
+      sstore(51, 0) // this slot was _status, but is now part of the gap
     }
+    __AccessControl_init();
+    __ReentrancyGuard_init();
+    _grantRole(DEFAULT_ADMIN_ROLE, admin);
+  }
 }

@@ -27,12 +27,12 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
     payload = _getPayload();
   }
 
-  function test_defaultExecution() external {
+  function test_defaultExecution() external virtual {
     defaultTest(NETWORK, _getPool(), payload);
   }
 
   // ensures stream id is in same position as before
-  function test_storageCorrectness() external {
+  function test_storageCorrectness() external virtual {
     Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
     uint256 nextStreamIdBefore = collector.getNextStreamId();
 
@@ -46,7 +46,7 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
     // last slot of gap should be empty
     assertEq(vm.load(address(collector), bytes32(uint256(51))), 0x0);
     // reentrancy _status should be 1
-    assertEq(uint256(vm.load(address(collector), bytes32(uint256(52)))), 1);
+    assertEq(uint256(vm.load(address(collector), bytes32(uint256(52)))), 0x0);
   }
 
   function test_transfer_aclAdmin() external {

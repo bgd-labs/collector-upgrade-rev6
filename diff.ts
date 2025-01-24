@@ -6,6 +6,7 @@ import { AaveV3Gnosis } from "@bgd-labs/aave-address-book";
 import { AaveV3BNB } from "@bgd-labs/aave-address-book";
 import { AaveV3Scroll } from "@bgd-labs/aave-address-book";
 import { AaveV3Metis } from "@bgd-labs/aave-address-book";
+import { AaveV3Linea } from "@bgd-labs/aave-address-book";
 import {
   AaveV3Avalanche,
   AaveV3Ethereum,
@@ -31,6 +32,7 @@ const CHAIN_ID_API_KEY_MAP = {
   [ChainId.base_sepolia]: process.env.ETHERSCAN_API_KEY_BASE,
   [ChainId.zksync]: process.env.ETHERSCAN_API_KEY_ZKSYNC,
   [ChainId.gnosis]: process.env.ETHERSCAN_API_KEY_GNOSIS,
+  [ChainId.linea]: process.env.ETHERSCAN_API_KEY_LINEA,
 };
 
 const bytes32toAddress = (bytes32: Hex) => {
@@ -81,4 +83,5 @@ async function diffReference() {
   await snapshotPool(AaveV3Metis);
   await snapshotPool(AaveV3BNB);
   await snapshotPool(AaveV3Scroll);
+  await snapshotPool(AaveV3Linea);
 })();

@@ -3,13 +3,13 @@ pragma solidity ^0.8.0;
 
 import {AaveV3Optimism, IPool} from 'aave-address-book/AaveV3Optimism.sol';
 import {UpgradeTest} from './UpgradeTest.sol';
-import {DeploymentLibrary} from '../script/Deploy.s.sol';
+import {Payloads} from '../src/Payloads.sol';
 
 contract OptimismTest is UpgradeTest {
-  constructor() UpgradeTest('optimism', 130288649) {}
+  constructor() UpgradeTest('optimism', 131028687) {}
 
   function _getPayload() internal virtual override returns (address) {
-    return DeploymentLibrary.deployOptimism();
+    return Payloads.OPTIMISM;
   }
 
   function _getPool() internal virtual override returns (IPool) {

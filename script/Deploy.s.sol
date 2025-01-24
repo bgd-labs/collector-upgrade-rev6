@@ -34,9 +34,27 @@ import {AaveV3Gnosis} from 'aave-address-book/AaveV3Gnosis.sol';
 import {MiscZkSync} from 'aave-address-book/MiscZkSync.sol';
 import {AaveV3ZkSync} from 'aave-address-book/AaveV3ZkSync.sol';
 
+import {MiscLinea} from 'aave-address-book/MiscLinea.sol';
+import {AaveV3Linea} from 'aave-address-book/AaveV3Linea.sol';
+
 import {GovV3Helpers} from 'aave-helpers/src/GovV3Helpers.sol';
+import {
+  EthereumScript,
+  LineaScript,
+  PolygonScript,
+  GnosisScript,
+  BNBScript,
+  ArbitrumScript,
+  OptimismScript,
+  BaseScript,
+  AvalancheScript,
+  ScrollScript,
+  MetisScript,
+  ZkSyncScript,
+  Script
+} from 'solidity-utils/contracts/utils/ScriptUtils.sol';
 import {CollectorWithCustomImpl} from '../src/CollectorWithCustomImpl.sol';
-import {CollectorWithCustomImplZkSync} from '../src/CollectorWithCustomImplZkSync.sol';
+import {CollectorWithCustomImplNewLayout} from '../src/CollectorWithCustomImplNewLayout.sol';
 import {UpgradePayload} from '../src/UpgradePayload.sol';
 
 library DeploymentLibrary {
@@ -45,8 +63,8 @@ library DeploymentLibrary {
     return address(new UpgradePayload(collector, impl, proxyAdmin));
   }
 
-  function _deployZk(address collector, address proxyAdmin) private returns (address) {
-    address impl = address(new CollectorWithCustomImplZkSync{salt: 'v1'}());
+  function _deployNewLayout(address collector, address proxyAdmin) private returns (address) {
+    address impl = address(new CollectorWithCustomImplNewLayout());
     return address(new UpgradePayload(collector, impl, proxyAdmin));
   }
 
@@ -90,9 +108,87 @@ library DeploymentLibrary {
     return _deploy(address(AaveV3Gnosis.COLLECTOR), MiscGnosis.PROXY_ADMIN);
   }
 
-  // zksync is special
+  function deployLinea() internal returns (address) {
+    return _deployNewLayout(address(AaveV3Linea.COLLECTOR), MiscLinea.PROXY_ADMIN);
+  }
 
   function deployZkSync() internal returns (address) {
-    return _deployZk(address(AaveV3ZkSync.COLLECTOR), MiscZkSync.PROXY_ADMIN);
+    return _deployNewLayout(address(AaveV3ZkSync.COLLECTOR), MiscZkSync.PROXY_ADMIN);
+  }
+}
+
+contract DeployMainnet is EthereumScript {
+  function run() external broadcast {
+    DeploymentLibrary.deployMainnet();
+  }
+}
+
+contract DeployScroll is ScrollScript {
+  function run() external broadcast {
+    DeploymentLibrary.deployScroll();
+  }
+}
+
+contract DeployOptimism is OptimismScript {
+  function run() external broadcast {
+    DeploymentLibrary.deployOptimism();
+  }
+}
+
+contract DeployArbitrum is ArbitrumScript {
+  function run() external broadcast {
+    DeploymentLibrary.deployArbitrum();
+  }
+}
+
+contract DeployGnosis is GnosisScript {
+  function run() external broadcast {
+    DeploymentLibrary.deployGnosis();
+  }
+}
+
+contract DeployPolygon is PolygonScript {
+  function run() external broadcast {
+    DeploymentLibrary.deployPolygon();
+  }
+}
+
+contract DeployAvalanche is AvalancheScript {
+  function run() external broadcast {
+    DeploymentLibrary.deployAvalanche();
+  }
+}
+
+contract DeployBase is BaseScript {
+  function run() external broadcast {
+    DeploymentLibrary.deployBase();
+  }
+}
+
+contract DeployBNB is BNBScript {
+  function run() external broadcast {
+    DeploymentLibrary.deployBNB();
+  }
+}
+
+contract DeployMetis is MetisScript {
+  function run() external broadcast {
+    DeploymentLibrary.deployMetis();
+  }
+}
+
+contract DeployLinea is LineaScript {
+  function run() external broadcast {
+    DeploymentLibrary.deployLinea();
+  }
+}
+
+contract DeployZksync is Script {
+  function run() external {
+    vm.startBroadcast();
+
+    address impl = address(new CollectorWithCustomImplNewLayout());
+    new UpgradePayload(address(AaveV3ZkSync.COLLECTOR), impl, MiscZkSync.PROXY_ADMIN);
+    vm.stopBroadcast();
   }
 }

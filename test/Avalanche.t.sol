@@ -3,13 +3,13 @@ pragma solidity ^0.8.0;
 
 import {AaveV3Avalanche, IPool} from 'aave-address-book/AaveV3Avalanche.sol';
 import {UpgradeTest} from './UpgradeTest.sol';
-import {DeploymentLibrary} from '../script/Deploy.s.sol';
+import {Payloads} from '../src/Payloads.sol';
 
 contract AvalancheTest is UpgradeTest {
-  constructor() UpgradeTest('avalanche', 55418905) {}
+  constructor() UpgradeTest('avalanche', 56249496) {}
 
   function _getPayload() internal virtual override returns (address) {
-    return DeploymentLibrary.deployAvalanche();
+    return Payloads.AVALANCHE;
   }
 
   function _getPool() internal virtual override returns (IPool) {

@@ -13,7 +13,7 @@ import {Collector, ICollector} from 'aave-v3-origin/contracts/treasury/Collector
  * @author BGD Labs
  *
  */
-contract CollectorWithCustomImplZkSync is Collector {
+contract CollectorWithCustomImplNewLayout is Collector {
   function initialize(uint256, address admin) external virtual override initializer {
     assembly {
       sstore(0, 0) // this slot was revision, which is no longer used
