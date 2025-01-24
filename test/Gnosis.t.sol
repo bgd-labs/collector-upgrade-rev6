@@ -3,13 +3,13 @@ pragma solidity ^0.8.0;
 
 import {AaveV3Gnosis, IPool} from 'aave-address-book/AaveV3Gnosis.sol';
 import {UpgradeTest} from './UpgradeTest.sol';
-import {DeploymentLibrary} from '../script/Deploy.s.sol';
+import {Payloads} from '../src/Payloads.sol';
 
 contract GnosisTest is UpgradeTest {
-  constructor() UpgradeTest('gnosis', 37905990) {}
+  constructor() UpgradeTest('gnosis', 38190868) {}
 
   function _getPayload() internal virtual override returns (address) {
-    return DeploymentLibrary.deployGnosis();
+    return Payloads.GNOSIS;
   }
 
   function _getPool() internal virtual override returns (IPool) {

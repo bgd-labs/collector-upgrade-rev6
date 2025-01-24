@@ -3,13 +3,13 @@ pragma solidity ^0.8.0;
 
 import {AaveV3Metis, IPool} from 'aave-address-book/AaveV3Metis.sol';
 import {UpgradeTest} from './UpgradeTest.sol';
-import {DeploymentLibrary} from '../script/Deploy.s.sol';
+import {Payloads} from '../src/Payloads.sol';
 
 contract MetisTest is UpgradeTest {
-  constructor() UpgradeTest('metis', 19394504) {}
+  constructor() UpgradeTest('metis', 19546165) {}
 
   function _getPayload() internal virtual override returns (address) {
-    return DeploymentLibrary.deployMetis();
+    return Payloads.METIS;
   }
 
   function _getPool() internal virtual override returns (IPool) {

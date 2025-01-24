@@ -4,14 +4,14 @@ pragma solidity ^0.8.0;
 import {AaveV3Linea, IPool} from 'aave-address-book/AaveV3Linea.sol';
 import {Collector, ICollector, IERC20} from 'aave-v3-origin/contracts/treasury/Collector.sol';
 import {UpgradeTest} from './UpgradeTest.sol';
-import {DeploymentLibrary} from '../script/Deploy.s.sol';
+import {Payloads} from '../src/Payloads.sol';
 import {UpgradePayload} from '../src/UpgradePayload.sol';
 
 contract LineaTest is UpgradeTest {
-  constructor() UpgradeTest('linea', 14941305) {}
+  constructor() UpgradeTest('linea', 14947439) {}
 
   function _getPayload() internal virtual override returns (address) {
-    return DeploymentLibrary.deployLinea();
+    return Payloads.LINEA;
   }
 
   function _getPool() internal virtual override returns (IPool) {
