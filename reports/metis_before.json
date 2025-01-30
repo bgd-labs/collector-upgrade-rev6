@@ -6,15 +6,12 @@
     "pool": "0x90df02551bB792286e8D4f13E0e357b4Bf1D6a57",
     "poolAddressesProvider": "0xB9FABd7500B2C6781c35Dd48d54f81fc2299D7AF",
     "poolConfigurator": "0x69FEE8F261E004453BE0800BC9039717528645A6",
-    "poolConfiguratorImpl": "0x4816b2C2895f97fB918f1aE7Da403750a0eE372e",
-    "poolImpl": "0xcA311Dce5b11436c7Bd7b3847E77adE29F829F8e",
     "priceOracleSentinel": "0x2B5EA1604BAbb7B730120950Cb13951f3525828A",
     "protocolDataProvider": "0xC01372469A17b6716A38F00c277533917B6859c0"
   },
   "reserves": {
     "0x420000000000000000000000000000000000000A": {
       "aToken": "0x8acAe35059C9aE27709028fF6689386a44c09f3a",
-      "aTokenImpl": "0x246405C70461f93513C74606815615c24c5C8C79",
       "aTokenName": "Aave Metis WETH",
       "aTokenSymbol": "aMetWETH",
       "aTokenUnderlyingBalance": "1372299133678992290783",
@@ -44,7 +41,6 @@
       "underlying": "0x420000000000000000000000000000000000000A",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x8Bb19e3DD277a73D4A95EE434F14cE4B92898421",
-      "variableDebtTokenImpl": "0xE7fA271BD76FC9c6F2F968976E9f4f553256E02f",
       "variableDebtTokenName": "Aave Metis Variable Debt WETH",
       "variableDebtTokenSymbol": "variableDebtMetWETH",
       "virtualAccountingActive": true,
@@ -52,7 +48,6 @@
     },
     "0x4c078361FC9BbB78DF910800A991C7c3DD2F6ce0": {
       "aToken": "0x85ABAdDcae06efee2CB5F75f33b6471759eFDE24",
-      "aTokenImpl": "0x246405C70461f93513C74606815615c24c5C8C79",
       "aTokenName": "Aave Metis mDAI",
       "aTokenSymbol": "aMetmDAI",
       "aTokenUnderlyingBalance": "64647317929434578515698",
@@ -82,7 +77,6 @@
       "underlying": "0x4c078361FC9BbB78DF910800A991C7c3DD2F6ce0",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x13Bd89aF338f3c7eAE9a75852fC2F1ca28B4DDbF",
-      "variableDebtTokenImpl": "0xE7fA271BD76FC9c6F2F968976E9f4f553256E02f",
       "variableDebtTokenName": "Aave Metis Variable Debt mDAI",
       "variableDebtTokenSymbol": "variableDebtMetmDAI",
       "virtualAccountingActive": true,
@@ -90,7 +84,6 @@
     },
     "0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000": {
       "aToken": "0x7314Ef2CA509490f65F52CC8FC9E0675C66390b8",
-      "aTokenImpl": "0x246405C70461f93513C74606815615c24c5C8C79",
       "aTokenName": "Aave Metis METIS",
       "aTokenSymbol": "aMetMETIS",
       "aTokenUnderlyingBalance": "212907752597925286568026",
@@ -120,7 +113,6 @@
       "underlying": "0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x0110174183e13D5Ea59D7512226c5D5A47bA2c40",
-      "variableDebtTokenImpl": "0xE7fA271BD76FC9c6F2F968976E9f4f553256E02f",
       "variableDebtTokenName": "Aave Metis Variable Debt METIS",
       "variableDebtTokenSymbol": "variableDebtMetMETIS",
       "virtualAccountingActive": true,
@@ -128,7 +120,6 @@
     },
     "0xEA32A96608495e54156Ae48931A7c20f0dcc1a21": {
       "aToken": "0x885C8AEC5867571582545F894A5906971dB9bf27",
-      "aTokenImpl": "0x246405C70461f93513C74606815615c24c5C8C79",
       "aTokenName": "Aave Metis mUSDC",
       "aTokenSymbol": "aMetmUSDC",
       "aTokenUnderlyingBalance": "1419223825505",
@@ -158,7 +149,6 @@
       "underlying": "0xEA32A96608495e54156Ae48931A7c20f0dcc1a21",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x571171a7EF1e3c8c83d47EF1a50E225E9c351380",
-      "variableDebtTokenImpl": "0xE7fA271BD76FC9c6F2F968976E9f4f553256E02f",
       "variableDebtTokenName": "Aave Metis Variable Debt mUSDC",
       "variableDebtTokenSymbol": "variableDebtMetmUSDC",
       "virtualAccountingActive": true,
@@ -166,7 +156,6 @@
     },
     "0xbB06DCA3AE6887fAbF931640f67cab3e3a16F4dC": {
       "aToken": "0xd9fa75D14c26720d5ce7eE2530793a823e8f07b9",
-      "aTokenImpl": "0x246405C70461f93513C74606815615c24c5C8C79",
       "aTokenName": "Aave Metis mUSDT",
       "aTokenSymbol": "aMetmUSDT",
       "aTokenUnderlyingBalance": "502658086104",
@@ -196,7 +185,6 @@
       "underlying": "0xbB06DCA3AE6887fAbF931640f67cab3e3a16F4dC",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x6B45DcE8aF4fE5Ab3bFCF030d8fB57718eAB54e5",
-      "variableDebtTokenImpl": "0xE7fA271BD76FC9c6F2F968976E9f4f553256E02f",
       "variableDebtTokenName": "Aave Metis Variable Debt mUSDT",
       "variableDebtTokenSymbol": "variableDebtMetmUSDT",
       "virtualAccountingActive": true,

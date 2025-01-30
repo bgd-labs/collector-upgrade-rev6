@@ -67,7 +67,7 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
 
     IPoolAddressesProvider provider = _getPool().ADDRESSES_PROVIDER();
     address aclAdmin = provider.getACLAdmin();
-    Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
+    Collector collector = Collector(payable(UpgradePayload(payload).COLLECTOR()));
 
     vm.startPrank(aclAdmin);
     IAccessControl(address(collector)).grantRole(collector.FUNDS_ADMIN_ROLE(), address(this));
