@@ -29,27 +29,7 @@
     "protocolDataProvider": "0x57038C3e3Fe0a170BB72DE2fD56E98e4d1a69717"
   },
   "raw": {
-    "0x1df462e2712496373a347f8ad10802a5e95f053d": {
-      "label": null,
-      "balanceDiff": null,
-      "stateDiff": {}
-    },
     "0x3e652e97ff339b73421f824f5b03d75b62f1fb51": {
-      "label": null,
-      "balanceDiff": null,
-      "stateDiff": {
-        "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc": {
-          "previousValue": "0x0000000000000000000000002ab3580a805fb10cbad567212c70e26c1b6769ec",
-          "newValue": "0x000000000000000000000000e1cb211027e27d6cb2d67b823d148d80bdaa7e9a"
-        }
-      }
-    },
-    "0x9a1f491b86d09fc1484b5fab10041b189b60756b": {
-      "label": null,
-      "balanceDiff": null,
-      "stateDiff": {}
-    },
-    "0xe1cb211027e27d6cb2d67b823d148d80bdaa7e9a": {
       "label": null,
       "balanceDiff": null,
       "stateDiff": {
@@ -64,6 +44,10 @@
         "0x0000000000000000000000000000000000000000000000000000000000000034": {
           "previousValue": "0x0000000000000000000000001df462e2712496373a347f8ad10802a5e95f053d",
           "newValue": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc": {
+          "previousValue": "0x0000000000000000000000002ab3580a805fb10cbad567212c70e26c1b6769ec",
+          "newValue": "0x000000000000000000000000e1cb211027e27d6cb2d67b823d148d80bdaa7e9a"
         },
         "0x946c4d09a2b1704aeb780ee0789f19eaca72bced6d93ad4fe9f885da452405e4": {
           "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -83,7 +67,7 @@
         }
       }
     },
-    "0xe59470b3be3293534603487e00a44c72f2cd466d": {
+    "0x9a1f491b86d09fc1484b5fab10041b189b60756b": {
       "label": null,
       "balanceDiff": null,
       "stateDiff": {
@@ -96,11 +80,6 @@
           "newValue": "0x000000000000000000093a8000000000000067c0a34300000000000067927ec3"
         }
       }
-    },
-    "0xe892e40c92c2e4d281be59b2e6300f271d824e75": {
-      "label": null,
-      "balanceDiff": null,
-      "stateDiff": {}
     }
   },
   "reserves": {
