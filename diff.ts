@@ -66,7 +66,7 @@ async function snapshotPool({ CHAIN_ID, COLLECTOR }) {
 
 async function diffReference() {
   execSync(
-    `forge flatten src/CollectorWithCustomImpl.sol -o flattened/Collector.sol`,
+    `forge flatten src/CollectorWithCustomImpl.sol -o flattened/Collector.sol && forge fmt flattened/Collector.sol`,
   );
   execSync(
     `forge inspect --pretty flattened/Collector.sol:Collector storage > reports/storage_new`,
