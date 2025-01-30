@@ -57,6 +57,9 @@ async function snapshotPool({ CHAIN_ID, COLLECTOR }) {
     execSync(sourceCommand);
   }
 
+  const codeDiff = `make git-diff before=${destination} after=flattened/Collector.sol out=${CHAIN_ID}.patch`;
+  execSync(codeDiff);
+
   const command = `mkdir -p reports/${CHAIN_ID} && forge inspect --pretty ${destination}:Collector storage > reports/${CHAIN_ID}/storage_${COLLECTOR}`;
   execSync(command);
 }
