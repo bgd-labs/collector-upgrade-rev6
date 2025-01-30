@@ -1,8 +1,8 @@
 diff --git a/flattened/8453/0xC0885d961a2E3E6236Cb3e5FBd1aff72149e5D84.sol b/flattened/Collector.sol
-index 9eddb85..02b42d6 100644
+index 9eddb85..79c043e 100644
 --- a/flattened/8453/0xC0885d961a2E3E6236Cb3e5FBd1aff72149e5D84.sol
 +++ b/flattened/Collector.sol
-@@ -1,127 +1,478 @@
+@@ -1,374 +1,338 @@
  // SPDX-License-Identifier: MIT
 -pragma solidity >=0.6.0 ^0.8.0 ^0.8.1;
 +pragma solidity ^0.8.0 ^0.8.20;
@@ -36,44 +36,7 @@ index 9eddb85..02b42d6 100644
 - * TIP: If you would like to learn more about reentrancy and alternative ways
 - * to protect against it, check out our blog post
 - * https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].
-+ * [.hljs-theme-light.nopadding]
-+ * ```solidity
-+ * contract MyToken is ERC20Upgradeable {
-+ *     function initialize() initializer public {
-+ *         __ERC20_init("MyToken", "MTK");
-+ *     }
-+ * }
-+ *
-+ * contract MyTokenV2 is MyToken, ERC20PermitUpgradeable {
-+ *     function initializeV2() reinitializer(2) public {
-+ *         __ERC20Permit_init("MyToken");
-+ *     }
-+ * }
-+ * ```
-+ *
-+ * TIP: To avoid leaving the proxy in an uninitialized state, the initializer function should be called as early as
-+ * possible by providing the encoded function call as the `_data` argument to {ERC1967Proxy-constructor}.
-+ *
-+ * CAUTION: When used with inheritance, manual care must be taken to not invoke a parent initializer twice, or to ensure
-+ * that all initializers are idempotent. This is not verified automatically as constructors are by Solidity.
-+ *
-+ * [CAUTION]
-+ * ====
-+ * Avoid leaving a contract uninitialized.
-+ *
-+ * An uninitialized contract can be taken over by an attacker. This applies to both a proxy and its implementation
-+ * contract, which may impact the proxy. To prevent the implementation contract from being used, you should invoke
-+ * the {_disableInitializers} function in the constructor to automatically lock it when it is deployed:
-+ *
-+ * [.hljs-theme-light.nopadding]
-+ * ```
-+ * /// @custom:oz-upgrades-unsafe-allow constructor
-+ * constructor() {
-+ *     _disableInitializers();
-+ * }
-+ * ```
-+ * ====
-  */
+- */
 -abstract contract ReentrancyGuard {
 -  // Booleans are more expensive than uint256 or any type that takes up a full
 -  // word because each write operation emits an extra SLOAD to first read the
@@ -122,6 +85,84 @@ index 9eddb85..02b42d6 100644
 -  function _initGuard() internal {
 -    _status = _NOT_ENTERED;
 -  }
+-}
+-
+-// lib/aave-collector-unification/src/libs/VersionedInitializable.sol
+-
+-/**
+- * @title VersionedInitializable
++ * [.hljs-theme-light.nopadding]
++ * ```solidity
++ * contract MyToken is ERC20Upgradeable {
++ *     function initialize() initializer public {
++ *         __ERC20_init("MyToken", "MTK");
++ *     }
++ * }
++ *
++ * contract MyTokenV2 is MyToken, ERC20PermitUpgradeable {
++ *     function initializeV2() reinitializer(2) public {
++ *         __ERC20Permit_init("MyToken");
++ *     }
++ * }
++ * ```
++ *
++ * TIP: To avoid leaving the proxy in an uninitialized state, the initializer function should be called as early as
++ * possible by providing the encoded function call as the `_data` argument to {ERC1967Proxy-constructor}.
++ *
++ * CAUTION: When used with inheritance, manual care must be taken to not invoke a parent initializer twice, or to ensure
++ * that all initializers are idempotent. This is not verified automatically as constructors are by Solidity.
+  *
+- * @dev Helper contract to support initializer functions. To use it, replace
+- * the constructor with a function that has the `initializer` modifier.
+- * WARNING: Unlike constructors, initializer functions must be manually
+- * invoked. This applies both to deploying an Initializable contract, as well
+- * as extending an Initializable contract via inheritance.
+- * WARNING: When used with inheritance, manual care must be taken to not invoke
+- * a parent initializer twice, or ensure that all initializers are idempotent,
+- * because this is not dealt with automatically as with constructors.
++ * [CAUTION]
++ * ====
++ * Avoid leaving a contract uninitialized.
+  *
+- * @author Aave, inspired by the OpenZeppelin Initializable contract
++ * An uninitialized contract can be taken over by an attacker. This applies to both a proxy and its implementation
++ * contract, which may impact the proxy. To prevent the implementation contract from being used, you should invoke
++ * the {_disableInitializers} function in the constructor to automatically lock it when it is deployed:
++ *
++ * [.hljs-theme-light.nopadding]
++ * ```
++ * /// @custom:oz-upgrades-unsafe-allow constructor
++ * constructor() {
++ *     _disableInitializers();
++ * }
++ * ```
++ * ====
+  */
+-abstract contract VersionedInitializable {
+-  /**
+-   * @dev Indicates that the contract has been initialized.
+-   */
+-  uint256 internal lastInitializedRevision = 0;
+-
+-  /**
+-   * @dev Modifier to use in the initializer function of a contract.
+-   */
+-  modifier initializer() {
+-    uint256 revision = getRevision();
+-    require(revision > lastInitializedRevision, 'Contract instance has already been initialized');
+-
+-    lastInitializedRevision = revision;
+-
+-    _;
+-  }
+-
+-  /// @dev returns the revision number of the contract.
+-  /// Needs to be defined in the inherited class as a constant.
+-  function getRevision() internal pure virtual returns (uint256);
+-
+-  // Reserved storage space to allow for layout changes in the future.
+-  uint256[50] private ______gap;
+-}
 +abstract contract Initializable {
 +    /**
 +     * @dev Storage of the initializable contract.
@@ -141,7 +182,8 @@ index 9eddb85..02b42d6 100644
 +         */
 +        bool _initializing;
 +    }
-+
+ 
+-// lib/solidity-utils/src/contracts/oz-common/Address.sol
 +    // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.Initializable")) - 1)) & ~bytes32(uint256(0xff))
 +    bytes32 private constant INITIALIZABLE_STORAGE = 0xf0c57e16840df040f15088dc2f81fe391c3923bec73e23a9662efc9c229c6a00;
 +
@@ -199,7 +241,9 @@ index 9eddb85..02b42d6 100644
 +            emit Initialized(1);
 +        }
 +    }
-+
+ 
+-// OpenZeppelin Contracts (last updated v4.7.0) (utils/Address.sol)
+-// From commit https://github.com/OpenZeppelin/openzeppelin-contracts/commit/8b778fa20d6d76340c5fac1ed66c80273f05b95a
 +    /**
 +     * @dev A modifier that defines a protected reinitializer function that can be invoked at most once, and only if the
 +     * contract hasn't been initialized to a greater version before. In its scope, `onlyInitializing` functions can be
@@ -231,7 +275,215 @@ index 9eddb85..02b42d6 100644
 +        $._initializing = false;
 +        emit Initialized(version);
 +    }
-+
+ 
+-/**
+- * @dev Collection of functions related to the address type
+- */
+-library Address {
+-  /**
+-   * @dev Returns true if `account` is a contract.
+-   *
+-   * [IMPORTANT]
+-   * ====
+-   * It is unsafe to assume that an address for which this function returns
+-   * false is an externally-owned account (EOA) and not a contract.
+-   *
+-   * Among others, `isContract` will return false for the following
+-   * types of addresses:
+-   *
+-   *  - an externally-owned account
+-   *  - a contract in construction
+-   *  - an address where a contract will be created
+-   *  - an address where a contract lived, but was destroyed
+-   * ====
+-   *
+-   * [IMPORTANT]
+-   * ====
+-   * You shouldn't rely on `isContract` to protect against flash loan attacks!
+-   *
+-   * Preventing calls from contracts is highly discouraged. It breaks composability, breaks support for smart wallets
+-   * like Gnosis Safe, and does not provide security since it can be circumvented by calling from a contract
+-   * constructor.
+-   * ====
+-   */
+-  function isContract(address account) internal view returns (bool) {
+-    // This method relies on extcodesize/address.code.length, which returns 0
+-    // for contracts in construction, since the code is only stored at the end
+-    // of the constructor execution.
+-
+-    return account.code.length > 0;
+-  }
+-
+-  /**
+-   * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
+-   * `recipient`, forwarding all available gas and reverting on errors.
+-   *
+-   * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
+-   * of certain opcodes, possibly making contracts go over the 2300 gas limit
+-   * imposed by `transfer`, making them unable to receive funds via
+-   * `transfer`. {sendValue} removes this limitation.
+-   *
+-   * https://diligence.consensys.net/posts/2019/09/stop-using-soliditys-transfer-now/[Learn more].
+-   *
+-   * IMPORTANT: because control is transferred to `recipient`, care must be
+-   * taken to not create reentrancy vulnerabilities. Consider using
+-   * {ReentrancyGuard} or the
+-   * https://solidity.readthedocs.io/en/v0.5.11/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].
+-   */
+-  function sendValue(address payable recipient, uint256 amount) internal {
+-    require(address(this).balance >= amount, 'Address: insufficient balance');
+-
+-    (bool success, ) = recipient.call{value: amount}('');
+-    require(success, 'Address: unable to send value, recipient may have reverted');
+-  }
+-
+-  /**
+-   * @dev Performs a Solidity function call using a low level `call`. A
+-   * plain `call` is an unsafe replacement for a function call: use this
+-   * function instead.
+-   *
+-   * If `target` reverts with a revert reason, it is bubbled up by this
+-   * function (like regular Solidity function calls).
+-   *
+-   * Returns the raw returned data. To convert to the expected return value,
+-   * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].
+-   *
+-   * Requirements:
+-   *
+-   * - `target` must be a contract.
+-   * - calling `target` with `data` must not revert.
+-   *
+-   * _Available since v3.1._
+-   */
+-  function functionCall(address target, bytes memory data) internal returns (bytes memory) {
+-    return functionCallWithValue(target, data, 0, 'Address: low-level call failed');
+-  }
+-
+-  /**
+-   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`], but with
+-   * `errorMessage` as a fallback revert reason when `target` reverts.
+-   *
+-   * _Available since v3.1._
+-   */
+-  function functionCall(
+-    address target,
+-    bytes memory data,
+-    string memory errorMessage
+-  ) internal returns (bytes memory) {
+-    return functionCallWithValue(target, data, 0, errorMessage);
+-  }
+-
+-  /**
+-   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
+-   * but also transferring `value` wei to `target`.
+-   *
+-   * Requirements:
+-   *
+-   * - the calling contract must have an ETH balance of at least `value`.
+-   * - the called Solidity function must be `payable`.
+-   *
+-   * _Available since v3.1._
+-   */
+-  function functionCallWithValue(
+-    address target,
+-    bytes memory data,
+-    uint256 value
+-  ) internal returns (bytes memory) {
+-    return functionCallWithValue(target, data, value, 'Address: low-level call with value failed');
+-  }
+-
+-  /**
+-   * @dev Same as {xref-Address-functionCallWithValue-address-bytes-uint256-}[`functionCallWithValue`], but
+-   * with `errorMessage` as a fallback revert reason when `target` reverts.
+-   *
+-   * _Available since v3.1._
+-   */
+-  function functionCallWithValue(
+-    address target,
+-    bytes memory data,
+-    uint256 value,
+-    string memory errorMessage
+-  ) internal returns (bytes memory) {
+-    require(address(this).balance >= value, 'Address: insufficient balance for call');
+-    (bool success, bytes memory returndata) = target.call{value: value}(data);
+-    return verifyCallResultFromTarget(target, success, returndata, errorMessage);
+-  }
+-
+-  /**
+-   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
+-   * but performing a static call.
+-   *
+-   * _Available since v3.3._
+-   */
+-  function functionStaticCall(address target, bytes memory data)
+-    internal
+-    view
+-    returns (bytes memory)
+-  {
+-    return functionStaticCall(target, data, 'Address: low-level static call failed');
+-  }
+-
+-  /**
+-   * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],
+-   * but performing a static call.
+-   *
+-   * _Available since v3.3._
+-   */
+-  function functionStaticCall(
+-    address target,
+-    bytes memory data,
+-    string memory errorMessage
+-  ) internal view returns (bytes memory) {
+-    (bool success, bytes memory returndata) = target.staticcall(data);
+-    return verifyCallResultFromTarget(target, success, returndata, errorMessage);
+-  }
+-
+-  /**
+-   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
+-   * but performing a delegate call.
+-   *
+-   * _Available since v3.4._
+-   */
+-  function functionDelegateCall(address target, bytes memory data) internal returns (bytes memory) {
+-    return functionDelegateCall(target, data, 'Address: low-level delegate call failed');
+-  }
+-
+-  /**
+-   * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],
+-   * but performing a delegate call.
+-   *
+-   * _Available since v3.4._
+-   */
+-  function functionDelegateCall(
+-    address target,
+-    bytes memory data,
+-    string memory errorMessage
+-  ) internal returns (bytes memory) {
+-    (bool success, bytes memory returndata) = target.delegatecall(data);
+-    return verifyCallResultFromTarget(target, success, returndata, errorMessage);
+-  }
+-
+-  /**
+-   * @dev Tool to verify that a low level call to smart-contract was successful, and revert (either by bubbling
+-   * the revert reason or using the provided one) in case of unsuccessful call or if target was not a contract.
+-   *
+-   * _Available since v4.8._
+-   */
+-  function verifyCallResultFromTarget(
+-    address target,
+-    bool success,
+-    bytes memory returndata,
+-    string memory errorMessage
+-  ) internal view returns (bytes memory) {
+-    if (success) {
+-      if (returndata.length == 0) {
+-        // only check isContract if the call was successful and the return data is empty
+-        // otherwise we already know that it was a contract
+-        require(isContract(target), 'Address: call to non-contract');
+-      }
+-      return returndata;
+-    } else {
+-      _revert(returndata, errorMessage);
 +    /**
 +     * @dev Modifier to protect an initialization function so that it can only be invoked by functions with the
 +     * {initializer} and {reinitializer} modifiers, directly or indirectly.
@@ -239,7 +491,24 @@ index 9eddb85..02b42d6 100644
 +    modifier onlyInitializing() {
 +        _checkInitializing();
 +        _;
-+    }
+     }
+-  }
+-
+-  /**
+-   * @dev Tool to verify that a low level call was successful, and revert if it wasn't, either by bubbling the
+-   * revert reason or using the provided one.
+-   *
+-   * _Available since v4.3._
+-   */
+-  function verifyCallResult(
+-    bool success,
+-    bytes memory returndata,
+-    string memory errorMessage
+-  ) internal pure returns (bytes memory) {
+-    if (success) {
+-      return returndata;
+-    } else {
+-      _revert(returndata, errorMessage);
 +
 +    /**
 +     * @dev Reverts if the contract is not in an initializing state. See {onlyInitializing}.
@@ -283,7 +552,20 @@ index 9eddb85..02b42d6 100644
 +     */
 +    function _isInitializing() internal view returns (bool) {
 +        return _getInitializableStorage()._initializing;
-+    }
+     }
+-  }
+-
+-  function _revert(bytes memory returndata, string memory errorMessage) private pure {
+-    // Look for revert reason and bubble it up if present
+-    if (returndata.length > 0) {
+-      // The easiest way to bubble the revert reason is using memory via assembly
+-      /// @solidity memory-safe-assembly
+-      assembly {
+-        let returndata_size := mload(returndata)
+-        revert(add(32, returndata), returndata_size)
+-      }
+-    } else {
+-      revert(errorMessage);
 +
 +    /**
 +     * @dev Returns a pointer to the storage namespace.
@@ -293,10 +575,11 @@ index 9eddb85..02b42d6 100644
 +        assembly {
 +            $.slot := INITIALIZABLE_STORAGE
 +        }
-+    }
+     }
+-  }
  }
  
--// lib/aave-collector-unification/src/libs/VersionedInitializable.sol
+-// lib/solidity-utils/src/contracts/oz-common/interfaces/IERC20.sol
 +// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/access/IAccessControl.sol
 +
 +// OpenZeppelin Contracts (last updated v5.1.0) (access/IAccessControl.sol)
@@ -396,96 +679,102 @@ index 9eddb85..02b42d6 100644
 +}
 +
 +// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol
-+
+ 
+-// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC20/IERC20.sol)
+-// From commit https://github.com/OpenZeppelin/openzeppelin-contracts/commit/a035b235b4f2c9af4ba88edc4447f02e37f8d124
 +// OpenZeppelin Contracts (last updated v5.1.0) (token/ERC20/IERC20.sol)
-+
-+/**
+ 
+ /**
+- * @dev Interface of the ERC20 standard as defined in the EIP.
 + * @dev Interface of the ERC-20 standard as defined in the ERC.
-+ */
-+interface IERC20 {
-+    /**
-+     * @dev Emitted when `value` tokens are moved from one account (`from`) to
-+     * another (`to`).
-+     *
-+     * Note that `value` may be zero.
-+     */
-+    event Transfer(address indexed from, address indexed to, uint256 value);
-+
-+    /**
-+     * @dev Emitted when the allowance of a `spender` for an `owner` is set by
-+     * a call to {approve}. `value` is the new allowance.
-+     */
-+    event Approval(address indexed owner, address indexed spender, uint256 value);
-+
-+    /**
+  */
+ interface IERC20 {
+     /**
+@@ -386,23 +350,23 @@ interface IERC20 {
+     event Approval(address indexed owner, address indexed spender, uint256 value);
+ 
+     /**
+-     * @dev Returns the amount of tokens in existence.
 +     * @dev Returns the value of tokens in existence.
-+     */
-+    function totalSupply() external view returns (uint256);
-+
-+    /**
+      */
+     function totalSupply() external view returns (uint256);
+ 
+     /**
+-     * @dev Returns the amount of tokens owned by `account`.
 +     * @dev Returns the value of tokens owned by `account`.
-+     */
-+    function balanceOf(address account) external view returns (uint256);
-+
-+    /**
+      */
+     function balanceOf(address account) external view returns (uint256);
+ 
+     /**
+-     * @dev Moves `amount` tokens from the caller's account to `to`.
 +     * @dev Moves a `value` amount of tokens from the caller's account to `to`.
-+     *
-+     * Returns a boolean value indicating whether the operation succeeded.
-+     *
-+     * Emits a {Transfer} event.
-+     */
+      *
+      * Returns a boolean value indicating whether the operation succeeded.
+      *
+      * Emits a {Transfer} event.
+      */
+-    function transfer(address to, uint256 amount) external returns (bool);
 +    function transfer(address to, uint256 value) external returns (bool);
-+
-+    /**
-+     * @dev Returns the remaining number of tokens that `spender` will be
-+     * allowed to spend on behalf of `owner` through {transferFrom}. This is
-+     * zero by default.
-+     *
-+     * This value changes when {approve} or {transferFrom} are called.
-+     */
-+    function allowance(address owner, address spender) external view returns (uint256);
-+
-+    /**
+ 
+     /**
+      * @dev Returns the remaining number of tokens that `spender` will be
+@@ -414,7 +378,8 @@ interface IERC20 {
+     function allowance(address owner, address spender) external view returns (uint256);
+ 
+     /**
+-     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
 +     * @dev Sets a `value` amount of tokens as the allowance of `spender` over the
 +     * caller's tokens.
-+     *
-+     * Returns a boolean value indicating whether the operation succeeded.
-+     *
-+     * IMPORTANT: Beware that changing an allowance with this method brings the risk
-+     * that someone may use both the old and the new allowance by unfortunate
-+     * transaction ordering. One possible solution to mitigate this race
-+     * condition is to first reduce the spender's allowance to 0 and set the
-+     * desired value afterwards:
-+     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
-+     *
-+     * Emits an {Approval} event.
-+     */
+      *
+      * Returns a boolean value indicating whether the operation succeeded.
+      *
+@@ -427,86 +392,376 @@ interface IERC20 {
+      *
+      * Emits an {Approval} event.
+      */
+-    function approve(address spender, uint256 amount) external returns (bool);
 +    function approve(address spender, uint256 value) external returns (bool);
-+
-+    /**
+ 
+     /**
+-     * @dev Moves `amount` tokens from `from` to `to` using the
+-     * allowance mechanism. `amount` is then deducted from the caller's
 +     * @dev Moves a `value` amount of tokens from `from` to `to` using the
 +     * allowance mechanism. `value` is then deducted from the caller's
-+     * allowance.
-+     *
-+     * Returns a boolean value indicating whether the operation succeeded.
-+     *
-+     * Emits a {Transfer} event.
-+     */
+      * allowance.
+      *
+      * Returns a boolean value indicating whether the operation succeeded.
+      *
+      * Emits a {Transfer} event.
+      */
+-    function transferFrom(
+-        address from,
+-        address to,
+-        uint256 amount
+-    ) external returns (bool);
 +    function transferFrom(address from, address to, uint256 value) external returns (bool);
-+}
-+
+ }
+ 
+-// lib/solidity-utils/src/contracts/oz-common/interfaces/draft-IERC20Permit.sol
 +// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/utils/Errors.sol
-+
+ 
+-// OpenZeppelin Contracts v4.4.1 (token/ERC20/extensions/draft-IERC20Permit.sol)
+-// From commit https://github.com/OpenZeppelin/openzeppelin-contracts/commit/6bd6b76d1156e20e45d1016f355d154141c7e5b9
 +// OpenZeppelin Contracts (last updated v5.1.0) (utils/Errors.sol)
-+
-+/**
+ 
+ /**
+- * @dev Interface of the ERC20 Permit extension allowing approvals to be made via signatures, as defined in
+- * https://eips.ethereum.org/EIPS/eip-2612[EIP-2612].
 + * @dev Collection of common custom errors used in multiple contracts
-+ *
+  *
+- * Adds the {permit} method, which can be used to change an account's ERC20 allowance (see {IERC20-allowance}) by
+- * presenting a message signed by the account. By not relying on {IERC20-approve}, the token holder account doesn't
+- * need to send a transaction, and thus is not required to hold Ether at all.
 + * IMPORTANT: Backwards compatibility is not guaranteed in future versions of the library.
 + * It is recommended to avoid relying on the error API for critical functionality.
 + *
 + * _Available since v5.1._
-+ */
+  */
+-interface IERC20Permit {
 +library Errors {
 +    /**
 +     * @dev The ETH balance of the account is not enough to perform the operation.
@@ -497,7 +786,9 @@ index 9eddb85..02b42d6 100644
 +     */
 +    error FailedCall();
 +
-+    /**
+     /**
+-     * @dev Sets `value` as the allowance of `spender` over ``owner``'s tokens,
+-     * given ``owner``'s signed approval.
 +     * @dev The deployment failed.
 +     */
 +    error FailedDeployment();
@@ -511,241 +802,35 @@ index 9eddb85..02b42d6 100644
 +// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol
 +
 +// OpenZeppelin Contracts (last updated v5.1.0) (utils/introspection/IERC165.sol)
- 
- /**
-- * @title VersionedInitializable
++
++/**
 + * @dev Interface of the ERC-165 standard, as defined in the
 + * https://eips.ethereum.org/EIPS/eip-165[ERC].
-  *
-- * @dev Helper contract to support initializer functions. To use it, replace
-- * the constructor with a function that has the `initializer` modifier.
-- * WARNING: Unlike constructors, initializer functions must be manually
-- * invoked. This applies both to deploying an Initializable contract, as well
-- * as extending an Initializable contract via inheritance.
-- * WARNING: When used with inheritance, manual care must be taken to not invoke
-- * a parent initializer twice, or ensure that all initializers are idempotent,
-- * because this is not dealt with automatically as with constructors.
++ *
 + * Implementers can declare support of contract interfaces, which can then be
 + * queried by others ({ERC165Checker}).
-  *
-- * @author Aave, inspired by the OpenZeppelin Initializable contract
++ *
 + * For an implementation, see {ERC165}.
-  */
--abstract contract VersionedInitializable {
--  /**
--   * @dev Indicates that the contract has been initialized.
--   */
--  uint256 internal lastInitializedRevision = 0;
--
--  /**
--   * @dev Modifier to use in the initializer function of a contract.
--   */
--  modifier initializer() {
--    uint256 revision = getRevision();
--    require(revision > lastInitializedRevision, 'Contract instance has already been initialized');
--
--    lastInitializedRevision = revision;
--
--    _;
--  }
--
--  /// @dev returns the revision number of the contract.
--  /// Needs to be defined in the inherited class as a constant.
--  function getRevision() internal pure virtual returns (uint256);
--
--  // Reserved storage space to allow for layout changes in the future.
--  uint256[50] private ______gap;
++ */
 +interface IERC165 {
 +    /**
 +     * @dev Returns true if this contract implements the interface defined by
 +     * `interfaceId`. See the corresponding
 +     * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[ERC section]
 +     * to learn more about how these ids are created.
-+     *
+      *
+-     * IMPORTANT: The same issues {IERC20-approve} has related to transaction
+-     * ordering also apply here.
 +     * This function call must use less than 30 000 gas.
 +     */
 +    function supportsInterface(bytes4 interfaceId) external view returns (bool);
- }
- 
--// lib/solidity-utils/src/contracts/oz-common/Address.sol
-+// lib/aave-v3-origin/src/contracts/dependencies/openzeppelin/contracts/Address.sol
- 
--// OpenZeppelin Contracts (last updated v4.7.0) (utils/Address.sol)
--// From commit https://github.com/OpenZeppelin/openzeppelin-contracts/commit/8b778fa20d6d76340c5fac1ed66c80273f05b95a
-+// OpenZeppelin Contracts v4.4.1 (utils/Address.sol)
- 
- /**
-  * @dev Collection of functions related to the address type
-  */
--library Address {
-+library Address_0 {
-   /**
-    * @dev Returns true if `account` is a contract.
-    *
-@@ -138,22 +489,17 @@ library Address {
-    *  - an address where a contract will be created
-    *  - an address where a contract lived, but was destroyed
-    * ====
--   *
--   * [IMPORTANT]
--   * ====
--   * You shouldn't rely on `isContract` to protect against flash loan attacks!
--   *
--   * Preventing calls from contracts is highly discouraged. It breaks composability, breaks support for smart wallets
--   * like Gnosis Safe, and does not provide security since it can be circumvented by calling from a contract
--   * constructor.
--   * ====
-    */
-   function isContract(address account) internal view returns (bool) {
--    // This method relies on extcodesize/address.code.length, which returns 0
--    // for contracts in construction, since the code is only stored at the end
--    // of the constructor execution.
-+    // This method relies on extcodesize, which returns 0 for contracts in
-+    // construction, since the code is only stored at the end of the
-+    // constructor execution.
- 
--    return account.code.length > 0;
-+    uint256 size;
-+    assembly {
-+      size := extcodesize(account)
-+    }
-+    return size > 0;
-   }
- 
-   /**
-@@ -198,7 +544,7 @@ library Address {
-    * _Available since v3.1._
-    */
-   function functionCall(address target, bytes memory data) internal returns (bytes memory) {
--    return functionCallWithValue(target, data, 0, 'Address: low-level call failed');
-+    return functionCall(target, data, 'Address: low-level call failed');
-   }
- 
-   /**
-@@ -247,8 +593,10 @@ library Address {
-     string memory errorMessage
-   ) internal returns (bytes memory) {
-     require(address(this).balance >= value, 'Address: insufficient balance for call');
-+    require(isContract(target), 'Address: call to non-contract');
++}
 +
-     (bool success, bytes memory returndata) = target.call{value: value}(data);
--    return verifyCallResultFromTarget(target, success, returndata, errorMessage);
-+    return verifyCallResult(success, returndata, errorMessage);
-   }
- 
-   /**
-@@ -257,11 +605,10 @@ library Address {
-    *
-    * _Available since v3.3._
-    */
--  function functionStaticCall(address target, bytes memory data)
--    internal
--    view
--    returns (bytes memory)
--  {
-+  function functionStaticCall(
-+    address target,
-+    bytes memory data
-+  ) internal view returns (bytes memory) {
-     return functionStaticCall(target, data, 'Address: low-level static call failed');
-   }
- 
-@@ -276,8 +623,10 @@ library Address {
-     bytes memory data,
-     string memory errorMessage
-   ) internal view returns (bytes memory) {
-+    require(isContract(target), 'Address: static call to non-contract');
-+
-     (bool success, bytes memory returndata) = target.staticcall(data);
--    return verifyCallResultFromTarget(target, success, returndata, errorMessage);
-+    return verifyCallResult(success, returndata, errorMessage);
-   }
- 
-   /**
-@@ -301,37 +650,15 @@ library Address {
-     bytes memory data,
-     string memory errorMessage
-   ) internal returns (bytes memory) {
-+    require(isContract(target), 'Address: delegate call to non-contract');
-+
-     (bool success, bytes memory returndata) = target.delegatecall(data);
--    return verifyCallResultFromTarget(target, success, returndata, errorMessage);
-+    return verifyCallResult(success, returndata, errorMessage);
-   }
- 
-   /**
--   * @dev Tool to verify that a low level call to smart-contract was successful, and revert (either by bubbling
--   * the revert reason or using the provided one) in case of unsuccessful call or if target was not a contract.
--   *
--   * _Available since v4.8._
--   */
--  function verifyCallResultFromTarget(
--    address target,
--    bool success,
--    bytes memory returndata,
--    string memory errorMessage
--  ) internal view returns (bytes memory) {
--    if (success) {
--      if (returndata.length == 0) {
--        // only check isContract if the call was successful and the return data is empty
--        // otherwise we already know that it was a contract
--        require(isContract(target), 'Address: call to non-contract');
--      }
--      return returndata;
--    } else {
--      _revert(returndata, errorMessage);
--    }
--  }
--
--  /**
--   * @dev Tool to verify that a low level call was successful, and revert if it wasn't, either by bubbling the
--   * revert reason or using the provided one.
-+   * @dev Tool to verifies that a low level call was successful, and revert if it wasn't, either by bubbling the
-+   * revert reason using the provided one.
-    *
-    * _Available since v4.3._
-    */
-@@ -343,170 +670,318 @@ library Address {
-     if (success) {
-       return returndata;
-     } else {
--      _revert(returndata, errorMessage);
--    }
--  }
-+      // Look for revert reason and bubble it up if present
-+      if (returndata.length > 0) {
-+        // The easiest way to bubble the revert reason is using memory via assembly
- 
--  function _revert(bytes memory returndata, string memory errorMessage) private pure {
--    // Look for revert reason and bubble it up if present
--    if (returndata.length > 0) {
--      // The easiest way to bubble the revert reason is using memory via assembly
--      /// @solidity memory-safe-assembly
--      assembly {
--        let returndata_size := mload(returndata)
--        revert(add(32, returndata), returndata_size)
-+        assembly {
-+          let returndata_size := mload(returndata)
-+          revert(add(32, returndata), returndata_size)
-+        }
-+      } else {
-+        revert(errorMessage);
-       }
--    } else {
--      revert(errorMessage);
-     }
-   }
- }
- 
--// lib/solidity-utils/src/contracts/oz-common/interfaces/IERC20.sol
 +// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol
- 
--// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC20/IERC20.sol)
--// From commit https://github.com/OpenZeppelin/openzeppelin-contracts/commit/a035b235b4f2c9af4ba88edc4447f02e37f8d124
++
 +// OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)
- 
- /**
-- * @dev Interface of the ERC20 standard as defined in the EIP.
++
++/**
 + * @dev Provides information about the current execution context, including the
 + * sender of the transaction and its data. While these are generally available
 + * via msg.sender and msg.data, they should not be accessed in such a direct
@@ -796,8 +881,7 @@ index 9eddb85..02b42d6 100644
 + * TIP: If you would like to learn more about reentrancy and alternative ways
 + * to protect against it, check out our blog post
 + * https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].
-  */
--interface IERC20 {
++ */
 +abstract contract ReentrancyGuardUpgradeable is Initializable {
 +    // Booleans are more expensive than uint256 or any type that takes up a full
 +    // word because each write operation emits an extra SLOAD to first read the
@@ -827,14 +911,9 @@ index 9eddb85..02b42d6 100644
 +        }
 +    }
 +
-     /**
--     * @dev Emitted when `value` tokens are moved from one account (`from`) to
--     * another (`to`).
--     *
--     * Note that `value` may be zero.
++    /**
 +     * @dev Unauthorized reentrant call.
-      */
--    event Transfer(address indexed from, address indexed to, uint256 value);
++     */
 +    error ReentrancyGuardReentrantCall();
 +
 +    function __ReentrancyGuard_init() internal onlyInitializing {
@@ -845,17 +924,14 @@ index 9eddb85..02b42d6 100644
 +        ReentrancyGuardStorage storage $ = _getReentrancyGuardStorage();
 +        $._status = NOT_ENTERED;
 +    }
- 
-     /**
--     * @dev Emitted when the allowance of a `spender` for an `owner` is set by
--     * a call to {approve}. `value` is the new allowance.
++
++    /**
 +     * @dev Prevents a contract from calling itself, directly or indirectly.
 +     * Calling a `nonReentrant` function from another `nonReentrant`
 +     * function is not supported. It is possible to prevent this from happening
 +     * by making the `nonReentrant` function external, and making it call a
 +     * `private` function that does the actual work.
-      */
--    event Approval(address indexed owner, address indexed spender, uint256 value);
++     */
 +    modifier nonReentrant() {
 +        _nonReentrantBefore();
 +        _;
@@ -879,13 +955,11 @@ index 9eddb85..02b42d6 100644
 +        // https://eips.ethereum.org/EIPS/eip-2200)
 +        $._status = NOT_ENTERED;
 +    }
- 
-     /**
--     * @dev Returns the amount of tokens in existence.
++
++    /**
 +     * @dev Returns true if the reentrancy guard is currently set to "entered", which indicates there is a
 +     * `nonReentrant` function in the call stack.
-      */
--    function totalSupply() external view returns (uint256);
++     */
 +    function _reentrancyGuardEntered() internal view returns (bool) {
 +        ReentrancyGuardStorage storage $ = _getReentrancyGuardStorage();
 +        return $._status == ENTERED;
@@ -895,7 +969,7 @@ index 9eddb85..02b42d6 100644
 +// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/interfaces/IERC165.sol
 +
 +// OpenZeppelin Contracts (last updated v5.0.0) (interfaces/IERC165.sol)
- 
++
 +// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/interfaces/IERC20.sol
 +
 +// OpenZeppelin Contracts (last updated v5.0.0) (interfaces/IERC20.sol)
@@ -907,42 +981,29 @@ index 9eddb85..02b42d6 100644
 +/**
 + * @dev Collection of functions related to the address type
 + */
-+library Address_1 {
-     /**
--     * @dev Returns the amount of tokens owned by `account`.
++library Address {
++    /**
 +     * @dev There's no code at `target` (it is not a contract).
-      */
--    function balanceOf(address account) external view returns (uint256);
++     */
 +    error AddressEmptyCode(address target);
- 
-     /**
--     * @dev Moves `amount` tokens from the caller's account to `to`.
++
++    /**
 +     * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
 +     * `recipient`, forwarding all available gas and reverting on errors.
       *
--     * Returns a boolean value indicating whether the operation succeeded.
+-     * Emits an {Approval} event.
 +     * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
 +     * of certain opcodes, possibly making contracts go over the 2300 gas limit
 +     * imposed by `transfer`, making them unable to receive funds via
 +     * `transfer`. {sendValue} removes this limitation.
-      *
--     * Emits a {Transfer} event.
--     */
--    function transfer(address to, uint256 amount) external returns (bool);
--
--    /**
--     * @dev Returns the remaining number of tokens that `spender` will be
--     * allowed to spend on behalf of `owner` through {transferFrom}. This is
--     * zero by default.
++     *
 +     * https://consensys.net/diligence/blog/2019/09/stop-using-soliditys-transfer-now/[Learn more].
-      *
--     * This value changes when {approve} or {transferFrom} are called.
++     *
 +     * IMPORTANT: because control is transferred to `recipient`, care must be
 +     * taken to not create reentrancy vulnerabilities. Consider using
 +     * {ReentrancyGuard} or the
 +     * https://solidity.readthedocs.io/en/v0.8.20/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].
-      */
--    function allowance(address owner, address spender) external view returns (uint256);
++     */
 +    function sendValue(address payable recipient, uint256 amount) internal {
 +        if (address(this).balance < amount) {
 +            revert Errors.InsufficientBalance(address(this).balance, amount);
@@ -953,121 +1014,42 @@ index 9eddb85..02b42d6 100644
 +            revert Errors.FailedCall();
 +        }
 +    }
- 
-     /**
--     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
++
++    /**
 +     * @dev Performs a Solidity function call using a low level `call`. A
 +     * plain `call` is an unsafe replacement for a function call: use this
 +     * function instead.
-      *
--     * Returns a boolean value indicating whether the operation succeeded.
++     *
 +     * If `target` reverts with a revert reason or custom error, it is bubbled
 +     * up by this function (like regular Solidity function calls). However, if
 +     * the call reverted with no returned reason, this function reverts with a
 +     * {Errors.FailedCall} error.
-      *
--     * IMPORTANT: Beware that changing an allowance with this method brings the risk
--     * that someone may use both the old and the new allowance by unfortunate
--     * transaction ordering. One possible solution to mitigate this race
--     * condition is to first reduce the spender's allowance to 0 and set the
--     * desired value afterwards:
--     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
++     *
 +     * Returns the raw returned data. To convert to the expected return value,
 +     * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].
       *
--     * Emits an {Approval} event.
-+     * Requirements:
-+     *
-+     * - `target` must be a contract.
-+     * - calling `target` with `data` must not revert.
-      */
--    function approve(address spender, uint256 amount) external returns (bool);
-+    function functionCall(address target, bytes memory data) internal returns (bytes memory) {
-+        return functionCallWithValue(target, data, 0);
-+    }
- 
-     /**
--     * @dev Moves `amount` tokens from `from` to `to` using the
--     * allowance mechanism. `amount` is then deducted from the caller's
--     * allowance.
-+     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
-+     * but also transferring `value` wei to `target`.
+      * Requirements:
       *
--     * Returns a boolean value indicating whether the operation succeeded.
-+     * Requirements:
-      *
--     * Emits a {Transfer} event.
-+     * - the calling contract must have an ETH balance of at least `value`.
-+     * - the called Solidity function must be `payable`.
-      */
--    function transferFrom(
--        address from,
--        address to,
--        uint256 amount
--    ) external returns (bool);
--}
-+    function functionCallWithValue(address target, bytes memory data, uint256 value) internal returns (bytes memory) {
-+        if (address(this).balance < value) {
-+            revert Errors.InsufficientBalance(address(this).balance, value);
-+        }
-+        (bool success, bytes memory returndata) = target.call{value: value}(data);
-+        return verifyCallResultFromTarget(target, success, returndata);
-+    }
- 
--// lib/solidity-utils/src/contracts/oz-common/interfaces/draft-IERC20Permit.sol
-+    /**
-+     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
-+     * but performing a static call.
-+     */
-+    function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {
-+        (bool success, bytes memory returndata) = target.staticcall(data);
-+        return verifyCallResultFromTarget(target, success, returndata);
-+    }
- 
--// OpenZeppelin Contracts v4.4.1 (token/ERC20/extensions/draft-IERC20Permit.sol)
--// From commit https://github.com/OpenZeppelin/openzeppelin-contracts/commit/6bd6b76d1156e20e45d1016f355d154141c7e5b9
-+    /**
-+     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
-+     * but performing a delegate call.
-+     */
-+    function functionDelegateCall(address target, bytes memory data) internal returns (bytes memory) {
-+        (bool success, bytes memory returndata) = target.delegatecall(data);
-+        return verifyCallResultFromTarget(target, success, returndata);
-+    }
- 
--/**
-- * @dev Interface of the ERC20 Permit extension allowing approvals to be made via signatures, as defined in
-- * https://eips.ethereum.org/EIPS/eip-2612[EIP-2612].
-- *
-- * Adds the {permit} method, which can be used to change an account's ERC20 allowance (see {IERC20-allowance}) by
-- * presenting a message signed by the account. By not relying on {IERC20-approve}, the token holder account doesn't
-- * need to send a transaction, and thus is not required to hold Ether at all.
-- */
--interface IERC20Permit {
-     /**
--     * @dev Sets `value` as the allowance of `spender` over ``owner``'s tokens,
--     * given ``owner``'s signed approval.
--     *
--     * IMPORTANT: The same issues {IERC20-approve} has related to transaction
--     * ordering also apply here.
--     *
--     * Emits an {Approval} event.
--     *
--     * Requirements:
--     *
 -     * - `spender` cannot be the zero address.
 -     * - `deadline` must be a timestamp in the future.
 -     * - `v`, `r` and `s` must be a valid `secp256k1` signature from `owner`
 -     * over the EIP712-formatted function arguments.
 -     * - the signature must use ``owner``'s current nonce (see {nonces}).
--     *
++     * - `target` must be a contract.
++     * - calling `target` with `data` must not revert.
++     */
++    function functionCall(address target, bytes memory data) internal returns (bytes memory) {
++        return functionCallWithValue(target, data, 0);
++    }
++
++    /**
++     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
++     * but also transferring `value` wei to `target`.
+      *
 -     * For more information on the signature format, see the
 -     * https://eips.ethereum.org/EIPS/eip-2612#specification[relevant EIP
 -     * section].
-+     * @dev Tool to verify that a low level call to smart-contract was successful, and reverts if the target
-+     * was not a contract or bubbling up the revert reason (falling back to {Errors.FailedCall}) in case
-+     * of an unsuccessful call.
-      */
+-     */
 -    function permit(
 -        address owner,
 -        address spender,
@@ -1077,6 +1059,48 @@ index 9eddb85..02b42d6 100644
 -        bytes32 r,
 -        bytes32 s
 -    ) external;
+-
+-    /**
+-     * @dev Returns the current nonce for `owner`. This value must be
+-     * included whenever a signature is generated for {permit}.
++     * Requirements:
+      *
+-     * Every successful call to {permit} increases ``owner``'s nonce by one. This
+-     * prevents a signature from being used multiple times.
++     * - the calling contract must have an ETH balance of at least `value`.
++     * - the called Solidity function must be `payable`.
++     */
++    function functionCallWithValue(address target, bytes memory data, uint256 value) internal returns (bytes memory) {
++        if (address(this).balance < value) {
++            revert Errors.InsufficientBalance(address(this).balance, value);
++        }
++        (bool success, bytes memory returndata) = target.call{value: value}(data);
++        return verifyCallResultFromTarget(target, success, returndata);
++    }
++
++    /**
++     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
++     * but performing a static call.
++     */
++    function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {
++        (bool success, bytes memory returndata) = target.staticcall(data);
++        return verifyCallResultFromTarget(target, success, returndata);
++    }
++
++    /**
++     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
++     * but performing a delegate call.
++     */
++    function functionDelegateCall(address target, bytes memory data) internal returns (bytes memory) {
++        (bool success, bytes memory returndata) = target.delegatecall(data);
++        return verifyCallResultFromTarget(target, success, returndata);
++    }
++
++    /**
++     * @dev Tool to verify that a low level call to smart-contract was successful, and reverts if the target
++     * was not a contract or bubbling up the revert reason (falling back to {Errors.FailedCall}) in case
++     * of an unsuccessful call.
++     */
 +    function verifyCallResultFromTarget(
 +        address target,
 +        bool success,
@@ -1093,13 +1117,8 @@ index 9eddb85..02b42d6 100644
 +            return returndata;
 +        }
 +    }
- 
-     /**
--     * @dev Returns the current nonce for `owner`. This value must be
--     * included whenever a signature is generated for {permit}.
--     *
--     * Every successful call to {permit} increases ``owner``'s nonce by one. This
--     * prevents a signature from being used multiple times.
++
++    /**
 +     * @dev Tool to verify that a low level call was successful, and reverts if it wasn't, either by bubbling the
 +     * revert reason or with a default {Errors.FailedCall} error.
       */
@@ -1137,7 +1156,7 @@ index 9eddb85..02b42d6 100644
  
  interface ICollector {
    struct Stream {
-@@ -521,10 +996,60 @@ interface ICollector {
+@@ -521,10 +776,60 @@ interface ICollector {
      bool isEntity;
    }
  
@@ -1202,7 +1221,7 @@ index 9eddb85..02b42d6 100644
  
    /** @notice Emitted when the new stream is created
     * @param streamId The identifier of the stream.
-@@ -569,29 +1094,28 @@ interface ICollector {
+@@ -569,29 +874,28 @@ interface ICollector {
      uint256 recipientBalance
    );
  
@@ -1241,7 +1260,7 @@ index 9eddb85..02b42d6 100644
    function balanceOf(uint256 streamId, address who) external view returns (uint256 balance);
  
    /**
-@@ -610,13 +1134,6 @@ interface ICollector {
+@@ -610,13 +914,6 @@ interface ICollector {
     **/
    function transfer(IERC20 token, address recipient, uint256 amount) external;
  
@@ -1255,7 +1274,7 @@ index 9eddb85..02b42d6 100644
    /**
     * @notice Creates a new stream funded by this contracts itself and paid towards `recipient`.
     * @param recipient The address towards which the money is streamed.
-@@ -678,14 +1195,353 @@ interface ICollector {
+@@ -678,14 +975,353 @@ interface ICollector {
    function getNextStreamId() external view returns (uint256);
  }
  
@@ -1613,7 +1632,7 @@ index 9eddb85..02b42d6 100644
   * contract returns false). Tokens that return no value (and instead revert or
   * throw on failure) are also supported, non-reverting calls are assumed to be
   * successful.
-@@ -693,83 +1549,136 @@ interface ICollector {
+@@ -693,83 +1329,136 @@ interface ICollector {
   * which allows you to call the safe operations as `token.safeTransfer(...)`, etc.
   */
  library SafeERC20 {
@@ -1811,7 +1830,7 @@ index 9eddb85..02b42d6 100644
      }
  
      /**
-@@ -777,21 +1686,51 @@ library SafeERC20 {
+@@ -777,21 +1466,51 @@ library SafeERC20 {
       * on the return value: the return value is optional (but if data is returned, it must not be false).
       * @param token The token targeted by the call.
       * @param data The call data (encoded using abi.encode or one of its variants).
@@ -1871,15 +1890,14 @@ index 9eddb85..02b42d6 100644
  
  /**
   * @title Collector
-@@ -806,21 +1745,25 @@ library SafeERC20 {
+@@ -806,21 +1525,25 @@ library SafeERC20 {
   * - Same as with creation, on Sablier the `sender` and `recipient` can cancel a stream. Here, only fund admin and recipient
   * @author BGD Labs
   **/
 -contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
 +contract Collector is AccessControlUpgradeable, ReentrancyGuardUpgradeable, ICollector {
    using SafeERC20 for IERC20;
--  using Address for address payable;
-+  using Address_0 for address payable;
+   using Address for address payable;
  
    /*** Storage Properties ***/
 +  /// @inheritdoc ICollector
@@ -1907,7 +1925,7 @@ index 9eddb85..02b42d6 100644
  
    /**
     * @notice Counter for new stream ids.
-@@ -832,16 +1775,15 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -832,16 +1555,15 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     */
    mapping(uint256 => Stream) private _streams;
  
@@ -1928,7 +1946,7 @@ index 9eddb85..02b42d6 100644
      _;
    }
  
-@@ -850,10 +1792,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -850,10 +1572,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     * @param streamId The id of the stream to query.
     */
    modifier onlyAdminOrRecipient(uint256 streamId) {
@@ -1942,7 +1960,7 @@ index 9eddb85..02b42d6 100644
      _;
    }
  
-@@ -861,33 +1802,33 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -861,33 +1582,33 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     * @dev Throws if the provided id does not point to a valid stream.
     */
    modifier streamExists(uint256 streamId) {
@@ -1991,7 +2009,7 @@ index 9eddb85..02b42d6 100644
    }
  
    /// @inheritdoc ICollector
-@@ -977,12 +1918,12 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -977,12 +1698,12 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
  
    /// @inheritdoc ICollector
    function approve(IERC20 token, address recipient, uint256 amount) external onlyFundsAdmin {
@@ -2006,7 +2024,7 @@ index 9eddb85..02b42d6 100644
  
      if (address(token) == ETH_MOCK_ADDRESS) {
        payable(recipient).sendValue(amount);
-@@ -991,21 +1932,8 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -991,21 +1712,8 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      }
    }
  
@@ -2030,7 +2048,7 @@ index 9eddb85..02b42d6 100644
    }
  
    struct CreateStreamLocalVars {
-@@ -1034,21 +1962,21 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -1034,21 +1742,21 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      uint256 startTime,
      uint256 stopTime
    ) external onlyFundsAdmin returns (uint256) {
@@ -2060,7 +2078,7 @@ index 9eddb85..02b42d6 100644
  
      vars.ratePerSecond = deposit / vars.duration;
  
-@@ -1092,11 +2020,11 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -1092,11 +1800,11 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      uint256 streamId,
      uint256 amount
    ) external nonReentrant streamExists(streamId) onlyAdminOrRecipient(streamId) returns (bool) {
@@ -2074,7 +2092,7 @@ index 9eddb85..02b42d6 100644
  
      _streams[streamId].remainingBalance = stream.remainingBalance - amount;
  
-@@ -1128,4 +2056,32 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -1128,4 +1836,32 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      emit CancelStream(streamId, stream.sender, stream.recipient, senderBalance, recipientBalance);
      return true;
    }
