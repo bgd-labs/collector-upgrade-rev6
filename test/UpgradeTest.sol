@@ -33,7 +33,7 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
 
   // ensures stream id is in same position as before
   function test_storageCorrectness() external virtual {
-    Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
+    ICollector collector = ICollector(UpgradePayload(payload).COLLECTOR());
     uint256 nextStreamIdBefore = collector.getNextStreamId();
 
     executePayload(vm, payload);
@@ -54,7 +54,7 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
 
     IPoolAddressesProvider provider = _getPool().ADDRESSES_PROVIDER();
     address aclAdmin = provider.getACLAdmin();
-    Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
+    ICollector collector = ICollector(UpgradePayload(payload).COLLECTOR());
 
     vm.startPrank(aclAdmin);
     deal(address(collector), 100 ether);
@@ -67,7 +67,7 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
 
     IPoolAddressesProvider provider = _getPool().ADDRESSES_PROVIDER();
     address aclAdmin = provider.getACLAdmin();
-    Collector collector = Collector(payable(UpgradePayload(payload).COLLECTOR()));
+    ICollector collector = ICollector(UpgradePayload(payload).COLLECTOR());
 
     vm.startPrank(aclAdmin);
     IAccessControl(address(collector)).grantRole(collector.FUNDS_ADMIN_ROLE(), address(this));
@@ -80,7 +80,7 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
   function test_revert_transfer_nonAdmin() external {
     executePayload(vm, payload);
 
-    Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
+    ICollector collector = ICollector(UpgradePayload(payload).COLLECTOR());
     address mockETH = collector.ETH_MOCK_ADDRESS();
 
     vm.expectRevert(ICollector.OnlyFundsAdmin.selector);

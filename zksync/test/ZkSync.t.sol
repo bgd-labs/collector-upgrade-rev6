@@ -28,7 +28,7 @@ contract UpgradeTest is ProtocolV3TestBase {
 
   // ensures stream id is in same position as before
   function test_storageCorrectness() external {
-    Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
+    ICollector collector = ICollector(UpgradePayload(payload).COLLECTOR());
     uint256 nextStreamIdBefore = collector.getNextStreamId();
 
     // _status is 0 beause it was not initialized
@@ -59,7 +59,7 @@ contract UpgradeTest is ProtocolV3TestBase {
 
     IPoolAddressesProvider provider = _getPool().ADDRESSES_PROVIDER();
     address aclAdmin = provider.getACLAdmin();
-    Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
+    ICollector collector = ICollector(UpgradePayload(payload).COLLECTOR());
 
     vm.startPrank(aclAdmin);
     deal(address(collector), 100 ether);
@@ -72,7 +72,7 @@ contract UpgradeTest is ProtocolV3TestBase {
 
     IPoolAddressesProvider provider = _getPool().ADDRESSES_PROVIDER();
     address aclAdmin = provider.getACLAdmin();
-    Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
+    ICollector collector = ICollector(UpgradePayload(payload).COLLECTOR());
 
     vm.startPrank(aclAdmin);
     IAccessControl(address(collector)).grantRole(collector.FUNDS_ADMIN_ROLE(), address(this));
