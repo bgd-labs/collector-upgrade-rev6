@@ -25,15 +25,66 @@
     "pool": "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
     "poolAddressesProvider": "0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb",
     "poolConfigurator": "0x8145eddDf43f50276641b55bd3AD95944510021E",
-    "poolConfiguratorImpl": "0x4816b2C2895f97fB918f1aE7Da403750a0eE372e",
-    "poolImpl": "0x7A7eF57479123f26DB6a0e3EFbF8A3562EDD65BE",
     "priceOracleSentinel": "0xE229d5DE4BD5beEAf12d427B5B57BFe66abD2c3b",
     "protocolDataProvider": "0x7F23D86Ee20D869112572136221e173428DD740B"
+  },
+  "raw": {
+    "0x0e1a3af1f9cc76a62ed31ededca291e63632e7c4": {
+      "label": null,
+      "balanceDiff": null,
+      "stateDiff": {
+        "0x7bfa808024a5334b0a1e191d8e95f6724ea40d1a03d1286b6934e670f8c6924b": {
+          "previousValue": "0x0067928756000000000002000000000000000000000000000000000000000000",
+          "newValue": "0x0067928756000000000003000000000000000000000000000000000000000000"
+        },
+        "0x7bfa808024a5334b0a1e191d8e95f6724ea40d1a03d1286b6934e670f8c6924c": {
+          "previousValue": "0x000000000000000000093a8000000000000067c0abd700000000000000000000",
+          "newValue": "0x000000000000000000093a8000000000000067c0abd700000000000067928757"
+        }
+      }
+    },
+    "0xb2289e329d2f85f1ed31adbb30ea345278f21bcf": {
+      "label": null,
+      "balanceDiff": null,
+      "stateDiff": {
+        "0x0000000000000000000000000000000000000000000000000000000000000000": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000005",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "0x0000000000000000000000000000000000000000000000000000000000000033": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000001",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "0x0000000000000000000000000000000000000000000000000000000000000034": {
+          "previousValue": "0x000000000000000000000000746c675dab49bcd5bb9dc85161f2d7eb435009bf",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc": {
+          "previousValue": "0x000000000000000000000000230e0321cf38f09e247e50afc7801ea2351fe56f",
+          "newValue": "0x000000000000000000000000e1cb211027e27d6cb2d67b823d148d80bdaa7e9a"
+        },
+        "0x61c28677cede5bc46b00e7c6726df7dc255fe1d59fa2a58510a43d3bf67ef9f4": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        },
+        "0x79323eb514e0642456d27dcb82202a39ca264efab26375ca806c95a6f4a083e8": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        },
+        "0x9b779b17422d0df92223018b32b4d1fa46e071723d6817e2486d003becc55f00": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        },
+        "0xf0c57e16840df040f15088dc2f81fe391c3923bec73e23a9662efc9c229c6a00": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        }
+      }
+    }
   },
   "reserves": {
     "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85": {
       "aToken": "0x38d693cE1dF5AaDF7bC62595A37D667aD57922e5",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism USDCn",
       "aTokenSymbol": "aOptUSDCn",
       "aTokenUnderlyingBalance": "7773761342311",
@@ -63,7 +114,6 @@
       "underlying": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x5D557B07776D12967914379C71a1310e917C7555",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt USDCn",
       "variableDebtTokenSymbol": "variableDebtOptUSDCn",
       "virtualAccountingActive": true,
@@ -71,7 +121,6 @@
     },
     "0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb": {
       "aToken": "0xc45A479877e1e9Dfe9FcD4056c699575a1045dAA",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism wstETH",
       "aTokenSymbol": "aOptwstETH",
       "aTokenUnderlyingBalance": "21732658904762468133541",
@@ -101,7 +150,6 @@
       "underlying": "0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x34e2eD44EF7466D5f9E0b782B5c08b57475e7907",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt wstETH",
       "variableDebtTokenSymbol": "variableDebtOptwstETH",
       "virtualAccountingActive": true,
@@ -109,7 +157,6 @@
     },
     "0x350a791Bfc2C21F9Ed5d10980Dad2e2638ffa7f6": {
       "aToken": "0x191c10Aa4AF7C30e871E70C95dB0E4eb77237530",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism LINK",
       "aTokenSymbol": "aOptLINK",
       "aTokenUnderlyingBalance": "153469630996891984835580",
@@ -139,7 +186,6 @@
       "underlying": "0x350a791Bfc2C21F9Ed5d10980Dad2e2638ffa7f6",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x953A573793604aF8d41F306FEb8274190dB4aE0e",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt LINK",
       "variableDebtTokenSymbol": "variableDebtOptLINK",
       "virtualAccountingActive": true,
@@ -147,7 +193,6 @@
     },
     "0x4200000000000000000000000000000000000006": {
       "aToken": "0xe50fA9b3c56FfB159cB0FCA61F5c9D750e8128c8",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism WETH",
       "aTokenSymbol": "aOptWETH",
       "aTokenUnderlyingBalance": "3992321118553867305692",
@@ -177,7 +222,6 @@
       "underlying": "0x4200000000000000000000000000000000000006",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x0c84331e39d6658Cd6e6b9ba04736cC4c4734351",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt WETH",
       "variableDebtTokenSymbol": "variableDebtOptWETH",
       "virtualAccountingActive": true,
@@ -185,7 +229,6 @@
     },
     "0x4200000000000000000000000000000000000042": {
       "aToken": "0x513c7E3a9c69cA3e22550eF58AC1C0088e918FFf",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism OP",
       "aTokenSymbol": "aOptOP",
       "aTokenUnderlyingBalance": "9409586455924638042595190",
@@ -215,7 +258,6 @@
       "underlying": "0x4200000000000000000000000000000000000042",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x77CA01483f379E58174739308945f044e1a764dc",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt OP",
       "variableDebtTokenSymbol": "variableDebtOptOP",
       "virtualAccountingActive": true,
@@ -223,7 +265,6 @@
     },
     "0x68f180fcCe6836688e9084f035309E29Bf0A2095": {
       "aToken": "0x078f358208685046a11C85e8ad32895DED33A249",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism WBTC",
       "aTokenSymbol": "aOptWBTC",
       "aTokenUnderlyingBalance": "37486093631",
@@ -253,7 +294,6 @@
       "underlying": "0x68f180fcCe6836688e9084f035309E29Bf0A2095",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x92b42c66840C7AD907b4BF74879FF3eF7c529473",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt WBTC",
       "variableDebtTokenSymbol": "variableDebtOptWBTC",
       "virtualAccountingActive": true,
@@ -261,7 +301,6 @@
     },
     "0x76FB31fb4af56892A25e32cFC43De717950c9278": {
       "aToken": "0xf329e36C7bF6E5E86ce2150875a84Ce77f477375",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism AAVE",
       "aTokenSymbol": "aOptAAVE",
       "aTokenUnderlyingBalance": "7443495792805149513214",
@@ -291,7 +330,6 @@
       "underlying": "0x76FB31fb4af56892A25e32cFC43De717950c9278",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xE80761Ea617F66F96274eA5e8c37f03960ecC679",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt AAVE",
       "variableDebtTokenSymbol": "variableDebtOptAAVE",
       "virtualAccountingActive": true,
@@ -299,7 +337,6 @@
     },
     "0x7F5c764cBc14f9669B88837ca1490cCa17c31607": {
       "aToken": "0x625E7708f30cA75bfd92586e17077590C60eb4cD",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism USDC",
       "aTokenSymbol": "aOptUSDC",
       "aTokenUnderlyingBalance": "321253176316",
@@ -329,7 +366,6 @@
       "underlying": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xFCCf3cAbbe80101232d343252614b6A3eE81C989",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt USDC",
       "variableDebtTokenSymbol": "variableDebtOptUSDC",
       "virtualAccountingActive": true,
@@ -337,7 +373,6 @@
     },
     "0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9": {
       "aToken": "0x6d80113e533a2C0fe82EaBD35f1875DcEA89Ea97",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism SUSD",
       "aTokenSymbol": "aOptSUSD",
       "aTokenUnderlyingBalance": "4070410384082025817145914",
@@ -367,7 +402,6 @@
       "underlying": "0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x4a1c3aD6Ed28a636ee1751C69071f6be75DEb8B8",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt SUSD",
       "variableDebtTokenSymbol": "variableDebtOptSUSD",
       "virtualAccountingActive": true,
@@ -375,7 +409,6 @@
     },
     "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58": {
       "aToken": "0x6ab707Aca953eDAeFBc4fD23bA73294241490620",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism USDT",
       "aTokenSymbol": "aOptUSDT",
       "aTokenUnderlyingBalance": "3164996416263",
@@ -405,7 +438,6 @@
       "underlying": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xfb00AC187a8Eb5AFAE4eACE434F493Eb62672df7",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt USDT",
       "variableDebtTokenSymbol": "variableDebtOptUSDT",
       "virtualAccountingActive": true,
@@ -413,7 +445,6 @@
     },
     "0x9Bcef72be871e61ED4fBbc7630889beE758eb81D": {
       "aToken": "0x724dc807b04555b71ed48a6896b6F41593b8C637",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism rETH",
       "aTokenSymbol": "aOptrETH",
       "aTokenUnderlyingBalance": "2039763664042867825736",
@@ -443,7 +474,6 @@
       "underlying": "0x9Bcef72be871e61ED4fBbc7630889beE758eb81D",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xf611aEb5013fD2c0511c9CD55c7dc5C1140741A6",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt rETH",
       "variableDebtTokenSymbol": "variableDebtOptrETH",
       "virtualAccountingActive": true,
@@ -451,7 +481,6 @@
     },
     "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1": {
       "aToken": "0x82E64f49Ed5EC1bC6e43DAD4FC8Af9bb3A2312EE",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism DAI",
       "aTokenSymbol": "aOptDAI",
       "aTokenUnderlyingBalance": "485110842144210194116150",
@@ -481,7 +510,6 @@
       "underlying": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x8619d80FB0141ba7F184CbF22fd724116D9f7ffC",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt DAI",
       "variableDebtTokenSymbol": "variableDebtOptDAI",
       "virtualAccountingActive": true,
@@ -489,7 +517,6 @@
     },
     "0xc40F949F8a4e094D1b49a23ea9241D289B7b2819": {
       "aToken": "0x8Eb270e296023E9D92081fdF967dDd7878724424",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism LUSD",
       "aTokenSymbol": "aOptLUSD",
       "aTokenUnderlyingBalance": "64564010273432392264920",
@@ -519,7 +546,6 @@
       "underlying": "0xc40F949F8a4e094D1b49a23ea9241D289B7b2819",
       "usageAsCollateralEnabled": false,
       "variableDebtToken": "0xCE186F6Cccb0c955445bb9d10C59caE488Fea559",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt LUSD",
       "variableDebtTokenSymbol": "variableDebtOptLUSD",
       "virtualAccountingActive": true,
@@ -527,7 +553,6 @@
     },
     "0xdFA46478F9e5EA86d57387849598dbFB2e964b02": {
       "aToken": "0x8ffDf2DE812095b1D19CB146E4c004587C0A0692",
-      "aTokenImpl": "0xbCb167bDCF14a8F791d6f4A6EDd964aed2F8813B",
       "aTokenName": "Aave Optimism MAI",
       "aTokenSymbol": "aOptMAI",
       "aTokenUnderlyingBalance": "5943357971817723407168",
@@ -557,7 +582,6 @@
       "underlying": "0xdFA46478F9e5EA86d57387849598dbFB2e964b02",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xA8669021776Bc142DfcA87c21b4A52595bCbB40a",
-      "variableDebtTokenImpl": "0x04a8D477eE202aDCE1682F5902e1160455205b12",
       "variableDebtTokenName": "Aave Optimism Variable Debt MAI",
       "variableDebtTokenSymbol": "variableDebtOptMAI",
       "virtualAccountingActive": true,

@@ -25,15 +25,66 @@
     "pool": "0xb50201558B00496A145fE76f7424749556E326D8",
     "poolAddressesProvider": "0x36616cf17557639614c1cdDb356b1B83fc0B2132",
     "poolConfigurator": "0x7304979ec9E4EaA0273b6A037a31c4e9e5A75D16",
-    "poolConfiguratorImpl": "0x4816b2C2895f97fB918f1aE7Da403750a0eE372e",
-    "poolImpl": "0xF2C312BfAF4CF0429DB4DA15a0cf5F770Ea3E770",
     "priceOracleSentinel": "0x0000000000000000000000000000000000000000",
     "protocolDataProvider": "0x57038C3e3Fe0a170BB72DE2fD56E98e4d1a69717"
+  },
+  "raw": {
+    "0x3e652e97ff339b73421f824f5b03d75b62f1fb51": {
+      "label": null,
+      "balanceDiff": null,
+      "stateDiff": {
+        "0x0000000000000000000000000000000000000000000000000000000000000000": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000005",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "0x0000000000000000000000000000000000000000000000000000000000000033": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000001",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "0x0000000000000000000000000000000000000000000000000000000000000034": {
+          "previousValue": "0x0000000000000000000000001df462e2712496373a347f8ad10802a5e95f053d",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc": {
+          "previousValue": "0x0000000000000000000000002ab3580a805fb10cbad567212c70e26c1b6769ec",
+          "newValue": "0x000000000000000000000000e1cb211027e27d6cb2d67b823d148d80bdaa7e9a"
+        },
+        "0x946c4d09a2b1704aeb780ee0789f19eaca72bced6d93ad4fe9f885da452405e4": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        },
+        "0x9589a0f9b27918b483bc50518352455854de43b3891c8d13c8afdfefe85a3b61": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        },
+        "0x9b779b17422d0df92223018b32b4d1fa46e071723d6817e2486d003becc55f00": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        },
+        "0xf0c57e16840df040f15088dc2f81fe391c3923bec73e23a9662efc9c229c6a00": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        }
+      }
+    },
+    "0x9a1f491b86d09fc1484b5fab10041b189b60756b": {
+      "label": null,
+      "balanceDiff": null,
+      "stateDiff": {
+        "0xa6d60d4ff1c38ae572157a43d1b8579039e4b4cc96e22c75c07379751785fe51": {
+          "previousValue": "0x0067927ec2000000000002000000000000000000000000000000000000000000",
+          "newValue": "0x0067927ec2000000000003000000000000000000000000000000000000000000"
+        },
+        "0xa6d60d4ff1c38ae572157a43d1b8579039e4b4cc96e22c75c07379751785fe52": {
+          "previousValue": "0x000000000000000000093a8000000000000067c0a34300000000000000000000",
+          "newValue": "0x000000000000000000093a8000000000000067c0a34300000000000067927ec3"
+        }
+      }
+    }
   },
   "reserves": {
     "0x2a22f9c3b484c3629090FeED35F17Ff8F88f76F0": {
       "aToken": "0xC0333cb85B59a788d8C7CAe5e1Fd6E229A3E5a65",
-      "aTokenImpl": "0x589750BA8aF186cE5B55391B0b7148cAD43a1619",
       "aTokenName": "Aave Gnosis USDCe",
       "aTokenSymbol": "aGnoUSDCe",
       "aTokenUnderlyingBalance": "2746989396405",
@@ -63,7 +114,6 @@
       "underlying": "0x2a22f9c3b484c3629090FeED35F17Ff8F88f76F0",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x37B9Ad6b5DC8Ad977AD716e92F49e9D200e58431",
-      "variableDebtTokenImpl": "0xBeC519531F0E78BcDdB295242fA4EC5251B38574",
       "variableDebtTokenName": "Aave Gnosis Variable Debt USDCe",
       "variableDebtTokenSymbol": "variableDebtGnoUSDCe",
       "virtualAccountingActive": true,
@@ -71,7 +121,6 @@
     },
     "0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1": {
       "aToken": "0xa818F1B57c201E092C4A2017A91815034326Efd1",
-      "aTokenImpl": "0x589750BA8aF186cE5B55391B0b7148cAD43a1619",
       "aTokenName": "Aave Gnosis WETH",
       "aTokenSymbol": "aGnoWETH",
       "aTokenUnderlyingBalance": "863554110670622697691",
@@ -101,7 +150,6 @@
       "underlying": "0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x0c0fce05F2314540EcB095bF4D069e5E0ED90fF8",
-      "variableDebtTokenImpl": "0xBeC519531F0E78BcDdB295242fA4EC5251B38574",
       "variableDebtTokenName": "Aave Gnosis Variable Debt WETH",
       "variableDebtTokenSymbol": "variableDebtGnoWETH",
       "virtualAccountingActive": true,
@@ -109,7 +157,6 @@
     },
     "0x6C76971f98945AE98dD7d4DFcA8711ebea946eA6": {
       "aToken": "0x23e4E76D01B2002BE436CE8d6044b0aA2f68B68a",
-      "aTokenImpl": "0x589750BA8aF186cE5B55391B0b7148cAD43a1619",
       "aTokenName": "Aave Gnosis wstETH",
       "aTokenSymbol": "aGnowstETH",
       "aTokenUnderlyingBalance": "7921114682649923752411",
@@ -139,7 +186,6 @@
       "underlying": "0x6C76971f98945AE98dD7d4DFcA8711ebea946eA6",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x9D881f67F20B49243c98f53d2B9E91E39d02Ae09",
-      "variableDebtTokenImpl": "0xBeC519531F0E78BcDdB295242fA4EC5251B38574",
       "variableDebtTokenName": "Aave Gnosis Variable Debt wstETH",
       "variableDebtTokenSymbol": "variableDebtGnowstETH",
       "virtualAccountingActive": true,
@@ -147,7 +193,6 @@
     },
     "0x9C58BAcC331c9aa871AFD802DB6379a98e80CEdb": {
       "aToken": "0xA1Fa064A85266E2Ca82DEe5C5CcEC84DF445760e",
-      "aTokenImpl": "0x589750BA8aF186cE5B55391B0b7148cAD43a1619",
       "aTokenName": "Aave Gnosis GNO",
       "aTokenSymbol": "aGnoGNO",
       "aTokenUnderlyingBalance": "67152587177496160382289",
@@ -177,7 +222,6 @@
       "underlying": "0x9C58BAcC331c9aa871AFD802DB6379a98e80CEdb",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xBc59E99198DbA71985A66E1713cC89FFEC53f7FC",
-      "variableDebtTokenImpl": "0xBeC519531F0E78BcDdB295242fA4EC5251B38574",
       "variableDebtTokenName": "Aave Gnosis Variable Debt GNO",
       "variableDebtTokenSymbol": "variableDebtGnoGNO",
       "virtualAccountingActive": true,
@@ -185,7 +229,6 @@
     },
     "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83": {
       "aToken": "0xc6B7AcA6DE8a6044E0e32d0c841a89244A10D284",
-      "aTokenImpl": "0x589750BA8aF186cE5B55391B0b7148cAD43a1619",
       "aTokenName": "Aave Gnosis USDC",
       "aTokenSymbol": "aGnoUSDC",
       "aTokenUnderlyingBalance": "271886286279",
@@ -215,7 +258,6 @@
       "underlying": "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x5F6f7B0a87CA3CF3d0b431Ae03EF3305180BFf4d",
-      "variableDebtTokenImpl": "0xBeC519531F0E78BcDdB295242fA4EC5251B38574",
       "variableDebtTokenName": "Aave Gnosis Variable Debt USDC",
       "variableDebtTokenSymbol": "variableDebtGnoUSDC",
       "virtualAccountingActive": true,
@@ -223,7 +265,6 @@
     },
     "0xaf204776c7245bF4147c2612BF6e5972Ee483701": {
       "aToken": "0x7a5c3860a77a8DC1b225BD46d0fb2ac1C6D191BC",
-      "aTokenImpl": "0x589750BA8aF186cE5B55391B0b7148cAD43a1619",
       "aTokenName": "Aave Gnosis sDAI",
       "aTokenSymbol": "aGnosDAI",
       "aTokenUnderlyingBalance": "19870784336191526084608678",
@@ -253,7 +294,6 @@
       "underlying": "0xaf204776c7245bF4147c2612BF6e5972Ee483701",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x8Fe06E1D8Aff42Bf6812CacF7854A2249a00bED7",
-      "variableDebtTokenImpl": "0xBeC519531F0E78BcDdB295242fA4EC5251B38574",
       "variableDebtTokenName": "Aave Gnosis Variable Debt sDAI",
       "variableDebtTokenSymbol": "variableDebtGnosDAI",
       "virtualAccountingActive": true,
@@ -261,7 +301,6 @@
     },
     "0xcB444e90D8198415266c6a2724b7900fb12FC56E": {
       "aToken": "0xEdBC7449a9b594CA4E053D9737EC5Dc4CbCcBfb2",
-      "aTokenImpl": "0x589750BA8aF186cE5B55391B0b7148cAD43a1619",
       "aTokenName": "Aave Gnosis EURe",
       "aTokenSymbol": "aGnoEURe",
       "aTokenUnderlyingBalance": "2614302691637373864693949",
@@ -291,7 +330,6 @@
       "underlying": "0xcB444e90D8198415266c6a2724b7900fb12FC56E",
       "usageAsCollateralEnabled": false,
       "variableDebtToken": "0xb96404e475f337A7E98e4a541C9b71309BB66c5A",
-      "variableDebtTokenImpl": "0xBeC519531F0E78BcDdB295242fA4EC5251B38574",
       "variableDebtTokenName": "Aave Gnosis Variable Debt EURe",
       "variableDebtTokenSymbol": "variableDebtGnoEURe",
       "virtualAccountingActive": true,
@@ -299,7 +337,6 @@
     },
     "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d": {
       "aToken": "0xd0Dd6cEF72143E22cCED4867eb0d5F2328715533",
-      "aTokenImpl": "0x589750BA8aF186cE5B55391B0b7148cAD43a1619",
       "aTokenName": "Aave Gnosis WXDAI",
       "aTokenSymbol": "aGnoWXDAI",
       "aTokenUnderlyingBalance": "1238850933934516617502636",
@@ -329,7 +366,6 @@
       "underlying": "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x281963D7471eCdC3A2Bd4503e24e89691cfe420D",
-      "variableDebtTokenImpl": "0xBeC519531F0E78BcDdB295242fA4EC5251B38574",
       "variableDebtTokenName": "Aave Gnosis Variable Debt WXDAI",
       "variableDebtTokenSymbol": "variableDebtGnoWXDAI",
       "virtualAccountingActive": true,

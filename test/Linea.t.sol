@@ -24,7 +24,7 @@ contract LineaTest is UpgradeTest {
   }
 
   function test_storageCorrectness() external override {
-    Collector collector = Collector(UpgradePayload(payload).COLLECTOR());
+    ICollector collector = ICollector(UpgradePayload(payload).COLLECTOR());
     uint256 nextStreamIdBefore = collector.getNextStreamId();
 
     // _status is 0 before which is strange (this fails currently)

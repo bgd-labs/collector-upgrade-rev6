@@ -57,16 +57,19 @@ async function snapshotPool({ CHAIN_ID, COLLECTOR }) {
     execSync(sourceCommand);
   }
 
-  const command = `mkdir -p reports/${CHAIN_ID} && forge inspect --pretty ${destination}:Collector storage > reports/${CHAIN_ID}/storage_${COLLECTOR}`;
+  const codeDiff = `make git-diff before=${destination} after=flattened/Collector.sol out=${CHAIN_ID}.patch`;
+  execSync(codeDiff);
+
+  const command = `mkdir -p reports/${CHAIN_ID} && forge inspect ${destination}:Collector storage > reports/${CHAIN_ID}/storage_${COLLECTOR}`;
   execSync(command);
 }
 
 async function diffReference() {
   execSync(
-    `forge flatten src/CollectorWithCustomImpl.sol -o flattened/Collector.sol`,
+    `forge flatten src/CollectorWithCustomImpl.sol -o flattened/Collector.sol && forge fmt flattened/Collector.sol`,
   );
   execSync(
-    `forge inspect --pretty flattened/Collector.sol:Collector storage > reports/storage_new`,
+    `forge inspect flattened/Collector.sol:Collector storage > reports/storage_new`,
   );
 }
 

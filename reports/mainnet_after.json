@@ -34,15 +34,66 @@
     "pool": "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
     "poolAddressesProvider": "0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e",
     "poolConfigurator": "0x64b761D848206f447Fe2dd461b0c635Ec39EbB27",
-    "poolConfiguratorImpl": "0x4816b2C2895f97fB918f1aE7Da403750a0eE372e",
-    "poolImpl": "0xeF434E4573b90b6ECd4a00f4888381e4D0CC5Ccd",
     "priceOracleSentinel": "0x0000000000000000000000000000000000000000",
     "protocolDataProvider": "0x41393e5e337606dc3821075Af65AeE84D7688CBD"
+  },
+  "raw": {
+    "0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c": {
+      "label": null,
+      "balanceDiff": null,
+      "stateDiff": {
+        "0x0000000000000000000000000000000000000000000000000000000000000000": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000005",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "0x0000000000000000000000000000000000000000000000000000000000000033": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000001",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "0x0000000000000000000000000000000000000000000000000000000000000034": {
+          "previousValue": "0x0000000000000000000000005300a1a15135ea4dc7ad5a167152c01efc9b192a",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc": {
+          "previousValue": "0x00000000000000000000000080f2c02224a2e548fc67c0bf705ebfa825dd5439",
+          "newValue": "0x000000000000000000000000e1cb211027e27d6cb2d67b823d148d80bdaa7e9a"
+        },
+        "0x9b779b17422d0df92223018b32b4d1fa46e071723d6817e2486d003becc55f00": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        },
+        "0x9df7f2e6fe0cec185b85f47fb641c0aa6ef69eec5d9569c1177e18d7eebf5733": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        },
+        "0xed582c40e150e0e18564a1cfa3e588d5e1f45146b45702ec3d22a0678b96fa2b": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        },
+        "0xf0c57e16840df040f15088dc2f81fe391c3923bec73e23a9662efc9c229c6a00": {
+          "previousValue": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "newValue": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        }
+      }
+    },
+    "0xdabad81af85554e9ae636395611c58f7ec1aaec5": {
+      "label": null,
+      "balanceDiff": null,
+      "stateDiff": {
+        "0x726c0239d8143fcc34d30ac6ef3f6e3a51e31b0bb7a03ff559c40434071fd48d": {
+          "previousValue": "0x0067928fb6000000000002000000000000000000000000000000000000000000",
+          "newValue": "0x0067928fb6000000000003000000000000000000000000000000000000000000"
+        },
+        "0x726c0239d8143fcc34d30ac6ef3f6e3a51e31b0bb7a03ff559c40434071fd48e": {
+          "previousValue": "0x000000000000000000093a8000000000000067c0b43700000000000000000000",
+          "newValue": "0x000000000000000000093a8000000000000067c0b43700000000000067928fb7"
+        }
+      }
+    }
   },
   "reserves": {
     "0x111111111117dC0aa78b770fA6A738034120C302": {
       "aToken": "0x71Aef7b30728b9BB371578f36c5A1f1502a5723e",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum 1INCH",
       "aTokenSymbol": "aEth1INCH",
       "aTokenUnderlyingBalance": "1139521161574474775552724",
@@ -72,7 +123,6 @@
       "underlying": "0x111111111117dC0aa78b770fA6A738034120C302",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xA38fCa8c6Bf9BdA52E76EB78f08CaA3BE7c5A970",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt 1INCH",
       "variableDebtTokenSymbol": "variableDebtEth1INCH",
       "virtualAccountingActive": true,
@@ -80,7 +130,6 @@
     },
     "0x18084fbA666a33d37592fA2633fD49a74DD93a88": {
       "aToken": "0x10Ac93971cdb1F5c778144084242374473c350Da",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum tBTC",
       "aTokenSymbol": "aEthtBTC",
       "aTokenUnderlyingBalance": "1118777673704559544165",
@@ -110,7 +159,6 @@
       "underlying": "0x18084fbA666a33d37592fA2633fD49a74DD93a88",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xAC50890a80A2731eb1eA2e9B4F29569CeB06D960",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt tBTC",
       "variableDebtTokenSymbol": "variableDebtEthtBTC",
       "virtualAccountingActive": true,
@@ -118,7 +166,6 @@
     },
     "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984": {
       "aToken": "0xF6D2224916DDFbbab6e6bd0D1B7034f4Ae0CaB18",
-      "aTokenImpl": "0x21714092D90c7265F52fdfDae068EC11a23C6248",
       "aTokenName": "Aave Ethereum UNI",
       "aTokenSymbol": "aEthUNI",
       "aTokenUnderlyingBalance": "5625371722449052522796968",
@@ -148,7 +195,6 @@
       "underlying": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xF64178Ebd2E2719F2B1233bCb5Ef6DB4bCc4d09a",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt UNI",
       "variableDebtTokenSymbol": "variableDebtEthUNI",
       "virtualAccountingActive": true,
@@ -156,7 +202,6 @@
     },
     "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599": {
       "aToken": "0x5Ee5bf7ae06D1Be5997A1A72006FE6C607eC6DE8",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum WBTC",
       "aTokenSymbol": "aEthWBTC",
       "aTokenUnderlyingBalance": "3350338305851",
@@ -185,7 +230,6 @@
       "underlying": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x40aAbEf1aa8f0eEc637E0E7d92fbfFB2F26A8b7B",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt WBTC",
       "variableDebtTokenSymbol": "variableDebtEthWBTC",
       "virtualAccountingActive": true,
@@ -193,7 +237,6 @@
     },
     "0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0": {
       "aToken": "0x82F9c5ad306BBa1AD0De49bB5FA6F01bf61085ef",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum FXS",
       "aTokenSymbol": "aEthFXS",
       "aTokenUnderlyingBalance": "4252050418120958682213",
@@ -223,7 +266,6 @@
       "underlying": "0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x68e9f0aD4e6f8F5DB70F6923d4d6d5b225B83b16",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt FXS",
       "variableDebtTokenSymbol": "variableDebtEthFXS",
       "virtualAccountingActive": true,
@@ -231,7 +273,6 @@
     },
     "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f": {
       "aToken": "0x00907f9921424583e7ffBfEdf84F92B7B2Be4977",
-      "aTokenImpl": "0x2f32A274e02FA356423CE5e97a8e3155c1Ac396b",
       "aTokenName": "Aave Ethereum GHO",
       "aTokenSymbol": "aEthGHO",
       "aTokenUnderlyingBalance": "34299478763595416000333",
@@ -260,7 +301,6 @@
       "underlying": "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f",
       "usageAsCollateralEnabled": false,
       "variableDebtToken": "0x786dBff3f1292ae8F92ea68Cf93c30b34B1ed04B",
-      "variableDebtTokenImpl": "0x20Cb2f303EDe313e2Cc44549Ad8653a5E8c0050e",
       "variableDebtTokenName": "Aave Ethereum Variable Debt GHO",
       "variableDebtTokenSymbol": "variableDebtEthGHO",
       "virtualAccountingActive": false,
@@ -268,7 +308,6 @@
     },
     "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3": {
       "aToken": "0x4F5923Fc5FD4a93352581b38B7cD26943012DECF",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum USDe",
       "aTokenSymbol": "aEthUSDe",
       "aTokenUnderlyingBalance": "15284494556191895898654510",
@@ -298,7 +337,6 @@
       "underlying": "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x015396E1F286289aE23a762088E863b3ec465145",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt USDe",
       "variableDebtTokenSymbol": "variableDebtEthUSDe",
       "virtualAccountingActive": true,
@@ -306,7 +344,6 @@
     },
     "0x514910771AF9Ca656af840dff83E8264EcF986CA": {
       "aToken": "0x5E8C8A7243651DB1384C0dDfDbE39761E8e7E51a",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum LINK",
       "aTokenSymbol": "aEthLINK",
       "aTokenUnderlyingBalance": "13663651734104991473136237",
@@ -336,7 +373,6 @@
       "underlying": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x4228F8895C7dDA20227F6a5c6751b8Ebf19a6ba8",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt LINK",
       "variableDebtTokenSymbol": "variableDebtEthLINK",
       "virtualAccountingActive": true,
@@ -344,7 +380,6 @@
     },
     "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32": {
       "aToken": "0x9A44fd41566876A39655f74971a3A6eA0a17a454",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum LDO",
       "aTokenSymbol": "aEthLDO",
       "aTokenUnderlyingBalance": "2168263974686673663669312",
@@ -374,7 +409,6 @@
       "underlying": "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xc30808705C01289A3D306ca9CAB081Ba9114eC82",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt LDO",
       "variableDebtTokenSymbol": "variableDebtEthLDO",
       "virtualAccountingActive": true,
@@ -382,7 +416,6 @@
     },
     "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0": {
       "aToken": "0x3Fe6a295459FAe07DF8A0ceCC36F37160FE86AA9",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum LUSD",
       "aTokenSymbol": "aEthLUSD",
       "aTokenUnderlyingBalance": "1008505043842161589459287",
@@ -412,7 +445,6 @@
       "underlying": "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x33652e48e4B74D18520f11BfE58Edd2ED2cEc5A2",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt LUSD",
       "variableDebtTokenSymbol": "variableDebtEthLUSD",
       "virtualAccountingActive": true,
@@ -420,7 +452,6 @@
     },
     "0x6B175474E89094C44Da98b954EedeAC495271d0F": {
       "aToken": "0x018008bfb33d285247A21d44E50697654f754e63",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum DAI",
       "aTokenSymbol": "aEthDAI",
       "aTokenUnderlyingBalance": "32676437719790639832237369",
@@ -450,7 +481,6 @@
       "underlying": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xcF8d0c70c850859266f5C338b38F9D663181C314",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt DAI",
       "variableDebtTokenSymbol": "variableDebtEthDAI",
       "virtualAccountingActive": true,
@@ -458,7 +488,6 @@
     },
     "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8": {
       "aToken": "0x0C0d01AbF3e6aDfcA0989eBbA9d6e85dD58EaB1E",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum PYUSD",
       "aTokenSymbol": "aEthPYUSD",
       "aTokenUnderlyingBalance": "3751300857975",
@@ -488,7 +517,6 @@
       "underlying": "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x57B67e4DE077085Fd0AF2174e9c14871BE664546",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt PYUSD",
       "variableDebtTokenSymbol": "variableDebtEthPYUSD",
       "virtualAccountingActive": true,
@@ -496,7 +524,6 @@
     },
     "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9": {
       "aToken": "0xA700b4eB416Be35b2911fd5Dee80678ff64fF6C9",
-      "aTokenImpl": "0x366AE337897223AEa70e3EBe1862219386f20593",
       "aTokenName": "Aave Ethereum AAVE",
       "aTokenSymbol": "aEthAAVE",
       "aTokenUnderlyingBalance": "1105830237159617990151772",
@@ -526,7 +553,6 @@
       "underlying": "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xBae535520Abd9f8C85E58929e0006A2c8B372F74",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt AAVE",
       "variableDebtTokenSymbol": "variableDebtEthAAVE",
       "virtualAccountingActive": true,
@@ -534,7 +560,6 @@
     },
     "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0": {
       "aToken": "0x0B925eD163218f6662a35e0f0371Ac234f9E9371",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum wstETH",
       "aTokenSymbol": "aEthwstETH",
       "aTokenUnderlyingBalance": "751279532098217643494443",
@@ -564,7 +589,6 @@
       "underlying": "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xC96113eED8cAB59cD8A66813bCB0cEb29F06D2e4",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt wstETH",
       "variableDebtTokenSymbol": "variableDebtEthwstETH",
       "virtualAccountingActive": true,
@@ -572,7 +596,6 @@
     },
     "0x83F20F44975D03b1b09e64809B757c47f942BEeA": {
       "aToken": "0x4C612E3B15b96Ff9A6faED838F8d07d479a8dD4c",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum sDAI",
       "aTokenSymbol": "aEthsDAI",
       "aTokenUnderlyingBalance": "3096317731875734324454687",
@@ -602,7 +625,6 @@
       "underlying": "0x83F20F44975D03b1b09e64809B757c47f942BEeA",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x8Db9D35e117d8b93C6Ca9b644b25BaD5d9908141",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt sDAI",
       "variableDebtTokenSymbol": "variableDebtEthsDAI",
       "virtualAccountingActive": true,
@@ -610,7 +632,6 @@
     },
     "0x853d955aCEf822Db058eb8505911ED77F175b99e": {
       "aToken": "0xd4e245848d6E1220DBE62e155d89fa327E43CB06",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum FRAX",
       "aTokenSymbol": "aEthFRAX",
       "aTokenUnderlyingBalance": "100464452789988248425373",
@@ -640,7 +661,6 @@
       "underlying": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x88B8358F5BC87c2D7E116cCA5b65A9eEb2c5EA3F",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt FRAX",
       "variableDebtTokenSymbol": "variableDebtEthFRAX",
       "virtualAccountingActive": true,
@@ -648,7 +668,6 @@
     },
     "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497": {
       "aToken": "0x4579a27aF00A62C0EB156349f31B345c08386419",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum sUSDe",
       "aTokenSymbol": "aEthsUSDe",
       "aTokenUnderlyingBalance": "781031259484693385545547500",
@@ -678,7 +697,6 @@
       "underlying": "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xeFFDE9BFA8EC77c14C364055a200746d6e12BeD6",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt sUSDe",
       "variableDebtTokenSymbol": "variableDebtEthsUSDe",
       "virtualAccountingActive": true,
@@ -686,7 +704,6 @@
     },
     "0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2": {
       "aToken": "0x8A458A9dc9048e005d22849F470891b840296619",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum MKR",
       "aTokenSymbol": "aEthMKR",
       "aTokenUnderlyingBalance": "22362454447999069336967",
@@ -716,7 +733,6 @@
       "underlying": "0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x6Efc73E54E41b27d2134fF9f98F15550f30DF9B1",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt MKR",
       "variableDebtTokenSymbol": "variableDebtEthMKR",
       "virtualAccountingActive": true,
@@ -724,7 +740,6 @@
     },
     "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": {
       "aToken": "0x98C23E9d8f34FEFb1B7BD6a91B7FF122F4e16F5c",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum USDC",
       "aTokenSymbol": "aEthUSDC",
       "aTokenUnderlyingBalance": "564365569746508",
@@ -754,7 +769,6 @@
       "underlying": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x72E95b8931767C79bA4EeE721354d6E99a61D004",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt USDC",
       "variableDebtTokenSymbol": "variableDebtEthUSDC",
       "virtualAccountingActive": true,
@@ -762,7 +776,6 @@
     },
     "0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7": {
       "aToken": "0x2D62109243b87C4bA3EE7bA1D91B0dD0A074d7b1",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum rsETH",
       "aTokenSymbol": "aEthrsETH",
       "aTokenUnderlyingBalance": "399608574650672213287664",
@@ -792,7 +805,6 @@
       "underlying": "0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x6De3E52A1B7294A34e271a508082b1Ff4a37E30e",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt rsETH",
       "variableDebtTokenSymbol": "variableDebtEthrsETH",
       "virtualAccountingActive": true,
@@ -800,7 +812,6 @@
     },
     "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b": {
       "aToken": "0x1c0E06a0b1A4c160c17545FF2A951bfcA57C0002",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum ETHx",
       "aTokenSymbol": "aEthETHx",
       "aTokenUnderlyingBalance": "10969798022913385935491",
@@ -830,7 +841,6 @@
       "underlying": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x08a8Dc81AeA67F84745623aC6c72CDA3967aab8b",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt ETHx",
       "variableDebtTokenSymbol": "variableDebtEthETHx",
       "virtualAccountingActive": true,
@@ -838,7 +848,6 @@
     },
     "0xAf5191B0De278C7286d6C7CC6ab6BB8A73bA2Cd6": {
       "aToken": "0x1bA9843bD4327c6c77011406dE5fA8749F7E3479",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum STG",
       "aTokenSymbol": "aEthSTG",
       "aTokenUnderlyingBalance": "467790862690156029616",
@@ -868,7 +877,6 @@
       "underlying": "0xAf5191B0De278C7286d6C7CC6ab6BB8A73bA2Cd6",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x655568bDd6168325EC7e58Bf39b21A856F906Dc2",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt STG",
       "variableDebtTokenSymbol": "variableDebtEthSTG",
       "virtualAccountingActive": true,
@@ -876,7 +884,6 @@
     },
     "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704": {
       "aToken": "0x977b6fc5dE62598B08C85AC8Cf2b745874E8b78c",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum cbETH",
       "aTokenSymbol": "aEthcbETH",
       "aTokenUnderlyingBalance": "5156926587974431112693",
@@ -906,7 +913,6 @@
       "underlying": "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x0c91bcA95b5FE69164cE583A2ec9429A569798Ed",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt cbETH",
       "variableDebtTokenSymbol": "variableDebtEthcbETH",
       "virtualAccountingActive": true,
@@ -914,7 +920,6 @@
     },
     "0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F": {
       "aToken": "0xC7B4c17861357B8ABB91F25581E7263E08DCB59c",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum SNX",
       "aTokenSymbol": "aEthSNX",
       "aTokenUnderlyingBalance": "647338320500760045866966",
@@ -944,7 +949,6 @@
       "underlying": "0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x8d0de040e8aAd872eC3c33A3776dE9152D3c34ca",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt SNX",
       "variableDebtTokenSymbol": "variableDebtEthSNX",
       "virtualAccountingActive": true,
@@ -952,7 +956,6 @@
     },
     "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2": {
       "aToken": "0x4d5F47FA6A74757f35C14fD3a6Ef8E3C9BC514E8",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum WETH",
       "aTokenSymbol": "aEthWETH",
       "aTokenUnderlyingBalance": "226258217542768738510620",
@@ -982,7 +985,6 @@
       "underlying": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xeA51d7853EEFb32b6ee06b1C12E6dcCA88Be0fFE",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt WETH",
       "variableDebtTokenSymbol": "variableDebtEthWETH",
       "virtualAccountingActive": true,
@@ -990,7 +992,6 @@
     },
     "0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72": {
       "aToken": "0x545bD6c032eFdde65A377A6719DEF2796C8E0f2e",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum ENS",
       "aTokenSymbol": "aEthENS",
       "aTokenUnderlyingBalance": "229584046752875785299323",
@@ -1020,7 +1021,6 @@
       "underlying": "0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xd180D7fdD4092f07428eFE801E17BC03576b3192",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt ENS",
       "variableDebtTokenSymbol": "variableDebtEthENS",
       "virtualAccountingActive": true,
@@ -1028,7 +1028,6 @@
     },
     "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee": {
       "aToken": "0xBdfa7b7893081B35Fb54027489e2Bc7A38275129",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum weETH",
       "aTokenSymbol": "aEthweETH",
       "aTokenUnderlyingBalance": "1238176845175989982157361",
@@ -1058,7 +1057,6 @@
       "underlying": "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x77ad9BF13a52517AD698D65913e8D381300c8Bf3",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt weETH",
       "variableDebtTokenSymbol": "variableDebtEthweETH",
       "virtualAccountingActive": true,
@@ -1066,7 +1064,6 @@
     },
     "0xD33526068D116cE69F19A9ee46F0bd304F21A51f": {
       "aToken": "0xB76CF92076adBF1D9C39294FA8e7A67579FDe357",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum RPL",
       "aTokenSymbol": "aEthRPL",
       "aTokenUnderlyingBalance": "319936735264324356174700",
@@ -1096,7 +1093,6 @@
       "underlying": "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
       "usageAsCollateralEnabled": false,
       "variableDebtToken": "0x8988ECA19D502fd8b9CCd03fA3bD20a6f599bc2A",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt RPL",
       "variableDebtTokenSymbol": "variableDebtEthRPL",
       "virtualAccountingActive": true,
@@ -1104,7 +1100,6 @@
     },
     "0xD533a949740bb3306d119CC777fa900bA034cd52": {
       "aToken": "0x7B95Ec873268a6BFC6427e7a28e396Db9D0ebc65",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum CRV",
       "aTokenSymbol": "aEthCRV",
       "aTokenUnderlyingBalance": "6634494721435487698532032",
@@ -1134,7 +1129,6 @@
       "underlying": "0xD533a949740bb3306d119CC777fa900bA034cd52",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x1b7D3F4b3c032a5AE656e30eeA4e8E1Ba376068F",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt CRV",
       "variableDebtTokenSymbol": "variableDebtEthCRV",
       "virtualAccountingActive": true,
@@ -1142,7 +1136,6 @@
     },
     "0xae78736Cd615f374D3085123A210448E74Fc6393": {
       "aToken": "0xCc9EE9483f662091a1de4795249E24aC0aC2630f",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum rETH",
       "aTokenSymbol": "aEthrETH",
       "aTokenUnderlyingBalance": "43773375234389103306080",
@@ -1172,7 +1165,6 @@
       "underlying": "0xae78736Cd615f374D3085123A210448E74Fc6393",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xae8593DD575FE29A9745056aA91C4b746eee62C8",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt rETH",
       "variableDebtTokenSymbol": "variableDebtEthrETH",
       "virtualAccountingActive": true,
@@ -1180,7 +1172,6 @@
     },
     "0xba100000625a3754423978a60c9317c58a424e3D": {
       "aToken": "0x2516E7B3F76294e03C42AA4c5b5b4DCE9C436fB8",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum BAL",
       "aTokenSymbol": "aEthBAL",
       "aTokenUnderlyingBalance": "6960295511597907251970558",
@@ -1210,7 +1201,6 @@
       "underlying": "0xba100000625a3754423978a60c9317c58a424e3D",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x3D3efceb4Ff0966D34d9545D3A2fa2dcdBf451f2",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt BAL",
       "variableDebtTokenSymbol": "variableDebtEthBAL",
       "virtualAccountingActive": true,
@@ -1218,7 +1208,6 @@
     },
     "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf": {
       "aToken": "0x5c647cE0Ae10658ec44FA4E11A51c96e94efd1Dd",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum cbBTC",
       "aTokenSymbol": "aEthcbBTC",
       "aTokenUnderlyingBalance": "448515110856",
@@ -1248,7 +1237,6 @@
       "underlying": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0xeB284A70557EFe3591b9e6D9D720040E02c54a4d",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt cbBTC",
       "variableDebtTokenSymbol": "variableDebtEthcbBTC",
       "virtualAccountingActive": true,
@@ -1256,7 +1244,6 @@
     },
     "0xdAC17F958D2ee523a2206206994597C13D831ec7": {
       "aToken": "0x23878914EFE38d27C4D67Ab83ed1b93A74D4086a",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum USDT",
       "aTokenSymbol": "aEthUSDT",
       "aTokenUnderlyingBalance": "764654220791989",
@@ -1286,7 +1273,6 @@
       "underlying": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x6df1C1E379bC5a00a7b4C6e67A203333772f45A8",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt USDT",
       "variableDebtTokenSymbol": "variableDebtEthUSDT",
       "virtualAccountingActive": true,
@@ -1294,7 +1280,6 @@
     },
     "0xdC035D45d973E3EC169d2276DDab16f1e407384F": {
       "aToken": "0x32a6268f9Ba3642Dda7892aDd74f1D34469A4259",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum USDS",
       "aTokenSymbol": "aEthUSDS",
       "aTokenUnderlyingBalance": "181496401048564356965579030",
@@ -1324,7 +1309,6 @@
       "underlying": "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x490E0E6255bF65b43E2e02F7acB783c5e04572Ff",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt USDS",
       "variableDebtTokenSymbol": "variableDebtEthUSDS",
       "virtualAccountingActive": true,
@@ -1332,7 +1316,6 @@
     },
     "0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202": {
       "aToken": "0x5b502e3796385E1e9755d7043B9C945C3aCCeC9C",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum KNC",
       "aTokenSymbol": "aEthKNC",
       "aTokenUnderlyingBalance": "51952343860150470181768",
@@ -1362,7 +1345,6 @@
       "underlying": "0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x253127Ffc04981cEA8932F406710661c2f2c3fD2",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt KNC",
       "variableDebtTokenSymbol": "variableDebtEthKNC",
       "virtualAccountingActive": true,
@@ -1370,7 +1352,6 @@
     },
     "0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38": {
       "aToken": "0x927709711794F3De5DdBF1D176bEE2D55Ba13c21",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum osETH",
       "aTokenSymbol": "aEthosETH",
       "aTokenUnderlyingBalance": "14386175596266640509804",
@@ -1400,7 +1381,6 @@
       "underlying": "0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38",
       "usageAsCollateralEnabled": true,
       "variableDebtToken": "0x8838eefF2af391863E1Bb8b1dF563F86743a8470",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt osETH",
       "variableDebtTokenSymbol": "variableDebtEthosETH",
       "virtualAccountingActive": true,
@@ -1408,7 +1388,6 @@
     },
     "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E": {
       "aToken": "0xb82fa9f31612989525992FCfBB09AB22Eff5c85A",
-      "aTokenImpl": "0x7EfFD7b47Bfd17e52fB7559d3f924201b9DbfF3d",
       "aTokenName": "Aave Ethereum crvUSD",
       "aTokenSymbol": "aEthcrvUSD",
       "aTokenUnderlyingBalance": "35104418139863841165486",
@@ -1438,7 +1417,6 @@
       "underlying": "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
       "usageAsCollateralEnabled": false,
       "variableDebtToken": "0x028f7886F3e937f8479efaD64f31B3fE1119857a",
-      "variableDebtTokenImpl": "0xaC725CB59D16C81061BDeA61041a8A5e73DA9EC6",
       "variableDebtTokenName": "Aave Ethereum Variable Debt crvUSD",
       "variableDebtTokenSymbol": "variableDebtEthcrvUSD",
       "virtualAccountingActive": true,
