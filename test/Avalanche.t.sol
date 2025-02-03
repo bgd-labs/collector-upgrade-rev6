@@ -6,7 +6,7 @@ import {UpgradeTest} from './UpgradeTest.sol';
 import {Payloads} from '../src/Payloads.sol';
 
 contract AvalancheTest is UpgradeTest {
-  constructor() UpgradeTest('avalanche', 56249496) {}
+  constructor() UpgradeTest('avalanche', 56763394) {}
 
   function _getPayload() internal virtual override returns (address) {
     return Payloads.AVALANCHE;

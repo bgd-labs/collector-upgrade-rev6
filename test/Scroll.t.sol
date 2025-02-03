@@ -6,7 +6,7 @@ import {UpgradeTest} from './UpgradeTest.sol';
 import {Payloads} from '../src/Payloads.sol';
 
 contract ScrollTest is UpgradeTest {
-  constructor() UpgradeTest('scroll', 12914491) {}
+  constructor() UpgradeTest('scroll', 13165814) {}
 
   function _getPayload() internal virtual override returns (address) {
     return Payloads.SCROLL;

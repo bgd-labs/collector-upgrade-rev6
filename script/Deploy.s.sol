@@ -173,7 +173,11 @@ contract DeployBNB is BNBScript {
 
 contract DeployMetis is MetisScript {
   function run() external broadcast {
-    DeploymentLibrary.deployMetis();
+    // 0x83b7ce402a0e756e901c4a9d1cafa27ca9572afc
+    // DeploymentLibrary.deployMetis();
+    new UpgradePayload(
+      address(AaveV3Metis.COLLECTOR), 0x83b7Ce402A0E756E901C4A9d1cAfa27cA9572afC, MiscMetis.PROXY_ADMIN
+    );
   }
 }
 
@@ -187,8 +191,10 @@ contract DeployZksync is Script {
   function run() external {
     vm.startBroadcast();
 
-    address impl = address(new CollectorWithCustomImplNewLayout());
-    new UpgradePayload(address(AaveV3ZkSync.COLLECTOR), impl, MiscZkSync.PROXY_ADMIN);
+    // address impl = address(new CollectorWithCustomImplNewLayout());
+    new UpgradePayload(
+      address(AaveV3ZkSync.COLLECTOR), 0x8b5120017a8ed50Fd07A2206560973174C865A70, MiscZkSync.PROXY_ADMIN
+    );
     vm.stopBroadcast();
   }
 }

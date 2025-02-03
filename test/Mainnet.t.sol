@@ -6,7 +6,7 @@ import {UpgradeTest} from './UpgradeTest.sol';
 import {Payloads} from '../src/Payloads.sol';
 
 contract MainnetTest is UpgradeTest {
-  constructor() UpgradeTest('mainnet', 21689101) {}
+  constructor() UpgradeTest('mainnet', 21765725) {}
 
   function _getPayload() internal virtual override returns (address) {
     return Payloads.MAINNET;

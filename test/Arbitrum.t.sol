@@ -6,7 +6,7 @@ import {UpgradeTest} from './UpgradeTest.sol';
 import {Payloads} from '../src/Payloads.sol';
 
 contract ArbitrumTest is UpgradeTest {
-  constructor() UpgradeTest('arbitrum', 298507082) {}
+  constructor() UpgradeTest('arbitrum', 302191494) {}
 
   function _getPayload() internal virtual override returns (address) {
     return Payloads.ARBITRUM;

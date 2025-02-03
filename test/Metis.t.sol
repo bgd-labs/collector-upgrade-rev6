@@ -6,7 +6,7 @@ import {UpgradeTest} from './UpgradeTest.sol';
 import {Payloads} from '../src/Payloads.sol';
 
 contract MetisTest is UpgradeTest {
-  constructor() UpgradeTest('metis', 19546165) {}
+  constructor() UpgradeTest('metis', 19641278) {}
 
   function _getPayload() internal virtual override returns (address) {
     return Payloads.METIS;
