@@ -8,7 +8,7 @@ library Payloads {
   address constant AVALANCHE = 0x55c09b4Df32606667dBdF7dc846417bFb4Cec776;
   address constant BASE = 0x6b4E260b765B3cA1514e618C0215A6B7839fF93e;
   address constant METIS = 0x04a8D477eE202aDCE1682F5902e1160455205b12;
-  address constant BNB = 0x8b8bf083fD1837486c141681E10Ea61D0f3cD692; // explorer lag
+  address constant BNB = 0x8b8bf083fD1837486c141681E10Ea61D0f3cD692;
   address constant LINEA = 0xd91d1331db4F436DaF47Ec9Dd86deCb8EEF946B4;
-  address constant ZKSYNC = 0xA1900dD73e46Ad013fA87f5f70072c472D8f4770;
+  address constant ZKSYNC = 0xa5569DA53e95dD6311f01CCE03FA0BAD56d04125;
 }
