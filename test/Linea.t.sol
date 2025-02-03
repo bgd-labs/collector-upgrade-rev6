@@ -8,7 +8,7 @@ import {Payloads} from '../src/Payloads.sol';
 import {UpgradePayload} from '../src/UpgradePayload.sol';
 
 contract LineaTest is UpgradeTest {
-  constructor() UpgradeTest('linea', 14947439) {}
+  constructor() UpgradeTest('linea', 15377421) {}
 
   function _getPayload() internal virtual override returns (address) {
     return Payloads.LINEA;

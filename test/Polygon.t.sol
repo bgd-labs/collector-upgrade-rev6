@@ -6,7 +6,7 @@ import {UpgradeTest} from './UpgradeTest.sol';
 import {Payloads} from '../src/Payloads.sol';
 
 contract PolygonTest is UpgradeTest {
-  constructor() UpgradeTest('polygon', 67056030) {}
+  constructor() UpgradeTest('polygon', 67486745) {}
 
   function _getPayload() internal virtual override returns (address) {
     return Payloads.POLYGON;

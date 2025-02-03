@@ -6,7 +6,7 @@ import {UpgradeTest} from './UpgradeTest.sol';
 import {Payloads} from '../src/Payloads.sol';
 
 contract GnosisTest is UpgradeTest {
-  constructor() UpgradeTest('gnosis', 38190868) {}
+  constructor() UpgradeTest('gnosis', 38372447) {}
 
   function _getPayload() internal virtual override returns (address) {
     return Payloads.GNOSIS;

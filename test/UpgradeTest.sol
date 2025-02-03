@@ -87,6 +87,14 @@ abstract contract UpgradeTest is ProtocolV3TestBase {
     collector.transfer(IERC20(mockETH), address(this), 100 ether);
   }
 
+  function test_shouldReveiveEth() external {
+    executePayload(vm, payload);
+    deal(address(this), 100 ether);
+    address collector = UpgradePayload(payload).COLLECTOR();
+    (bool success,) = collector.call{value: 100 ether}('');
+    require(success, 'ERROR RECEIVING ETH');
+  }
+
   function _getPayload() internal virtual returns (address);
 
   function _getPool() internal virtual returns (IPool);

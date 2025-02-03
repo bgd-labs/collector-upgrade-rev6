@@ -17,7 +17,7 @@ contract UpgradeTest is ProtocolV3TestBase {
   address payload;
 
   function setUp() public override {
-    vm.createSelectFork(vm.rpcUrl('zksync'), 54434313);
+    vm.createSelectFork(vm.rpcUrl('zksync'), 55163443);
     payload = _getPayload();
     super.setUp();
   }
