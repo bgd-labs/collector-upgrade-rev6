@@ -50,7 +50,8 @@ function sortSolidityContracts(filePath) {
   const content = readFileSync(filePath, "utf8");
 
   // Regex to capture contract and library definitions
-  const contractRegex = /(contract|library)\s+(\w+)\s*{[^}]*}/gs;
+  const contractRegex =
+    /(abstract\s+contract|contract|library)\s+(\w+)\s*{[^}]*}/gs;
 
   let matches = [...content.matchAll(contractRegex)];
 
