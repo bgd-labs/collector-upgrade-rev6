@@ -57,6 +57,160 @@ pragma solidity ^0.8.0 ^0.8.20;
  */
 
 
+  // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.Initializable")) - 1)) & ~bytes32(uint256(0xff))
+  bytes32 private constant INITIALIZABLE_STORAGE = 0xf0c57e16840df040f15088dc2f81fe391c3923bec73e23a9662efc9c229c6a00;
+
+  /**
+   * @dev The contract is already initialized.
+   */
+  error InvalidInitialization();
+
+  /**
+   * @dev The contract is not initializing.
+   */
+  error NotInitializing();
+
+  /**
+   * @dev Triggered when the contract has been initialized or reinitialized.
+   */
+  event Initialized(uint64 version);
+
+  /**
+   * @dev A modifier that defines a protected initializer function that can be invoked at most once. In its scope,
+   * `onlyInitializing` functions can be used to initialize parent contracts.
+   *
+   * Similar to `reinitializer(1)`, except that in the context of a constructor an `initializer` may be invoked any
+   * number of times. This behavior in the constructor can be useful during testing and is not expected to be used in
+   * production.
+   *
+   * Emits an {Initialized} event.
+   */
+  modifier initializer() {
+    // solhint-disable-next-line var-name-mixedcase
+    InitializableStorage storage $ = _getInitializableStorage();
+
+    // Cache values to avoid duplicated sloads
+    bool isTopLevelCall = !$._initializing;
+    uint64 initialized = $._initialized;
+
+    // Allowed calls:
+    // - initialSetup: the contract is not in the initializing state and no previous version was
+    //                 initialized
+    // - construction: the contract is initialized at version 1 (no reininitialization) and the
+    //                 current contract is just being deployed
+    bool initialSetup = initialized == 0 && isTopLevelCall;
+    bool construction = initialized == 1 && address(this).code.length == 0;
+
+    if (!initialSetup && !construction) {
+      revert InvalidInitialization();
+    }
+    $._initialized = 1;
+    if (isTopLevelCall) {
+      $._initializing = true;
+    }
+    _;
+    if (isTopLevelCall) {
+      $._initializing = false;
+      emit Initialized(1);
+    }
+  }
+
+  /**
+   * @dev A modifier that defines a protected reinitializer function that can be invoked at most once, and only if the
+   * contract hasn't been initialized to a greater version before. In its scope, `onlyInitializing` functions can be
+   * used to initialize parent contracts.
+   *
+   * A reinitializer may be used after the original initialization step. This is essential to configure modules that
+   * are added through upgrades and that require initialization.
+   *
+   * When `version` is 1, this modifier is similar to `initializer`, except that functions marked with `reinitializer`
+   * cannot be nested. If one is invoked in the context of another, execution will revert.
+   *
+   * Note that versions can jump in increments greater than 1; this implies that if multiple reinitializers coexist in
+   * a contract, executing them in the right order is up to the developer or operator.
+   *
+   * WARNING: Setting the version to 2**64 - 1 will prevent any future reinitialization.
+   *
+   * Emits an {Initialized} event.
+   */
+  modifier reinitializer(uint64 version) {
+    // solhint-disable-next-line var-name-mixedcase
+    InitializableStorage storage $ = _getInitializableStorage();
+
+    if ($._initializing || $._initialized >= version) {
+      revert InvalidInitialization();
+    }
+    $._initialized = version;
+    $._initializing = true;
+    _;
+    $._initializing = false;
+    emit Initialized(version);
+  }
+
+  /**
+   * @dev Modifier to protect an initialization function so that it can only be invoked by functions with the
+   * {initializer} and {reinitializer} modifiers, directly or indirectly.
+   */
+  modifier onlyInitializing() {
+    _checkInitializing();
+    _;
+  }
+
+  /**
+   * @dev Reverts if the contract is not in an initializing state. See {onlyInitializing}.
+   */
+  function _checkInitializing() internal view virtual {
+    if (!_isInitializing()) {
+      revert NotInitializing();
+    }
+  }
+
+  /**
+   * @dev Locks the contract, preventing any future reinitialization. This cannot be part of an initializer call.
+   * Calling this in the constructor of a contract will prevent that contract from being initialized or reinitialized
+   * to any version. It is recommended to use this to lock implementation contracts that are designed to be called
+   * through proxies.
+   *
+   * Emits an {Initialized} event the first time it is successfully executed.
+   */
+  function _disableInitializers() internal virtual {
+    // solhint-disable-next-line var-name-mixedcase
+    InitializableStorage storage $ = _getInitializableStorage();
+
+    if ($._initializing) {
+      revert InvalidInitialization();
+    }
+    if ($._initialized != type(uint64).max) {
+      $._initialized = type(uint64).max;
+      emit Initialized(type(uint64).max);
+    }
+  }
+
+  /**
+   * @dev Returns the highest version that has been initialized. See {reinitializer}.
+   */
+  function _getInitializedVersion() internal view returns (uint64) {
+    return _getInitializableStorage()._initialized;
+  }
+
+  /**
+   * @dev Returns `true` if the contract is currently initializing. See {onlyInitializing}.
+   */
+  function _isInitializing() internal view returns (bool) {
+    return _getInitializableStorage()._initializing;
+  }
+
+  /**
+   * @dev Returns a pointer to the storage namespace.
+   */
+  // solhint-disable-next-line var-name-mixedcase
+  function _getInitializableStorage() private pure returns (InitializableStorage storage $) {
+    assembly {
+      $.slot := INITIALIZABLE_STORAGE
+    }
+  }
+}
+
 // lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/access/IAccessControl.sol
 
 // OpenZeppelin Contracts (last updated v5.1.0) (access/IAccessControl.sol)
@@ -64,16 +218,7 @@ pragma solidity ^0.8.0 ^0.8.20;
 /**
  * @dev External interface of AccessControl declared to support ERC-165 detection.
  */
-interface IAccessControl {
-  /**
-   * @dev The `account` is missing a role.
-   */
-  error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
-
-  /**
-   * @dev The caller of a function is not the expected one.
-   *
-   * NOTE: Don't confuse with {AccessControlUnauthorizedAccount}.
+.
    */
   error AccessControlBadConfirmation();
 
@@ -162,18 +307,7 @@ interface IAccessControl {
 /**
  * @dev Interface of the ERC-20 standard as defined in the ERC.
  */
-interface IERC20 {
-  /**
-   * @dev Emitted when `value` tokens are moved from one account (`from`) to
-   * another (`to`).
-   *
-   * Note that `value` may be zero.
-   */
-  event Transfer(address indexed from, address indexed to, uint256 value);
-
-  /**
-   * @dev Emitted when the allowance of a `spender` for an `owner` is set by
-   * a call to {approve}. `value` is the new allowance.
+. `value` is the new allowance.
    */
   event Approval(address indexed owner, address indexed spender, uint256 value);
 
@@ -261,17 +395,7 @@ interface IERC20 {
  *
  * For an implementation, see {ERC165}.
  */
-interface IERC165 {
-  /**
-   * @dev Returns true if this contract implements the interface defined by
-   * `interfaceId`. See the corresponding
-   * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[ERC section]
-   * to learn more about how these ids are created.
-   *
-   * This function call must use less than 30 000 gas.
-   */
-  function supportsInterface(bytes4 interfaceId) external view returns (bool);
-}
+
 
 // lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol
 
@@ -428,20 +552,7 @@ abstract contract ReentrancyGuardUpgradeable is Initializable {
 /**
  * @dev Collection of functions related to the address type
  */
-library Address {
-  /**
-   * @dev There's no code at `target` (it is not a contract).
-   */
-  error AddressEmptyCode(address target);
-
-  /**
-   * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
-   * `recipient`, forwarding all available gas and reverting on errors.
-   *
-   * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
-   * of certain opcodes, possibly making contracts go over the 2300 gas limit
-   * imposed by `transfer`, making them unable to receive funds via
-   * `transfer`. {sendValue} removes this limitation.
+ removes this limitation.
    *
    * https://consensys.net/diligence/blog/2019/09/stop-using-soliditys-transfer-now/[Learn more].
    *
@@ -571,18 +682,7 @@ library Address {
 
 // lib/aave-v3-origin/src/contracts/treasury/ICollector.sol
 
-interface ICollector {
-  struct Stream {
-    uint256 deposit;
-    uint256 ratePerSecond;
-    uint256 remainingBalance;
-    uint256 startTime;
-    uint256 stopTime;
-    address recipient;
-    address sender;
-    address tokenAddress;
-    bool isEntity;
-  }
+
 
   /**
    * @dev Withdraw amount exceeds available balance
@@ -1138,24 +1238,7 @@ abstract contract AccessControlUpgradeable is Initializable, ContextUpgradeable,
  * To use this library you can add a `using SafeERC20 for IERC20;` statement to your contract,
  * which allows you to call the safe operations as `token.safeTransfer(...)`, etc.
  */
-library SafeERC20 {
-  /**
-   * @dev An operation with an ERC-20 token failed.
-   */
-  error SafeERC20FailedOperation(address token);
 
-  /**
-   * @dev Indicates a failed `decreaseAllowance` request.
-   */
-  error SafeERC20FailedDecreaseAllowance(address spender, uint256 currentAllowance, uint256 requestedDecrease);
-
-  /**
-   * @dev Transfer `value` amount of `token` from the calling contract to `to`. If `token` returns no value,
-   * non-reverting calls are assumed to be successful.
-   */
-  function safeTransfer(IERC20 token, address to, uint256 value) internal {
-    _callOptionalReturn(token, abi.encodeCall(token.transfer, (to, value)));
-  }
 
   /**
    * @dev Transfer `value` amount of `token` from `from` to `to`, spending the approval given by `from` to the
@@ -1677,6 +1760,21 @@ contract CollectorWithCustomImpl is Collector {
   }
 }
 
+library Address {
+  /**
+   * @dev There's no code at `target` (it is not a contract).
+   */
+  error AddressEmptyCode(address target);
+
+  /**
+   * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
+   * `recipient`, forwarding all available gas and reverting on errors.
+   *
+   * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
+   * of certain opcodes, possibly making contracts go over the 2300 gas limit
+   * imposed by `transfer`, making them unable to receive funds via
+   * `transfer`. {sendValue}
+
 library Errors {
   /**
    * @dev The ETH balance of the account is not enough to perform the operation.
@@ -1699,6 +1797,55 @@ library Errors {
   error MissingPrecompile(address);
 }
 
+interface IAccessControl {
+  /**
+   * @dev The `account` is missing a role.
+   */
+  error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
+
+  /**
+   * @dev The caller of a function is not the expected one.
+   *
+   * NOTE: Don't confuse with {AccessControlUnauthorizedAccount}
+
+interface ICollector {
+  struct Stream {
+    uint256 deposit;
+    uint256 ratePerSecond;
+    uint256 remainingBalance;
+    uint256 startTime;
+    uint256 stopTime;
+    address recipient;
+    address sender;
+    address tokenAddress;
+    bool isEntity;
+  }
+
+interface IERC165 {
+  /**
+   * @dev Returns true if this contract implements the interface defined by
+   * `interfaceId`. See the corresponding
+   * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[ERC section]
+   * to learn more about how these ids are created.
+   *
+   * This function call must use less than 30 000 gas.
+   */
+  function supportsInterface(bytes4 interfaceId) external view returns (bool);
+}
+
+interface IERC20 {
+  /**
+   * @dev Emitted when `value` tokens are moved from one account (`from`) to
+   * another (`to`).
+   *
+   * Note that `value` may be zero.
+   */
+  event Transfer(address indexed from, address indexed to, uint256 value);
+
+  /**
+   * @dev Emitted when the allowance of a `spender` for an `owner` is set by
+   * a call to {approve}
+
 abstract contract Initializable {
   /**
    * @dev Storage of the initializable contract.
@@ -1719,156 +1866,21 @@ abstract contract Initializable {
     bool _initializing;
   }
 
-  // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.Initializable")) - 1)) & ~bytes32(uint256(0xff))
-  bytes32 private constant INITIALIZABLE_STORAGE = 0xf0c57e16840df040f15088dc2f81fe391c3923bec73e23a9662efc9c229c6a00;
+library SafeERC20 {
+  /**
+   * @dev An operation with an ERC-20 token failed.
+   */
+  error SafeERC20FailedOperation(address token);
 
   /**
-   * @dev The contract is already initialized.
+   * @dev Indicates a failed `decreaseAllowance` request.
    */
-  error InvalidInitialization();
+  error SafeERC20FailedDecreaseAllowance(address spender, uint256 currentAllowance, uint256 requestedDecrease);
 
   /**
-   * @dev The contract is not initializing.
+   * @dev Transfer `value` amount of `token` from the calling contract to `to`. If `token` returns no value,
+   * non-reverting calls are assumed to be successful.
    */
-  error NotInitializing();
-
-  /**
-   * @dev Triggered when the contract has been initialized or reinitialized.
-   */
-  event Initialized(uint64 version);
-
-  /**
-   * @dev A modifier that defines a protected initializer function that can be invoked at most once. In its scope,
-   * `onlyInitializing` functions can be used to initialize parent contracts.
-   *
-   * Similar to `reinitializer(1)`, except that in the context of a constructor an `initializer` may be invoked any
-   * number of times. This behavior in the constructor can be useful during testing and is not expected to be used in
-   * production.
-   *
-   * Emits an {Initialized} event.
-   */
-  modifier initializer() {
-    // solhint-disable-next-line var-name-mixedcase
-    InitializableStorage storage $ = _getInitializableStorage();
-
-    // Cache values to avoid duplicated sloads
-    bool isTopLevelCall = !$._initializing;
-    uint64 initialized = $._initialized;
-
-    // Allowed calls:
-    // - initialSetup: the contract is not in the initializing state and no previous version was
-    //                 initialized
-    // - construction: the contract is initialized at version 1 (no reininitialization) and the
-    //                 current contract is just being deployed
-    bool initialSetup = initialized == 0 && isTopLevelCall;
-    bool construction = initialized == 1 && address(this).code.length == 0;
-
-    if (!initialSetup && !construction) {
-      revert InvalidInitialization();
-    }
-    $._initialized = 1;
-    if (isTopLevelCall) {
-      $._initializing = true;
-    }
-    _;
-    if (isTopLevelCall) {
-      $._initializing = false;
-      emit Initialized(1);
-    }
+  function safeTransfer(IERC20 token, address to, uint256 value) internal {
+    _callOptionalReturn(token, abi.encodeCall(token.transfer, (to, value)));
   }
-
-  /**
-   * @dev A modifier that defines a protected reinitializer function that can be invoked at most once, and only if the
-   * contract hasn't been initialized to a greater version before. In its scope, `onlyInitializing` functions can be
-   * used to initialize parent contracts.
-   *
-   * A reinitializer may be used after the original initialization step. This is essential to configure modules that
-   * are added through upgrades and that require initialization.
-   *
-   * When `version` is 1, this modifier is similar to `initializer`, except that functions marked with `reinitializer`
-   * cannot be nested. If one is invoked in the context of another, execution will revert.
-   *
-   * Note that versions can jump in increments greater than 1; this implies that if multiple reinitializers coexist in
-   * a contract, executing them in the right order is up to the developer or operator.
-   *
-   * WARNING: Setting the version to 2**64 - 1 will prevent any future reinitialization.
-   *
-   * Emits an {Initialized} event.
-   */
-  modifier reinitializer(uint64 version) {
-    // solhint-disable-next-line var-name-mixedcase
-    InitializableStorage storage $ = _getInitializableStorage();
-
-    if ($._initializing || $._initialized >= version) {
-      revert InvalidInitialization();
-    }
-    $._initialized = version;
-    $._initializing = true;
-    _;
-    $._initializing = false;
-    emit Initialized(version);
-  }
-
-  /**
-   * @dev Modifier to protect an initialization function so that it can only be invoked by functions with the
-   * {initializer} and {reinitializer} modifiers, directly or indirectly.
-   */
-  modifier onlyInitializing() {
-    _checkInitializing();
-    _;
-  }
-
-  /**
-   * @dev Reverts if the contract is not in an initializing state. See {onlyInitializing}.
-   */
-  function _checkInitializing() internal view virtual {
-    if (!_isInitializing()) {
-      revert NotInitializing();
-    }
-  }
-
-  /**
-   * @dev Locks the contract, preventing any future reinitialization. This cannot be part of an initializer call.
-   * Calling this in the constructor of a contract will prevent that contract from being initialized or reinitialized
-   * to any version. It is recommended to use this to lock implementation contracts that are designed to be called
-   * through proxies.
-   *
-   * Emits an {Initialized} event the first time it is successfully executed.
-   */
-  function _disableInitializers() internal virtual {
-    // solhint-disable-next-line var-name-mixedcase
-    InitializableStorage storage $ = _getInitializableStorage();
-
-    if ($._initializing) {
-      revert InvalidInitialization();
-    }
-    if ($._initialized != type(uint64).max) {
-      $._initialized = type(uint64).max;
-      emit Initialized(type(uint64).max);
-    }
-  }
-
-  /**
-   * @dev Returns the highest version that has been initialized. See {reinitializer}.
-   */
-  function _getInitializedVersion() internal view returns (uint64) {
-    return _getInitializableStorage()._initialized;
-  }
-
-  /**
-   * @dev Returns `true` if the contract is currently initializing. See {onlyInitializing}.
-   */
-  function _isInitializing() internal view returns (bool) {
-    return _getInitializableStorage()._initializing;
-  }
-
-  /**
-   * @dev Returns a pointer to the storage namespace.
-   */
-  // solhint-disable-next-line var-name-mixedcase
-  function _getInitializableStorage() private pure returns (InitializableStorage storage $) {
-    assembly {
-      $.slot := INITIALIZABLE_STORAGE
-    }
-  }
-}

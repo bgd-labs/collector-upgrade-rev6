@@ -1,8 +1,8 @@
 diff --git a/flattened/324/0xF9C838BDec2fb25fa96f81c162A9B07f79056b8F.sol b/flattened/Collector.sol
-index 23f6219..e4761ea 100644
+index 23f6219..1a6f4ec 100644
 --- a/flattened/324/0xF9C838BDec2fb25fa96f81c162A9B07f79056b8F.sol
 +++ b/flattened/Collector.sol
-@@ -1,236 +1,200 @@
+@@ -1,236 +1,334 @@
  // SPDX-License-Identifier: MIT
 -pragma solidity ^0.8.0 ^0.8.10;
 +pragma solidity ^0.8.0 ^0.8.20;
@@ -65,45 +65,182 @@ index 23f6219..e4761ea 100644
 + * ====
   */
 -library Address {
--  /**
++
++
++  // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.Initializable")) - 1)) & ~bytes32(uint256(0xff))
++  bytes32 private constant INITIALIZABLE_STORAGE = 0xf0c57e16840df040f15088dc2f81fe391c3923bec73e23a9662efc9c229c6a00;
++
++  /**
++   * @dev The contract is already initialized.
++   */
++  error InvalidInitialization();
++
+   /**
 -   * @dev Returns true if `account` is a contract.
--   *
++   * @dev The contract is not initializing.
++   */
++  error NotInitializing();
++
++  /**
++   * @dev Triggered when the contract has been initialized or reinitialized.
++   */
++  event Initialized(uint64 version);
++
++  /**
++   * @dev A modifier that defines a protected initializer function that can be invoked at most once. In its scope,
++   * `onlyInitializing` functions can be used to initialize parent contracts.
++   *
++   * Similar to `reinitializer(1)`, except that in the context of a constructor an `initializer` may be invoked any
++   * number of times. This behavior in the constructor can be useful during testing and is not expected to be used in
++   * production.
++   *
++   * Emits an {Initialized} event.
++   */
++  modifier initializer() {
++    // solhint-disable-next-line var-name-mixedcase
++    InitializableStorage storage $ = _getInitializableStorage();
++
++    // Cache values to avoid duplicated sloads
++    bool isTopLevelCall = !$._initializing;
++    uint64 initialized = $._initialized;
++
++    // Allowed calls:
++    // - initialSetup: the contract is not in the initializing state and no previous version was
++    //                 initialized
++    // - construction: the contract is initialized at version 1 (no reininitialization) and the
++    //                 current contract is just being deployed
++    bool initialSetup = initialized == 0 && isTopLevelCall;
++    bool construction = initialized == 1 && address(this).code.length == 0;
++
++    if (!initialSetup && !construction) {
++      revert InvalidInitialization();
++    }
++    $._initialized = 1;
++    if (isTopLevelCall) {
++      $._initializing = true;
++    }
++    _;
++    if (isTopLevelCall) {
++      $._initializing = false;
++      emit Initialized(1);
++    }
++  }
++
++  /**
++   * @dev A modifier that defines a protected reinitializer function that can be invoked at most once, and only if the
++   * contract hasn't been initialized to a greater version before. In its scope, `onlyInitializing` functions can be
++   * used to initialize parent contracts.
++   *
++   * A reinitializer may be used after the original initialization step. This is essential to configure modules that
++   * are added through upgrades and that require initialization.
+    *
 -   * [IMPORTANT]
 -   * ====
 -   * It is unsafe to assume that an address for which this function returns
 -   * false is an externally-owned account (EOA) and not a contract.
--   *
++   * When `version` is 1, this modifier is similar to `initializer`, except that functions marked with `reinitializer`
++   * cannot be nested. If one is invoked in the context of another, execution will revert.
+    *
 -   * Among others, `isContract` will return false for the following
 -   * types of addresses:
--   *
++   * Note that versions can jump in increments greater than 1; this implies that if multiple reinitializers coexist in
++   * a contract, executing them in the right order is up to the developer or operator.
+    *
 -   *  - an externally-owned account
 -   *  - a contract in construction
 -   *  - an address where a contract will be created
 -   *  - an address where a contract lived, but was destroyed
 -   * ====
--   */
++   * WARNING: Setting the version to 2**64 - 1 will prevent any future reinitialization.
++   *
++   * Emits an {Initialized} event.
++   */
++  modifier reinitializer(uint64 version) {
++    // solhint-disable-next-line var-name-mixedcase
++    InitializableStorage storage $ = _getInitializableStorage();
++
++    if ($._initializing || $._initialized >= version) {
++      revert InvalidInitialization();
++    }
++    $._initialized = version;
++    $._initializing = true;
++    _;
++    $._initializing = false;
++    emit Initialized(version);
++  }
++
++  /**
++   * @dev Modifier to protect an initialization function so that it can only be invoked by functions with the
++   * {initializer} and {reinitializer} modifiers, directly or indirectly.
+    */
 -  function isContract(address account) internal view returns (bool) {
 -    // This method relies on extcodesize, which returns 0 for contracts in
 -    // construction, since the code is only stored at the end of the
 -    // constructor execution.
--
--    uint256 size;
--    assembly {
--      size := extcodesize(account)
--    }
--    return size > 0;
--  }
++  modifier onlyInitializing() {
++    _checkInitializing();
++    _;
++  }
  
+-    uint256 size;
++  /**
++   * @dev Reverts if the contract is not in an initializing state. See {onlyInitializing}.
++   */
++  function _checkInitializing() internal view virtual {
++    if (!_isInitializing()) {
++      revert NotInitializing();
++    }
++  }
 +
-+// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/access/IAccessControl.sol
++  /**
++   * @dev Locks the contract, preventing any future reinitialization. This cannot be part of an initializer call.
++   * Calling this in the constructor of a contract will prevent that contract from being initialized or reinitialized
++   * to any version. It is recommended to use this to lock implementation contracts that are designed to be called
++   * through proxies.
++   *
++   * Emits an {Initialized} event the first time it is successfully executed.
++   */
++  function _disableInitializers() internal virtual {
++    // solhint-disable-next-line var-name-mixedcase
++    InitializableStorage storage $ = _getInitializableStorage();
 +
-+// OpenZeppelin Contracts (last updated v5.1.0) (access/IAccessControl.sol)
++    if ($._initializing) {
++      revert InvalidInitialization();
++    }
++    if ($._initialized != type(uint64).max) {
++      $._initialized = type(uint64).max;
++      emit Initialized(type(uint64).max);
++    }
++  }
 +
-+/**
-+ * @dev External interface of AccessControl declared to support ERC-165 detection.
-+ */
-+interface IAccessControl {
-   /**
++  /**
++   * @dev Returns the highest version that has been initialized. See {reinitializer}.
++   */
++  function _getInitializedVersion() internal view returns (uint64) {
++    return _getInitializableStorage()._initialized;
++  }
++
++  /**
++   * @dev Returns `true` if the contract is currently initializing. See {onlyInitializing}.
++   */
++  function _isInitializing() internal view returns (bool) {
++    return _getInitializableStorage()._initializing;
++  }
++
++  /**
++   * @dev Returns a pointer to the storage namespace.
++   */
++  // solhint-disable-next-line var-name-mixedcase
++  function _getInitializableStorage() private pure returns (InitializableStorage storage $) {
+     assembly {
+-      size := extcodesize(account)
++      $.slot := INITIALIZABLE_STORAGE
+     }
+-    return size > 0;
+   }
++}
+ 
+-  /**
 -   * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
 -   * `recipient`, forwarding all available gas and reverting on errors.
 -   *
@@ -118,17 +255,17 @@ index 23f6219..e4761ea 100644
 -   * taken to not create reentrancy vulnerabilities. Consider using
 -   * {ReentrancyGuard} or the
 -   * https://solidity.readthedocs.io/en/v0.5.11/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].
-+   * @dev The `account` is missing a role.
-    */
+-   */
 -  function sendValue(address payable recipient, uint256 amount) internal {
 -    require(address(this).balance >= amount, 'Address: insufficient balance');
--
++// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/access/IAccessControl.sol
+ 
 -    (bool success,) = recipient.call{value: amount}('');
 -    require(success, 'Address: unable to send value, recipient may have reverted');
 -  }
-+  error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
++// OpenZeppelin Contracts (last updated v5.1.0) (access/IAccessControl.sol)
  
-   /**
+-  /**
 -   * @dev Performs a Solidity function call using a low level `call`. A
 -   * plain `call` is an unsafe replacement for a function call: use this
 -   * function instead.
@@ -140,13 +277,15 @@ index 23f6219..e4761ea 100644
 -   * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].
 -   *
 -   * Requirements:
-+   * @dev The caller of a function is not the expected one.
-    *
+-   *
 -   * - `target` must be a contract.
 -   * - calling `target` with `data` must not revert.
 -   *
 -   * _Available since v3.1._
-+   * NOTE: Don't confuse with {AccessControlUnauthorizedAccount}.
++/**
++ * @dev External interface of AccessControl declared to support ERC-165 detection.
++ */
++.
     */
 -  function functionCall(address target, bytes memory data) internal returns (bytes memory) {
 -    return functionCall(target, data, 'Address: low-level call failed');
@@ -170,10 +309,10 @@ index 23f6219..e4761ea 100644
    /**
 -   * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
 -   * but also transferring `value` wei to `target`.
--   *
--   * Requirements:
 +   * @dev Emitted when `account` is granted `role`.
     *
+-   * Requirements:
+-   *
 -   * - the calling contract must have an ETH balance of at least `value`.
 -   * - the called Solidity function must be `payable`.
 -   *
@@ -293,10 +432,10 @@ index 23f6219..e4761ea 100644
 +   *
 +   * If the calling account had been granted `role`, emits a {RoleRevoked}
 +   * event.
-+   *
-+   * Requirements:
     *
 -   * _Available since v4.3._
++   * Requirements:
++   *
 +   * - the caller must be `callerConfirmation`.
     */
 -  function verifyCallResult(bool success, bytes memory returndata, string memory errorMessage)
@@ -332,23 +471,13 @@ index 23f6219..e4761ea 100644
 - * @dev Interface of the ERC20 standard as defined in the EIP.
 + * @dev Interface of the ERC-20 standard as defined in the ERC.
   */
- interface IERC20 {
-   /**
--   * @dev Returns the amount of tokens in existence.
-+   * @dev Emitted when `value` tokens are moved from one account (`from`) to
-+   * another (`to`).
-+   *
-+   * Note that `value` may be zero.
-+   */
-+  event Transfer(address indexed from, address indexed to, uint256 value);
-+
-+  /**
-+   * @dev Emitted when the allowance of a `spender` for an `owner` is set by
-+   * a call to {approve}. `value` is the new allowance.
+-interface IERC20 {
++. `value` is the new allowance.
 +   */
 +  event Approval(address indexed owner, address indexed spender, uint256 value);
 +
-+  /**
+   /**
+-   * @dev Returns the amount of tokens in existence.
 +   * @dev Returns the value of tokens in existence.
     */
    function totalSupply() external view returns (uint256);
@@ -372,7 +501,7 @@ index 23f6219..e4761ea 100644
  
    /**
     * @dev Returns the remaining number of tokens that `spender` will be
-@@ -242,7 +206,8 @@ interface IERC20 {
+@@ -242,7 +340,8 @@ interface IERC20 {
    function allowance(address owner, address spender) external view returns (uint256);
  
    /**
@@ -382,7 +511,7 @@ index 23f6219..e4761ea 100644
     *
     * Returns a boolean value indicating whether the operation succeeded.
     *
-@@ -255,114 +220,94 @@ interface IERC20 {
+@@ -255,114 +354,84 @@ interface IERC20 {
     *
     * Emits an {Approval} event.
     */
@@ -401,9 +530,24 @@ index 23f6219..e4761ea 100644
     * Emits a {Transfer} event.
     */
 -  function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+-
+-  /**
+-   * @dev Emitted when `value` tokens are moved from one account (`from`) to
+-   * another (`to`).
+-   *
+-   * Note that `value` may be zero.
+-   */
+-  event Transfer(address indexed from, address indexed to, uint256 value);
+-
+-  /**
+-   * @dev Emitted when the allowance of a `spender` for an `owner` is set by
+-   * a call to {approve}. `value` is the new allowance.
+-   */
+-  event Approval(address indexed owner, address indexed spender, uint256 value);
 +  function transferFrom(address from, address to, uint256 value) external returns (bool);
-+}
+ }
  
+-// src/core/contracts/protocol/libraries/aave-upgradeability/VersionedInitializable.sol
 +// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/utils/Errors.sol
 +
 +// OpenZeppelin Contracts (last updated v5.1.0) (utils/Errors.sol)
@@ -431,29 +575,8 @@ index 23f6219..e4761ea 100644
 + *
 + * For an implementation, see {ERC165}.
 + */
-+interface IERC165 {
-   /**
--   * @dev Emitted when `value` tokens are moved from one account (`from`) to
--   * another (`to`).
-+   * @dev Returns true if this contract implements the interface defined by
-+   * `interfaceId`. See the corresponding
-+   * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[ERC section]
-+   * to learn more about how these ids are created.
-    *
--   * Note that `value` may be zero.
-+   * This function call must use less than 30 000 gas.
-    */
--  event Transfer(address indexed from, address indexed to, uint256 value);
--
--  /**
--   * @dev Emitted when the allowance of a `spender` for an `owner` is set by
--   * a call to {approve}. `value` is the new allowance.
--   */
--  event Approval(address indexed owner, address indexed spender, uint256 value);
-+  function supportsInterface(bytes4 interfaceId) external view returns (bool);
- }
- 
--// src/core/contracts/protocol/libraries/aave-upgradeability/VersionedInitializable.sol
++
++
 +// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol
 +
 +// OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)
@@ -483,15 +606,12 @@ index 23f6219..e4761ea 100644
 -   * @dev Indicates that the contract has been initialized.
 -   */
 -  uint256 private lastInitializedRevision = 0;
-+abstract contract ContextUpgradeable is Initializable {
-+  function __Context_init() internal onlyInitializing {}
- 
+-
 -  /**
 -   * @dev Indicates that the contract is in the process of being initialized.
 -   */
 -  bool private initializing;
-+  function __Context_init_unchained() internal onlyInitializing {}
- 
+-
 -  /**
 -   * @dev Modifier to use in the initializer function of a contract.
 -   */
@@ -513,6 +633,11 @@ index 23f6219..e4761ea 100644
 -    if (isTopLevelCall) {
 -      initializing = false;
 -    }
++abstract contract ContextUpgradeable is Initializable {
++  function __Context_init() internal onlyInitializing {}
++
++  function __Context_init_unchained() internal onlyInitializing {}
++
 +  function _msgSender() internal view virtual returns (address) {
 +    return msg.sender;
    }
@@ -559,7 +684,7 @@ index 23f6219..e4761ea 100644
  
  /**
   * @dev Contract module that helps prevent reentrant calls to a function.
-@@ -376,11 +321,14 @@ abstract contract VersionedInitializable {
+@@ -376,11 +445,14 @@ abstract contract VersionedInitializable {
   * those functions `private`, and then adding `external` `nonReentrant` entry
   * points to them.
   *
@@ -575,7 +700,7 @@ index 23f6219..e4761ea 100644
    // Booleans are more expensive than uint256 or any type that takes up a full
    // word because each write operation emits an extra SLOAD to first read the
    // slot's contents, replace the bits taken up by the boolean, and then write
-@@ -392,13 +340,36 @@ abstract contract ReentrancyGuard {
+@@ -392,13 +464,36 @@ abstract contract ReentrancyGuard {
    // amount. Since refunds are capped to a percentage of the total
    // transaction's gas, it is best to keep them low in cases like this one, to
    // increase the likelihood of the full refund coming into effect.
@@ -617,7 +742,7 @@ index 23f6219..e4761ea 100644
    }
  
    /**
-@@ -409,28 +380,196 @@ abstract contract ReentrancyGuard {
+@@ -409,48 +504,240 @@ abstract contract ReentrancyGuard {
     * `private` function that does the actual work.
     */
    modifier nonReentrant() {
@@ -665,7 +790,18 @@ index 23f6219..e4761ea 100644
  
 -// src/periphery/contracts/treasury/ICollector.sol
 +// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/interfaces/IERC165.sol
-+
+ 
+-interface ICollector {
+-  struct Stream {
+-    uint256 deposit;
+-    uint256 ratePerSecond;
+-    uint256 remainingBalance;
+-    uint256 startTime;
+-    uint256 stopTime;
+-    address recipient;
+-    address sender;
+-    address tokenAddress;
+-    bool isEntity;
 +// OpenZeppelin Contracts (last updated v5.0.0) (interfaces/IERC165.sol)
 +
 +// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/interfaces/IERC20.sol
@@ -679,20 +815,7 @@ index 23f6219..e4761ea 100644
 +/**
 + * @dev Collection of functions related to the address type
 + */
-+library Address {
-+  /**
-+   * @dev There's no code at `target` (it is not a contract).
-+   */
-+  error AddressEmptyCode(address target);
-+
-+  /**
-+   * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
-+   * `recipient`, forwarding all available gas and reverting on errors.
-+   *
-+   * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
-+   * of certain opcodes, possibly making contracts go over the 2300 gas limit
-+   * imposed by `transfer`, making them unable to receive funds via
-+   * `transfer`. {sendValue} removes this limitation.
++ removes this limitation.
 +   *
 +   * https://consensys.net/diligence/blog/2019/09/stop-using-soliditys-transfer-now/[Learn more].
 +   *
@@ -710,9 +833,11 @@ index 23f6219..e4761ea 100644
 +    if (!success) {
 +      revert Errors.FailedCall();
 +    }
-+  }
-+
-+  /**
+   }
+ 
+   /**
+-   * @notice Emitted when the funds admin changes
+-   * @param fundsAdmin The new funds admin.
 +   * @dev Performs a Solidity function call using a low level `call`. A
 +   * plain `call` is an unsafe replacement for a function call: use this
 +   * function instead.
@@ -721,7 +846,7 @@ index 23f6219..e4761ea 100644
 +   * up by this function (like regular Solidity function calls). However, if
 +   * the call reverted with no returned reason, this function reverts with a
 +   * {Errors.FailedCall} error.
-+   *
+    *
 +   * Returns the raw returned data. To convert to the expected return value,
 +   * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].
 +   *
@@ -821,19 +946,12 @@ index 23f6219..e4761ea 100644
 +}
 +
 +// lib/aave-v3-origin/src/contracts/treasury/ICollector.sol
- 
- interface ICollector {
-   struct Stream {
-@@ -446,11 +585,59 @@ interface ICollector {
-   }
- 
-   /**
--   * @notice Emitted when the funds admin changes
--   * @param fundsAdmin The new funds admin.
--   *
++
++
++
++  /**
 +   * @dev Withdraw amount exceeds available balance
-    */
--  event NewFundsAdmin(address indexed fundsAdmin);
++   */
 +  error BalanceExceeded();
 +
 +  /**
@@ -883,12 +1001,13 @@ index 23f6219..e4761ea 100644
 +
 +  /**
 +   * @dev The provided ID does not belong to an existing stream
-+   */
+    */
+-  event NewFundsAdmin(address indexed fundsAdmin);
 +  error StreamDoesNotExist();
  
    /**
     * @notice Emitted when the new stream is created
-@@ -497,6 +684,12 @@ interface ICollector {
+@@ -497,6 +784,12 @@ interface ICollector {
      uint256 recipientBalance
    );
  
@@ -901,7 +1020,7 @@ index 23f6219..e4761ea 100644
    /**
     * @notice Returns the mock ETH reference address
     * @return address The address
-@@ -505,25 +698,18 @@ interface ICollector {
+@@ -505,25 +798,18 @@ interface ICollector {
    function ETH_MOCK_ADDRESS() external pure returns (address);
  
    /**
@@ -931,7 +1050,7 @@ index 23f6219..e4761ea 100644
     */
    function balanceOf(uint256 streamId, address who) external view returns (uint256 balance);
  
-@@ -545,13 +731,6 @@ interface ICollector {
+@@ -545,13 +831,6 @@ interface ICollector {
     */
    function transfer(IERC20 token, address recipient, uint256 amount) external;
  
@@ -945,7 +1064,7 @@ index 23f6219..e4761ea 100644
    /**
     * @notice Creates a new stream funded by this contracts itself and paid towards `recipient`.
     * @param recipient The address towards which the money is streamed.
-@@ -607,13 +786,352 @@ interface ICollector {
+@@ -607,59 +886,467 @@ interface ICollector {
    function getNextStreamId() external view returns (uint256);
  }
  
@@ -1301,29 +1420,15 @@ index 23f6219..e4761ea 100644
   * contract returns false). Tokens that return no value (and instead revert or
   * throw on failure) are also supported, non-reverting calls are assumed to be
   * successful.
-@@ -621,45 +1139,131 @@ interface ICollector {
+  * To use this library you can add a `using SafeERC20 for IERC20;` statement to your contract,
   * which allows you to call the safe operations as `token.safeTransfer(...)`, etc.
   */
- library SafeERC20 {
+-library SafeERC20 {
 -  using Address for address;
-+  /**
-+   * @dev An operation with an ERC-20 token failed.
-+   */
-+  error SafeERC20FailedOperation(address token);
  
-+  /**
-+   * @dev Indicates a failed `decreaseAllowance` request.
-+   */
-+  error SafeERC20FailedDecreaseAllowance(address spender, uint256 currentAllowance, uint256 requestedDecrease);
-+
-+  /**
-+   * @dev Transfer `value` amount of `token` from the calling contract to `to`. If `token` returns no value,
-+   * non-reverting calls are assumed to be successful.
-+   */
-   function safeTransfer(IERC20 token, address to, uint256 value) internal {
+-  function safeTransfer(IERC20 token, address to, uint256 value) internal {
 -    _callOptionalReturn(token, abi.encodeWithSelector(token.transfer.selector, to, value));
-+    _callOptionalReturn(token, abi.encodeCall(token.transfer, (to, value)));
-   }
+-  }
  
 +  /**
 +   * @dev Transfer `value` amount of `token` from `from` to `to`, spending the approval given by `from` to the
@@ -1458,7 +1563,7 @@ index 23f6219..e4761ea 100644
      }
    }
  
-@@ -668,21 +1272,51 @@ library SafeERC20 {
+@@ -668,21 +1355,51 @@ library SafeERC20 {
     * on the return value: the return value is optional (but if data is returned, it must not be false).
     * @param token The token targeted by the call.
     * @param data The call data (encoded using abi.encode or one of its variants).
@@ -1518,7 +1623,7 @@ index 23f6219..e4761ea 100644
  
  /**
   * @title Collector
-@@ -698,23 +1332,27 @@ library SafeERC20 {
+@@ -698,23 +1415,27 @@ library SafeERC20 {
   * @author BGD Labs
   *
   */
@@ -1555,7 +1660,7 @@ index 23f6219..e4761ea 100644
  
    /**
     * @notice Counter for new stream ids.
-@@ -726,18 +1364,17 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -726,18 +1447,17 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     */
    mapping(uint256 => Stream) private _streams;
  
@@ -1578,7 +1683,7 @@ index 23f6219..e4761ea 100644
      _;
    }
  
-@@ -746,10 +1383,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -746,10 +1466,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     * @param streamId The id of the stream to query.
     */
    modifier onlyAdminOrRecipient(uint256 streamId) {
@@ -1592,7 +1697,7 @@ index 23f6219..e4761ea 100644
      _;
    }
  
-@@ -757,35 +1393,39 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -757,35 +1476,39 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     * @dev Throws if the provided id does not point to a valid stream.
     */
    modifier streamExists(uint256 streamId) {
@@ -1645,7 +1750,7 @@ index 23f6219..e4761ea 100644
    }
  
    /// @inheritdoc ICollector
-@@ -872,12 +1512,12 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -872,12 +1595,12 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
  
    /// @inheritdoc ICollector
    function approve(IERC20 token, address recipient, uint256 amount) external onlyFundsAdmin {
@@ -1660,7 +1765,7 @@ index 23f6219..e4761ea 100644
  
      if (address(token) == ETH_MOCK_ADDRESS) {
        payable(recipient).sendValue(amount);
-@@ -886,18 +1526,8 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -886,18 +1609,8 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      }
    }
  
@@ -1681,7 +1786,7 @@ index 23f6219..e4761ea 100644
    }
  
    struct CreateStreamLocalVars {
-@@ -924,21 +1554,21 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -924,21 +1637,21 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      onlyFundsAdmin
      returns (uint256)
    {
@@ -1711,7 +1816,7 @@ index 23f6219..e4761ea 100644
  
      vars.ratePerSecond = deposit / vars.duration;
  
-@@ -977,11 +1607,11 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -977,11 +1690,11 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      onlyAdminOrRecipient(streamId)
      returns (bool)
    {
@@ -1725,14 +1830,14 @@ index 23f6219..e4761ea 100644
  
      _streams[streamId].remainingBalance = stream.remainingBalance - amount;
  
-@@ -1017,4 +1647,228 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -1017,4 +1730,157 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      emit CancelStream(streamId, stream.sender, stream.recipient, senderBalance, recipientBalance);
      return true;
    }
 +
 +  /// @dev needed in order to receive ETH from the Aave v1 ecosystem reserve
 +  receive() external payable {}
-+}
+ }
 +
 +// src/CollectorWithCustomImpl.sol
 +
@@ -1759,6 +1864,21 @@ index 23f6219..e4761ea 100644
 +  }
 +}
 +
++library Address {
++  /**
++   * @dev There's no code at `target` (it is not a contract).
++   */
++  error AddressEmptyCode(address target);
++
++  /**
++   * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
++   * `recipient`, forwarding all available gas and reverting on errors.
++   *
++   * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
++   * of certain opcodes, possibly making contracts go over the 2300 gas limit
++   * imposed by `transfer`, making them unable to receive funds via
++   * `transfer`. {sendValue}
++
 +library Errors {
 +  /**
 +   * @dev The ETH balance of the account is not enough to perform the operation.
@@ -1781,6 +1901,55 @@ index 23f6219..e4761ea 100644
 +  error MissingPrecompile(address);
 +}
 +
++interface IAccessControl {
++  /**
++   * @dev The `account` is missing a role.
++   */
++  error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
++
++  /**
++   * @dev The caller of a function is not the expected one.
++   *
++   * NOTE: Don't confuse with {AccessControlUnauthorizedAccount}
++
++interface ICollector {
++  struct Stream {
++    uint256 deposit;
++    uint256 ratePerSecond;
++    uint256 remainingBalance;
++    uint256 startTime;
++    uint256 stopTime;
++    address recipient;
++    address sender;
++    address tokenAddress;
++    bool isEntity;
++  }
++
++interface IERC165 {
++  /**
++   * @dev Returns true if this contract implements the interface defined by
++   * `interfaceId`. See the corresponding
++   * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[ERC section]
++   * to learn more about how these ids are created.
++   *
++   * This function call must use less than 30 000 gas.
++   */
++  function supportsInterface(bytes4 interfaceId) external view returns (bool);
++}
++
++interface IERC20 {
++  /**
++   * @dev Emitted when `value` tokens are moved from one account (`from`) to
++   * another (`to`).
++   *
++   * Note that `value` may be zero.
++   */
++  event Transfer(address indexed from, address indexed to, uint256 value);
++
++  /**
++   * @dev Emitted when the allowance of a `spender` for an `owner` is set by
++   * a call to {approve}
++
 +abstract contract Initializable {
 +  /**
 +   * @dev Storage of the initializable contract.
@@ -1801,157 +1970,22 @@ index 23f6219..e4761ea 100644
 +    bool _initializing;
 +  }
 +
-+  // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.Initializable")) - 1)) & ~bytes32(uint256(0xff))
-+  bytes32 private constant INITIALIZABLE_STORAGE = 0xf0c57e16840df040f15088dc2f81fe391c3923bec73e23a9662efc9c229c6a00;
++library SafeERC20 {
++  /**
++   * @dev An operation with an ERC-20 token failed.
++   */
++  error SafeERC20FailedOperation(address token);
 +
 +  /**
-+   * @dev The contract is already initialized.
++   * @dev Indicates a failed `decreaseAllowance` request.
 +   */
-+  error InvalidInitialization();
++  error SafeERC20FailedDecreaseAllowance(address spender, uint256 currentAllowance, uint256 requestedDecrease);
 +
 +  /**
-+   * @dev The contract is not initializing.
++   * @dev Transfer `value` amount of `token` from the calling contract to `to`. If `token` returns no value,
++   * non-reverting calls are assumed to be successful.
 +   */
-+  error NotInitializing();
-+
-+  /**
-+   * @dev Triggered when the contract has been initialized or reinitialized.
-+   */
-+  event Initialized(uint64 version);
-+
-+  /**
-+   * @dev A modifier that defines a protected initializer function that can be invoked at most once. In its scope,
-+   * `onlyInitializing` functions can be used to initialize parent contracts.
-+   *
-+   * Similar to `reinitializer(1)`, except that in the context of a constructor an `initializer` may be invoked any
-+   * number of times. This behavior in the constructor can be useful during testing and is not expected to be used in
-+   * production.
-+   *
-+   * Emits an {Initialized} event.
-+   */
-+  modifier initializer() {
-+    // solhint-disable-next-line var-name-mixedcase
-+    InitializableStorage storage $ = _getInitializableStorage();
-+
-+    // Cache values to avoid duplicated sloads
-+    bool isTopLevelCall = !$._initializing;
-+    uint64 initialized = $._initialized;
-+
-+    // Allowed calls:
-+    // - initialSetup: the contract is not in the initializing state and no previous version was
-+    //                 initialized
-+    // - construction: the contract is initialized at version 1 (no reininitialization) and the
-+    //                 current contract is just being deployed
-+    bool initialSetup = initialized == 0 && isTopLevelCall;
-+    bool construction = initialized == 1 && address(this).code.length == 0;
-+
-+    if (!initialSetup && !construction) {
-+      revert InvalidInitialization();
-+    }
-+    $._initialized = 1;
-+    if (isTopLevelCall) {
-+      $._initializing = true;
-+    }
-+    _;
-+    if (isTopLevelCall) {
-+      $._initializing = false;
-+      emit Initialized(1);
-+    }
++  function safeTransfer(IERC20 token, address to, uint256 value) internal {
++    _callOptionalReturn(token, abi.encodeCall(token.transfer, (to, value)));
 +  }
-+
-+  /**
-+   * @dev A modifier that defines a protected reinitializer function that can be invoked at most once, and only if the
-+   * contract hasn't been initialized to a greater version before. In its scope, `onlyInitializing` functions can be
-+   * used to initialize parent contracts.
-+   *
-+   * A reinitializer may be used after the original initialization step. This is essential to configure modules that
-+   * are added through upgrades and that require initialization.
-+   *
-+   * When `version` is 1, this modifier is similar to `initializer`, except that functions marked with `reinitializer`
-+   * cannot be nested. If one is invoked in the context of another, execution will revert.
-+   *
-+   * Note that versions can jump in increments greater than 1; this implies that if multiple reinitializers coexist in
-+   * a contract, executing them in the right order is up to the developer or operator.
-+   *
-+   * WARNING: Setting the version to 2**64 - 1 will prevent any future reinitialization.
-+   *
-+   * Emits an {Initialized} event.
-+   */
-+  modifier reinitializer(uint64 version) {
-+    // solhint-disable-next-line var-name-mixedcase
-+    InitializableStorage storage $ = _getInitializableStorage();
-+
-+    if ($._initializing || $._initialized >= version) {
-+      revert InvalidInitialization();
-+    }
-+    $._initialized = version;
-+    $._initializing = true;
-+    _;
-+    $._initializing = false;
-+    emit Initialized(version);
-+  }
-+
-+  /**
-+   * @dev Modifier to protect an initialization function so that it can only be invoked by functions with the
-+   * {initializer} and {reinitializer} modifiers, directly or indirectly.
-+   */
-+  modifier onlyInitializing() {
-+    _checkInitializing();
-+    _;
-+  }
-+
-+  /**
-+   * @dev Reverts if the contract is not in an initializing state. See {onlyInitializing}.
-+   */
-+  function _checkInitializing() internal view virtual {
-+    if (!_isInitializing()) {
-+      revert NotInitializing();
-+    }
-+  }
-+
-+  /**
-+   * @dev Locks the contract, preventing any future reinitialization. This cannot be part of an initializer call.
-+   * Calling this in the constructor of a contract will prevent that contract from being initialized or reinitialized
-+   * to any version. It is recommended to use this to lock implementation contracts that are designed to be called
-+   * through proxies.
-+   *
-+   * Emits an {Initialized} event the first time it is successfully executed.
-+   */
-+  function _disableInitializers() internal virtual {
-+    // solhint-disable-next-line var-name-mixedcase
-+    InitializableStorage storage $ = _getInitializableStorage();
-+
-+    if ($._initializing) {
-+      revert InvalidInitialization();
-+    }
-+    if ($._initialized != type(uint64).max) {
-+      $._initialized = type(uint64).max;
-+      emit Initialized(type(uint64).max);
-+    }
-+  }
-+
-+  /**
-+   * @dev Returns the highest version that has been initialized. See {reinitializer}.
-+   */
-+  function _getInitializedVersion() internal view returns (uint64) {
-+    return _getInitializableStorage()._initialized;
-+  }
-+
-+  /**
-+   * @dev Returns `true` if the contract is currently initializing. See {onlyInitializing}.
-+   */
-+  function _isInitializing() internal view returns (bool) {
-+    return _getInitializableStorage()._initializing;
-+  }
-+
-+  /**
-+   * @dev Returns a pointer to the storage namespace.
-+   */
-+  // solhint-disable-next-line var-name-mixedcase
-+  function _getInitializableStorage() private pure returns (InitializableStorage storage $) {
-+    assembly {
-+      $.slot := INITIALIZABLE_STORAGE
-+    }
-+  }
- }
 \ No newline at end of file
