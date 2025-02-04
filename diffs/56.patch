@@ -1,8 +1,8 @@
 diff --git a/flattened/56/0xB1532b76D054c9F9E61b25c4d91f69B4133E4671.sol b/flattened/Collector.sol
-index 8529631..5793d06 100644
+index 8529631..77abb7e 100644
 --- a/flattened/56/0xB1532b76D054c9F9E61b25c4d91f69B4133E4671.sol
 +++ b/flattened/Collector.sol
-@@ -1,9 +1,505 @@
+@@ -1,9 +1,467 @@
  // SPDX-License-Identifier: MIT
 -pragma solidity >=0.6.0 ^0.8.0 ^0.8.1;
 +pragma solidity ^0.8.0 ^0.8.20;
@@ -63,25 +63,7 @@ index 8529631..5793d06 100644
 + * ```
 + * ====
 + */
-+abstract contract Initializable {
-+  /**
-+   * @dev Storage of the initializable contract.
-+   *
-+   * It's implemented on a custom ERC-7201 namespace to reduce the risk of storage collisions
-+   * when using with upgradeable contracts.
-+   *
-+   * @custom:storage-location erc7201:openzeppelin.storage.Initializable
-+   */
-+  struct InitializableStorage {
-+    /**
-+     * @dev Indicates that the contract has been initialized.
-+     */
-+    uint64 _initialized;
-+    /**
-+     * @dev Indicates that the contract is in the process of being initialized.
-+     */
-+    bool _initializing;
-+  }
++abstract 
 +
 +  // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.Initializable")) - 1)) & ~bytes32(uint256(0xff))
 +  bytes32 private constant INITIALIZABLE_STORAGE = 0xf0c57e16840df040f15088dc2f81fe391c3923bec73e23a9662efc9c229c6a00;
@@ -426,27 +408,7 @@ index 8529631..5793d06 100644
 + *
 + * _Available since v5.1._
 + */
-+library Errors {
-+  /**
-+   * @dev The ETH balance of the account is not enough to perform the operation.
-+   */
-+  error InsufficientBalance(uint256 balance, uint256 needed);
 +
-+  /**
-+   * @dev A call to an address target failed. The target may have reverted.
-+   */
-+  error FailedCall();
-+
-+  /**
-+   * @dev The deployment failed.
-+   */
-+  error FailedDeployment();
-+
-+  /**
-+   * @dev A necessary precompile is missing.
-+   */
-+  error MissingPrecompile(address);
-+}
 +
 +// lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol
 +
@@ -511,7 +473,7 @@ index 8529631..5793d06 100644
  
  /**
   * @dev Contract module that helps prevent reentrant calls to a function.
-@@ -17,11 +513,14 @@ pragma solidity >=0.6.0 ^0.8.0 ^0.8.1;
+@@ -17,11 +475,14 @@ pragma solidity >=0.6.0 ^0.8.0 ^0.8.1;
   * those functions `private`, and then adding `external` `nonReentrant` entry
   * points to them.
   *
@@ -527,7 +489,7 @@ index 8529631..5793d06 100644
    // Booleans are more expensive than uint256 or any type that takes up a full
    // word because each write operation emits an extra SLOAD to first read the
    // slot's contents, replace the bits taken up by the boolean, and then write
-@@ -33,13 +532,36 @@ abstract contract ReentrancyGuard {
+@@ -33,13 +494,36 @@ abstract contract ReentrancyGuard {
    // amount. Since refunds are capped to a percentage of the total
    // transaction's gas, it is best to keep them low in cases like this one, to
    // increase the likelihood of the full refund coming into effect.
@@ -569,7 +531,7 @@ index 8529631..5793d06 100644
    }
  
    /**
-@@ -50,111 +572,59 @@ abstract contract ReentrancyGuard {
+@@ -50,133 +534,72 @@ abstract contract ReentrancyGuard {
     * `private` function that does the actual work.
     */
    modifier nonReentrant() {
@@ -671,10 +633,11 @@ index 8529631..5793d06 100644
  /**
   * @dev Collection of functions related to the address type
   */
- library Address {
-   /**
+-library Address {
+-  /**
 -   * @dev Returns true if `account` is a contract.
--   *
++ removes this limitation.
+    *
 -   * [IMPORTANT]
 -   * ====
 -   * It is unsafe to assume that an address for which this function returns
@@ -697,8 +660,7 @@ index 8529631..5793d06 100644
 -   * like Gnosis Safe, and does not provide security since it can be circumvented by calling from a contract
 -   * constructor.
 -   * ====
-+   * @dev There's no code at `target` (it is not a contract).
-    */
+-   */
 -  function isContract(address account) internal view returns (bool) {
 -    // This method relies on extcodesize/address.code.length, which returns 0
 -    // for contracts in construction, since the code is only stored at the end
@@ -706,14 +668,16 @@ index 8529631..5793d06 100644
 -
 -    return account.code.length > 0;
 -  }
-+  error AddressEmptyCode(address target);
- 
-   /**
-    * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
-@@ -165,18 +635,22 @@ library Address {
-    * imposed by `transfer`, making them unable to receive funds via
-    * `transfer`. {sendValue} removes this limitation.
-    *
+-
+-  /**
+-   * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
+-   * `recipient`, forwarding all available gas and reverting on errors.
+-   *
+-   * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
+-   * of certain opcodes, possibly making contracts go over the 2300 gas limit
+-   * imposed by `transfer`, making them unable to receive funds via
+-   * `transfer`. {sendValue} removes this limitation.
+-   *
 -   * https://diligence.consensys.net/posts/2019/09/stop-using-soliditys-transfer-now/[Learn more].
 +   * https://consensys.net/diligence/blog/2019/09/stop-using-soliditys-transfer-now/[Learn more].
     *
@@ -737,7 +701,7 @@ index 8529631..5793d06 100644
    }
  
    /**
-@@ -184,8 +658,10 @@ library Address {
+@@ -184,8 +607,10 @@ library Address {
     * plain `call` is an unsafe replacement for a function call: use this
     * function instead.
     *
@@ -750,7 +714,7 @@ index 8529631..5793d06 100644
     *
     * Returns the raw returned data. To convert to the expected return value,
     * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].
-@@ -194,21 +670,9 @@ library Address {
+@@ -194,21 +619,9 @@ library Address {
     *
     * - `target` must be a contract.
     * - calling `target` with `data` must not revert.
@@ -773,7 +737,7 @@ index 8529631..5793d06 100644
    }
  
    /**
-@@ -219,267 +683,85 @@ library Address {
+@@ -219,267 +632,85 @@ library Address {
     *
     * - the calling contract must have an ETH balance of at least `value`.
     * - the called Solidity function must be `payable`.
@@ -1071,7 +1035,7 @@ index 8529631..5793d06 100644
  
  interface ICollector {
    struct Stream {
-@@ -495,11 +777,59 @@ interface ICollector {
+@@ -495,11 +726,59 @@ interface ICollector {
    }
  
    /**
@@ -1135,7 +1099,7 @@ index 8529631..5793d06 100644
  
    /**
     * @notice Emitted when the new stream is created
-@@ -546,6 +876,12 @@ interface ICollector {
+@@ -546,6 +825,12 @@ interface ICollector {
      uint256 recipientBalance
    );
  
@@ -1148,7 +1112,7 @@ index 8529631..5793d06 100644
    /**
     * @notice Returns the mock ETH reference address
     * @return address The address
-@@ -554,25 +890,18 @@ interface ICollector {
+@@ -554,25 +839,18 @@ interface ICollector {
    function ETH_MOCK_ADDRESS() external pure returns (address);
  
    /**
@@ -1178,7 +1142,7 @@ index 8529631..5793d06 100644
     */
    function balanceOf(uint256 streamId, address who) external view returns (uint256 balance);
  
-@@ -594,13 +923,6 @@ interface ICollector {
+@@ -594,13 +872,6 @@ interface ICollector {
     */
    function transfer(IERC20 token, address recipient, uint256 amount) external;
  
@@ -1192,7 +1156,7 @@ index 8529631..5793d06 100644
    /**
     * @notice Creates a new stream funded by this contracts itself and paid towards `recipient`.
     * @param recipient The address towards which the money is streamed.
-@@ -656,14 +978,352 @@ interface ICollector {
+@@ -656,77 +927,468 @@ interface ICollector {
    function getNextStreamId() external view returns (uint256);
  }
  
@@ -1549,29 +1513,15 @@ index 8529631..5793d06 100644
   * contract returns false). Tokens that return no value (and instead revert or
   * throw on failure) are also supported, non-reverting calls are assumed to be
   * successful.
-@@ -671,62 +1331,132 @@ interface ICollector {
+  * To use this library you can add a `using SafeERC20 for IERC20;` statement to your contract,
   * which allows you to call the safe operations as `token.safeTransfer(...)`, etc.
   */
- library SafeERC20 {
+-library SafeERC20 {
 -  using Address for address;
-+  /**
-+   * @dev An operation with an ERC-20 token failed.
-+   */
-+  error SafeERC20FailedOperation(address token);
  
-+  /**
-+   * @dev Indicates a failed `decreaseAllowance` request.
-+   */
-+  error SafeERC20FailedDecreaseAllowance(address spender, uint256 currentAllowance, uint256 requestedDecrease);
-+
-+  /**
-+   * @dev Transfer `value` amount of `token` from the calling contract to `to`. If `token` returns no value,
-+   * non-reverting calls are assumed to be successful.
-+   */
-   function safeTransfer(IERC20 token, address to, uint256 value) internal {
+-  function safeTransfer(IERC20 token, address to, uint256 value) internal {
 -    _callOptionalReturn(token, abi.encodeWithSelector(token.transfer.selector, to, value));
-+    _callOptionalReturn(token, abi.encodeCall(token.transfer, (to, value)));
-   }
+-  }
  
 +  /**
 +   * @dev Transfer `value` amount of `token` from `from` to `to`, spending the approval given by `from` to the
@@ -1721,7 +1671,7 @@ index 8529631..5793d06 100644
    }
  
    /**
-@@ -734,21 +1464,51 @@ library SafeERC20 {
+@@ -734,21 +1396,51 @@ library SafeERC20 {
     * on the return value: the return value is optional (but if data is returned, it must not be false).
     * @param token The token targeted by the call.
     * @param data The call data (encoded using abi.encode or one of its variants).
@@ -1781,7 +1731,7 @@ index 8529631..5793d06 100644
  
  /**
   * @title Collector
-@@ -764,23 +1524,27 @@ library SafeERC20 {
+@@ -764,23 +1456,27 @@ library SafeERC20 {
   * @author BGD Labs
   *
   */
@@ -1818,7 +1768,7 @@ index 8529631..5793d06 100644
  
    /**
     * @notice Counter for new stream ids.
-@@ -792,18 +1556,17 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -792,18 +1488,17 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     */
    mapping(uint256 => Stream) private _streams;
  
@@ -1841,7 +1791,7 @@ index 8529631..5793d06 100644
      _;
    }
  
-@@ -812,10 +1575,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -812,10 +1507,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     * @param streamId The id of the stream to query.
     */
    modifier onlyAdminOrRecipient(uint256 streamId) {
@@ -1855,7 +1805,7 @@ index 8529631..5793d06 100644
      _;
    }
  
-@@ -823,37 +1585,39 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -823,37 +1517,39 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     * @dev Throws if the provided id does not point to a valid stream.
     */
    modifier streamExists(uint256 streamId) {
@@ -1910,7 +1860,7 @@ index 8529631..5793d06 100644
    }
  
    /// @inheritdoc ICollector
-@@ -940,12 +1704,12 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -940,12 +1636,12 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
  
    /// @inheritdoc ICollector
    function approve(IERC20 token, address recipient, uint256 amount) external onlyFundsAdmin {
@@ -1925,7 +1875,7 @@ index 8529631..5793d06 100644
  
      if (address(token) == ETH_MOCK_ADDRESS) {
        payable(recipient).sendValue(amount);
-@@ -954,21 +1718,8 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -954,21 +1650,8 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      }
    }
  
@@ -1949,7 +1899,7 @@ index 8529631..5793d06 100644
    }
  
    struct CreateStreamLocalVars {
-@@ -995,21 +1746,21 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -995,21 +1678,21 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      onlyFundsAdmin
      returns (uint256)
    {
@@ -1979,7 +1929,7 @@ index 8529631..5793d06 100644
  
      vars.ratePerSecond = deposit / vars.duration;
  
-@@ -1048,11 +1799,11 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -1048,11 +1731,11 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      onlyAdminOrRecipient(streamId)
      returns (bool)
    {
@@ -1993,14 +1943,14 @@ index 8529631..5793d06 100644
  
      _streams[streamId].remainingBalance = stream.remainingBalance - amount;
  
-@@ -1088,4 +1839,32 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -1088,4 +1771,108 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      emit CancelStream(streamId, stream.sender, stream.recipient, senderBalance, recipientBalance);
      return true;
    }
 +
 +  /// @dev needed in order to receive ETH from the Aave v1 ecosystem reserve
 +  receive() external payable {}
-+}
+ }
 +
 +// src/CollectorWithCustomImpl.sol
 +
@@ -2025,4 +1975,81 @@ index 8529631..5793d06 100644
 +    __ReentrancyGuard_init();
 +    _grantRole(DEFAULT_ADMIN_ROLE, admin);
 +  }
- }
++}
++
++library Address {
++  /**
++   * @dev There's no code at `target` (it is not a contract).
++   */
++  error AddressEmptyCode(address target);
++
++  /**
++   * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
++   * `recipient`, forwarding all available gas and reverting on errors.
++   *
++   * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
++   * of certain opcodes, possibly making contracts go over the 2300 gas limit
++   * imposed by `transfer`, making them unable to receive funds via
++   * `transfer`. {sendValue}
++
++library Errors {
++  /**
++   * @dev The ETH balance of the account is not enough to perform the operation.
++   */
++  error InsufficientBalance(uint256 balance, uint256 needed);
++
++  /**
++   * @dev A call to an address target failed. The target may have reverted.
++   */
++  error FailedCall();
++
++  /**
++   * @dev The deployment failed.
++   */
++  error FailedDeployment();
++
++  /**
++   * @dev A necessary precompile is missing.
++   */
++  error MissingPrecompile(address);
++}
++
++contract Initializable {
++  /**
++   * @dev Storage of the initializable contract.
++   *
++   * It's implemented on a custom ERC-7201 namespace to reduce the risk of storage collisions
++   * when using with upgradeable contracts.
++   *
++   * @custom:storage-location erc7201:openzeppelin.storage.Initializable
++   */
++  struct InitializableStorage {
++    /**
++     * @dev Indicates that the contract has been initialized.
++     */
++    uint64 _initialized;
++    /**
++     * @dev Indicates that the contract is in the process of being initialized.
++     */
++    bool _initializing;
++  }
++
++library SafeERC20 {
++  /**
++   * @dev An operation with an ERC-20 token failed.
++   */
++  error SafeERC20FailedOperation(address token);
++
++  /**
++   * @dev Indicates a failed `decreaseAllowance` request.
++   */
++  error SafeERC20FailedDecreaseAllowance(address spender, uint256 currentAllowance, uint256 requestedDecrease);
++
++  /**
++   * @dev Transfer `value` amount of `token` from the calling contract to `to`. If `token` returns no value,
++   * non-reverting calls are assumed to be successful.
++   */
++  function safeTransfer(IERC20 token, address to, uint256 value) internal {
++    _callOptionalReturn(token, abi.encodeCall(token.transfer, (to, value)));
++  }
+\ No newline at end of file

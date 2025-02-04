@@ -46,6 +46,28 @@ const getImplementationStorageSlot = async (client: Client, address: Hex) => {
   })) as Hex;
 };
 
+function sortSolidityContracts(filePath) {
+  const content = readFileSync(filePath, "utf8");
+
+  // Regex to capture contract and library definitions
+  const contractRegex = /(contract|library)\s+(\w+)\s*{[^}]*}/gs;
+
+  let matches = [...content.matchAll(contractRegex)];
+
+  // Sort contracts and libraries alphabetically by name
+  matches.sort((a, b) => a[2].localeCompare(b[2]));
+
+  // Remove matched contracts/libraries from the original content
+  let strippedContent = content.replace(contractRegex, "");
+
+  // Reconstruct the Solidity file
+  const sortedContracts = matches.map((m) => m[0]).join("\n\n");
+
+  const finalContent = strippedContent.trim() + "\n\n" + sortedContracts;
+
+  writeFileSync(filePath, finalContent);
+}
+
 async function snapshotPool({ CHAIN_ID, COLLECTOR }) {
   const client = createClient({ transport: http(getRPCUrl(CHAIN_ID)) });
   const impl = bytes32toAddress(
@@ -71,6 +93,7 @@ async function diffReference() {
   execSync(
     `forge inspect flattened/Collector.sol:Collector storage > reports/storage_new`,
   );
+  sortSolidityContracts("flattened/Collector.sol");
 }
 
 (async function main() {

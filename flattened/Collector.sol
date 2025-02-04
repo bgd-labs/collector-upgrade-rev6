@@ -55,25 +55,7 @@ pragma solidity ^0.8.0 ^0.8.20;
  * ```
  * ====
  */
-abstract contract Initializable {
-  /**
-   * @dev Storage of the initializable contract.
-   *
-   * It's implemented on a custom ERC-7201 namespace to reduce the risk of storage collisions
-   * when using with upgradeable contracts.
-   *
-   * @custom:storage-location erc7201:openzeppelin.storage.Initializable
-   */
-  struct InitializableStorage {
-    /**
-     * @dev Indicates that the contract has been initialized.
-     */
-    uint64 _initialized;
-    /**
-     * @dev Indicates that the contract is in the process of being initialized.
-     */
-    bool _initializing;
-  }
+abstract 
 
   // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.Initializable")) - 1)) & ~bytes32(uint256(0xff))
   bytes32 private constant INITIALIZABLE_STORAGE = 0xf0c57e16840df040f15088dc2f81fe391c3923bec73e23a9662efc9c229c6a00;
@@ -418,27 +400,7 @@ interface IERC20 {
  *
  * _Available since v5.1._
  */
-library Errors {
-  /**
-   * @dev The ETH balance of the account is not enough to perform the operation.
-   */
-  error InsufficientBalance(uint256 balance, uint256 needed);
 
-  /**
-   * @dev A call to an address target failed. The target may have reverted.
-   */
-  error FailedCall();
-
-  /**
-   * @dev The deployment failed.
-   */
-  error FailedDeployment();
-
-  /**
-   * @dev A necessary precompile is missing.
-   */
-  error MissingPrecompile(address);
-}
 
 // lib/aave-v3-origin/lib/solidity-utils/lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol
 
@@ -620,20 +582,7 @@ abstract contract ReentrancyGuardUpgradeable is Initializable {
 /**
  * @dev Collection of functions related to the address type
  */
-library Address {
-  /**
-   * @dev There's no code at `target` (it is not a contract).
-   */
-  error AddressEmptyCode(address target);
-
-  /**
-   * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
-   * `recipient`, forwarding all available gas and reverting on errors.
-   *
-   * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
-   * of certain opcodes, possibly making contracts go over the 2300 gas limit
-   * imposed by `transfer`, making them unable to receive funds via
-   * `transfer`. {sendValue} removes this limitation.
+ removes this limitation.
    *
    * https://consensys.net/diligence/blog/2019/09/stop-using-soliditys-transfer-now/[Learn more].
    *
@@ -1330,24 +1279,7 @@ abstract contract AccessControlUpgradeable is Initializable, ContextUpgradeable,
  * To use this library you can add a `using SafeERC20 for IERC20;` statement to your contract,
  * which allows you to call the safe operations as `token.safeTransfer(...)`, etc.
  */
-library SafeERC20 {
-  /**
-   * @dev An operation with an ERC-20 token failed.
-   */
-  error SafeERC20FailedOperation(address token);
 
-  /**
-   * @dev Indicates a failed `decreaseAllowance` request.
-   */
-  error SafeERC20FailedDecreaseAllowance(address spender, uint256 currentAllowance, uint256 requestedDecrease);
-
-  /**
-   * @dev Transfer `value` amount of `token` from the calling contract to `to`. If `token` returns no value,
-   * non-reverting calls are assumed to be successful.
-   */
-  function safeTransfer(IERC20 token, address to, uint256 value) internal {
-    _callOptionalReturn(token, abi.encodeCall(token.transfer, (to, value)));
-  }
 
   /**
    * @dev Transfer `value` amount of `token` from `from` to `to`, spending the approval given by `from` to the
@@ -1868,3 +1800,79 @@ contract CollectorWithCustomImpl is Collector {
     _grantRole(DEFAULT_ADMIN_ROLE, admin);
   }
 }
+
+library Address {
+  /**
+   * @dev There's no code at `target` (it is not a contract).
+   */
+  error AddressEmptyCode(address target);
+
+  /**
+   * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
+   * `recipient`, forwarding all available gas and reverting on errors.
+   *
+   * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
+   * of certain opcodes, possibly making contracts go over the 2300 gas limit
+   * imposed by `transfer`, making them unable to receive funds via
+   * `transfer`. {sendValue}
+
+library Errors {
+  /**
+   * @dev The ETH balance of the account is not enough to perform the operation.
+   */
+  error InsufficientBalance(uint256 balance, uint256 needed);
+
+  /**
+   * @dev A call to an address target failed. The target may have reverted.
+   */
+  error FailedCall();
+
+  /**
+   * @dev The deployment failed.
+   */
+  error FailedDeployment();
+
+  /**
+   * @dev A necessary precompile is missing.
+   */
+  error MissingPrecompile(address);
+}
+
+contract Initializable {
+  /**
+   * @dev Storage of the initializable contract.
+   *
+   * It's implemented on a custom ERC-7201 namespace to reduce the risk of storage collisions
+   * when using with upgradeable contracts.
+   *
+   * @custom:storage-location erc7201:openzeppelin.storage.Initializable
+   */
+  struct InitializableStorage {
+    /**
+     * @dev Indicates that the contract has been initialized.
+     */
+    uint64 _initialized;
+    /**
+     * @dev Indicates that the contract is in the process of being initialized.
+     */
+    bool _initializing;
+  }
+
+library SafeERC20 {
+  /**
+   * @dev An operation with an ERC-20 token failed.
+   */
+  error SafeERC20FailedOperation(address token);
+
+  /**
+   * @dev Indicates a failed `decreaseAllowance` request.
+   */
+  error SafeERC20FailedDecreaseAllowance(address spender, uint256 currentAllowance, uint256 requestedDecrease);
+
+  /**
+   * @dev Transfer `value` amount of `token` from the calling contract to `to`. If `token` returns no value,
+   * non-reverting calls are assumed to be successful.
+   */
+  function safeTransfer(IERC20 token, address to, uint256 value) internal {
+    _callOptionalReturn(token, abi.encodeCall(token.transfer, (to, value)));
+  }
