@@ -1,5 +1,5 @@
 diff --git a/flattened/324/0xF9C838BDec2fb25fa96f81c162A9B07f79056b8F.sol b/flattened/Collector.sol
-index 23f6219..ad36cab 100644
+index 41524db..ad36cab 100644
 --- a/flattened/324/0xF9C838BDec2fb25fa96f81c162A9B07f79056b8F.sol
 +++ b/flattened/Collector.sol
 @@ -1,42 +1,482 @@
@@ -533,8 +533,9 @@ index 23f6219..ad36cab 100644
 +      revert Errors.InsufficientBalance(address(this).balance, amount);
 +    }
  
-     (bool success,) = recipient.call{value: amount}('');
+-    (bool success, ) = recipient.call{value: amount}('');
 -    require(success, 'Address: unable to send value, recipient may have reverted');
++    (bool success,) = recipient.call{value: amount}('');
 +    if (!success) {
 +      revert Errors.FailedCall();
 +    }
@@ -554,7 +555,7 @@ index 23f6219..ad36cab 100644
     *
     * Returns the raw returned data. To convert to the expected return value,
     * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].
-@@ -76,21 +522,9 @@ library Address {
+@@ -76,25 +522,9 @@ library Address {
     *
     * - `target` must be a contract.
     * - calling `target` with `data` must not revert.
@@ -571,20 +572,28 @@ index 23f6219..ad36cab 100644
 -   *
 -   * _Available since v3.1._
 -   */
--  function functionCall(address target, bytes memory data, string memory errorMessage) internal returns (bytes memory) {
+-  function functionCall(
+-    address target,
+-    bytes memory data,
+-    string memory errorMessage
+-  ) internal returns (bytes memory) {
 -    return functionCallWithValue(target, data, 0, errorMessage);
 +    return functionCallWithValue(target, data, 0);
    }
  
    /**
-@@ -101,336 +535,117 @@ library Address {
+@@ -105,346 +535,117 @@ library Address {
     *
     * - the calling contract must have an ETH balance of at least `value`.
     * - the called Solidity function must be `payable`.
 -   *
 -   * _Available since v3.1._
     */
-   function functionCallWithValue(address target, bytes memory data, uint256 value) internal returns (bytes memory) {
+-  function functionCallWithValue(
+-    address target,
+-    bytes memory data,
+-    uint256 value
+-  ) internal returns (bytes memory) {
 -    return functionCallWithValue(target, data, value, 'Address: low-level call with value failed');
 -  }
 -
@@ -594,13 +603,16 @@ index 23f6219..ad36cab 100644
 -   *
 -   * _Available since v3.1._
 -   */
--  function functionCallWithValue(address target, bytes memory data, uint256 value, string memory errorMessage)
--    internal
--    returns (bytes memory)
--  {
+-  function functionCallWithValue(
+-    address target,
+-    bytes memory data,
+-    uint256 value,
+-    string memory errorMessage
+-  ) internal returns (bytes memory) {
 -    require(address(this).balance >= value, 'Address: insufficient balance for call');
 -    require(isContract(target), 'Address: call to non-contract');
 -
++  function functionCallWithValue(address target, bytes memory data, uint256 value) internal returns (bytes memory) {
 +    if (address(this).balance < value) {
 +      revert Errors.InsufficientBalance(address(this).balance, value);
 +    }
@@ -615,7 +627,10 @@ index 23f6219..ad36cab 100644
 -   *
 -   * _Available since v3.3._
     */
-   function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {
+-  function functionStaticCall(
+-    address target,
+-    bytes memory data
+-  ) internal view returns (bytes memory) {
 -    return functionStaticCall(target, data, 'Address: low-level static call failed');
 -  }
 -
@@ -625,13 +640,14 @@ index 23f6219..ad36cab 100644
 -   *
 -   * _Available since v3.3._
 -   */
--  function functionStaticCall(address target, bytes memory data, string memory errorMessage)
--    internal
--    view
--    returns (bytes memory)
--  {
+-  function functionStaticCall(
+-    address target,
+-    bytes memory data,
+-    string memory errorMessage
+-  ) internal view returns (bytes memory) {
 -    require(isContract(target), 'Address: static call to non-contract');
 -
++  function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {
      (bool success, bytes memory returndata) = target.staticcall(data);
 -    return verifyCallResult(success, returndata, errorMessage);
 +    return verifyCallResultFromTarget(target, success, returndata);
@@ -653,10 +669,11 @@ index 23f6219..ad36cab 100644
 -   *
 -   * _Available since v3.4._
 -   */
--  function functionDelegateCall(address target, bytes memory data, string memory errorMessage)
--    internal
--    returns (bytes memory)
--  {
+-  function functionDelegateCall(
+-    address target,
+-    bytes memory data,
+-    string memory errorMessage
+-  ) internal returns (bytes memory) {
 -    require(isContract(target), 'Address: delegate call to non-contract');
 -
      (bool success, bytes memory returndata) = target.delegatecall(data);
@@ -673,15 +690,18 @@ index 23f6219..ad36cab 100644
 +   * was not a contract or bubbling up the revert reason (falling back to {Errors.FailedCall}) in case
 +   * of an unsuccessful call.
     */
--  function verifyCallResult(bool success, bytes memory returndata, string memory errorMessage)
-+  function verifyCallResultFromTarget(address target, bool success, bytes memory returndata)
-     internal
--    pure
-+    view
-     returns (bytes memory)
-   {
+-  function verifyCallResult(
+-    bool success,
+-    bytes memory returndata,
+-    string memory errorMessage
+-  ) internal pure returns (bytes memory) {
 -    if (success) {
 -      return returndata;
++  function verifyCallResultFromTarget(address target, bool success, bytes memory returndata)
++    internal
++    view
++    returns (bytes memory)
++  {
 +    if (!success) {
 +      _revert(returndata);
      } else {
@@ -729,19 +749,17 @@ index 23f6219..ad36cab 100644
 -   * Emits a {Transfer} event.
 -   */
 -  function transfer(address recipient, uint256 amount) external returns (bool);
- 
-   /**
+-
+-  /**
 -   * @dev Returns the remaining number of tokens that `spender` will be
 -   * allowed to spend on behalf of `owner` through {transferFrom}. This is
 -   * zero by default.
 -   *
 -   * This value changes when {approve} or {transferFrom} are called.
-+   * @dev Tool to verify that a low level call was successful, and reverts if it wasn't, either by bubbling the
-+   * revert reason or with a default {Errors.FailedCall} error.
-    */
+-   */
 -  function allowance(address owner, address spender) external view returns (uint256);
--
--  /**
+ 
+   /**
 -   * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
 -   *
 -   * Returns a boolean value indicating whether the operation succeeded.
@@ -754,7 +772,9 @@ index 23f6219..ad36cab 100644
 -   * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
 -   *
 -   * Emits an {Approval} event.
--   */
++   * @dev Tool to verify that a low level call was successful, and reverts if it wasn't, either by bubbling the
++   * revert reason or with a default {Errors.FailedCall} error.
+    */
 -  function approve(address spender, uint256 amount) external returns (bool);
 -
 -  /**
@@ -775,89 +795,20 @@ index 23f6219..ad36cab 100644
 -   * Note that `value` may be zero.
 -   */
 -  event Transfer(address indexed from, address indexed to, uint256 value);
--
--  /**
--   * @dev Emitted when the allowance of a `spender` for an `owner` is set by
--   * a call to {approve}. `value` is the new allowance.
--   */
--  event Approval(address indexed owner, address indexed spender, uint256 value);
--}
--
--// src/core/contracts/protocol/libraries/aave-upgradeability/VersionedInitializable.sol
--
--/**
-- * @title VersionedInitializable
-- * @author Aave, inspired by the OpenZeppelin Initializable contract
-- * @notice Helper contract to implement initializer functions. To use it, replace
-- * the constructor with a function that has the `initializer` modifier.
-- * @dev WARNING: Unlike constructors, initializer functions must be manually
-- * invoked. This applies both to deploying an Initializable contract, as well
-- * as extending an Initializable contract via inheritance.
-- * WARNING: When used with inheritance, manual care must be taken to not invoke
-- * a parent initializer twice, or ensure that all initializers are idempotent,
-- * because this is not dealt with automatically as with constructors.
-- */
--abstract contract VersionedInitializable {
--  /**
--   * @dev Indicates that the contract has been initialized.
--   */
--  uint256 private lastInitializedRevision = 0;
--
--  /**
--   * @dev Indicates that the contract is in the process of being initialized.
--   */
--  bool private initializing;
--
--  /**
--   * @dev Modifier to use in the initializer function of a contract.
--   */
--  modifier initializer() {
--    uint256 revision = getRevision();
--    require(
--      initializing || isConstructor() || revision > lastInitializedRevision,
--      'Contract instance has already been initialized'
--    );
--
--    bool isTopLevelCall = !initializing;
--    if (isTopLevelCall) {
--      initializing = true;
--      lastInitializedRevision = revision;
--    }
--
--    _;
--
--    if (isTopLevelCall) {
--      initializing = false;
 +  function verifyCallResult(bool success, bytes memory returndata) internal pure returns (bytes memory) {
 +    if (!success) {
 +      _revert(returndata);
 +    } else {
 +      return returndata;
-     }
-   }
++    }
++  }
  
    /**
--   * @notice Returns the revision number of the contract
--   * @dev Needs to be defined in the inherited class as a constant.
--   * @return The revision number
+-   * @dev Emitted when the allowance of a `spender` for an `owner` is set by
+-   * a call to {approve}. `value` is the new allowance.
 +   * @dev Reverts with returndata if present. Otherwise reverts with {Errors.FailedCall}.
     */
--  function getRevision() internal pure virtual returns (uint256);
--
--  /**
--   * @notice Returns true if and only if the function is running in the constructor
--   * @return True if the function is running in the constructor
--   */
--  function isConstructor() private view returns (bool) {
--    // extcodesize checks the size of the code stored in an address, and
--    // address returns the current address. Since the code is still not
--    // deployed when running a constructor, any checks on its code size will
--    // yield zero, making it an effective way to detect if a contract is
--    // under construction or not.
--    uint256 cs;
--    //solium-disable-next-line
--    assembly {
--      cs := extcodesize(address())
+-  event Approval(address indexed owner, address indexed spender, uint256 value);
 +  function _revert(bytes memory returndata) private pure {
 +    // Look for revert reason and bubble it up if present
 +    if (returndata.length > 0) {
@@ -868,12 +819,8 @@ index 23f6219..ad36cab 100644
 +      }
 +    } else {
 +      revert Errors.FailedCall();
-     }
--    return cs == 0;
-   }
--
--  // Reserved storage space to allow for layout changes in the future.
--  uint256[50] private ______gap;
++    }
++  }
  }
  
 -// src/periphery/contracts/dependencies/openzeppelin/ReentrancyGuard.sol
@@ -964,23 +911,102 @@ index 23f6219..ad36cab 100644
    }
  }
  
+-// src/core/contracts/protocol/libraries/aave-upgradeability/VersionedInitializable.sol
+-
+-/**
+- * @title VersionedInitializable
+- * @author Aave, inspired by the OpenZeppelin Initializable contract
+- * @notice Helper contract to implement initializer functions. To use it, replace
+- * the constructor with a function that has the `initializer` modifier.
+- * @dev WARNING: Unlike constructors, initializer functions must be manually
+- * invoked. This applies both to deploying an Initializable contract, as well
+- * as extending an Initializable contract via inheritance.
+- * WARNING: When used with inheritance, manual care must be taken to not invoke
+- * a parent initializer twice, or ensure that all initializers are idempotent,
+- * because this is not dealt with automatically as with constructors.
+- */
+-abstract contract VersionedInitializable {
+-  /**
+-   * @dev Indicates that the contract has been initialized.
+-   */
+-  uint256 private lastInitializedRevision = 0;
+-
+-  /**
+-   * @dev Indicates that the contract is in the process of being initialized.
+-   */
+-  bool private initializing;
+-
+-  /**
+-   * @dev Modifier to use in the initializer function of a contract.
+-   */
+-  modifier initializer() {
+-    uint256 revision = getRevision();
+-    require(
+-      initializing || isConstructor() || revision > lastInitializedRevision,
+-      'Contract instance has already been initialized'
+-    );
+-
+-    bool isTopLevelCall = !initializing;
+-    if (isTopLevelCall) {
+-      initializing = true;
+-      lastInitializedRevision = revision;
+-    }
+-
+-    _;
+-
+-    if (isTopLevelCall) {
+-      initializing = false;
+-    }
+-  }
+-
+-  /**
+-   * @notice Returns the revision number of the contract
+-   * @dev Needs to be defined in the inherited class as a constant.
+-   * @return The revision number
+-   */
+-  function getRevision() internal pure virtual returns (uint256);
+-
+-  /**
+-   * @notice Returns true if and only if the function is running in the constructor
+-   * @return True if the function is running in the constructor
+-   */
+-  function isConstructor() private view returns (bool) {
+-    // extcodesize checks the size of the code stored in an address, and
+-    // address returns the current address. Since the code is still not
+-    // deployed when running a constructor, any checks on its code size will
+-    // yield zero, making it an effective way to detect if a contract is
+-    // under construction or not.
+-    uint256 cs;
+-    //solium-disable-next-line
+-    assembly {
+-      cs := extcodesize(address())
+-    }
+-    return cs == 0;
+-  }
+-
+-  // Reserved storage space to allow for layout changes in the future.
+-  uint256[50] private ______gap;
+-}
+-
 -// src/periphery/contracts/treasury/ICollector.sol
 +// lib/aave-v3-origin/src/contracts/treasury/ICollector.sol
  
  interface ICollector {
    struct Stream {
-@@ -446,11 +661,59 @@ interface ICollector {
+@@ -459,12 +660,63 @@ interface ICollector {
+     bool isEntity;
    }
  
-   /**
--   * @notice Emitted when the funds admin changes
+-  /** @notice Emitted when the funds admin changes
 -   * @param fundsAdmin The new funds admin.
--   *
-+   * @dev Withdraw amount exceeds available balance
-    */
+-   **/
 -  event NewFundsAdmin(address indexed fundsAdmin);
++  /**
++   * @dev Withdraw amount exceeds available balance
++   */
 +  error BalanceExceeded();
-+
+ 
+-  /** @notice Emitted when the new stream is created
 +  /**
 +   * @dev Deposit smaller than time delta
 +   */
@@ -1030,41 +1056,56 @@ index 23f6219..ad36cab 100644
 +   * @dev The provided ID does not belong to an existing stream
 +   */
 +  error StreamDoesNotExist();
- 
-   /**
-    * @notice Emitted when the new stream is created
-@@ -497,6 +760,12 @@ interface ICollector {
++
++  /**
++   * @notice Emitted when the new stream is created
+    * @param streamId The identifier of the stream.
+    * @param sender The address of the collector.
+    * @param recipient The address towards which the money is streamed.
+@@ -472,7 +724,8 @@ interface ICollector {
+    * @param tokenAddress The ERC20 token to use as streaming currency.
+    * @param startTime The unix timestamp for when the stream starts.
+    * @param stopTime The unix timestamp for when the stream stops.
+-   **/
++   *
++   */
+   event CreateStream(
+     uint256 indexed streamId,
+     address indexed sender,
+@@ -507,28 +760,32 @@ interface ICollector {
      uint256 recipientBalance
    );
  
+-  /** @notice Returns the mock ETH reference address
 +  /**
 +   * @notice FUNDS_ADMIN role granted by ACL Manager
 +   *
 +   */
 +  function FUNDS_ADMIN_ROLE() external view returns (bytes32);
 +
-   /**
-    * @notice Returns the mock ETH reference address
++  /**
++   * @notice Returns the mock ETH reference address
     * @return address The address
-@@ -505,25 +774,18 @@ interface ICollector {
+-   **/
++   *
++   */
    function ETH_MOCK_ADDRESS() external pure returns (address);
  
-   /**
--   * @notice Initializes the contracts
+-  /** @notice Initializes the contracts
 -   * @param fundsAdmin Funds admin address
 -   * @param nextStreamId StreamId to set, applied if greater than 0
-+   * @notice Checks if address is funds admin
-+   * @return bool If the address has the funds admin role
-    *
-    */
+-   **/
 -  function initialize(address fundsAdmin, uint256 nextStreamId) external;
 -
--  /**
+   /**
 -   * @notice Return the funds admin, only entity to be able to interact with this contract (controller of reserve)
 -   * @return address The address of the funds admin
--   *
--   */
+-   **/
 -  function getFundsAdmin() external view returns (address);
++   * @notice Checks if address is funds admin
++   * @return bool If the address has the funds admin role
++   *
++   */
 +  function isFundsAdmin(address admin) external view returns (bool);
  
    /**
@@ -1076,13 +1117,28 @@ index 23f6219..ad36cab 100644
     */
    function balanceOf(uint256 streamId, address who) external view returns (uint256 balance);
  
-@@ -545,13 +807,6 @@ interface ICollector {
-    */
+@@ -537,7 +794,8 @@ interface ICollector {
+    * @param token The address of the token to give allowance from
+    * @param recipient Allowance's recipient
+    * @param amount Allowance to approve
+-   **/
++   *
++   */
+   function approve(IERC20 token, address recipient, uint256 amount) external;
+ 
+   /**
+@@ -545,16 +803,10 @@ interface ICollector {
+    * @param token The address of the token to transfer
+    * @param recipient Transfer's recipient
+    * @param amount Amount to transfer
+-   **/
++   *
++   */
    function transfer(IERC20 token, address recipient, uint256 amount) external;
  
 -  /**
 -   * @dev Transfer the ownership of the funds administrator role.
--   *         This function should only be callable by the current funds administrator.
+-          This function should only be callable by the current funds administrator.
 -   * @param admin The address of the new funds administrator
 -   */
 -  function setFundsAdmin(address admin) external;
@@ -1090,7 +1146,35 @@ index 23f6219..ad36cab 100644
    /**
     * @notice Creates a new stream funded by this contracts itself and paid towards `recipient`.
     * @param recipient The address towards which the money is streamed.
-@@ -607,13 +862,468 @@ interface ICollector {
+@@ -564,13 +816,9 @@ interface ICollector {
+    * @param stopTime The unix timestamp for when the stream stops.
+    * @return streamId the uint256 id of the newly created stream.
+    */
+-  function createStream(
+-    address recipient,
+-    uint256 deposit,
+-    address tokenAddress,
+-    uint256 startTime,
+-    uint256 stopTime
+-  ) external returns (uint256 streamId);
++  function createStream(address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime)
++    external
++    returns (uint256 streamId);
+ 
+   /**
+    * @notice Returns the stream with all its properties.
+@@ -578,9 +826,7 @@ interface ICollector {
+    * @param streamId The id of the stream to query.
+    * @notice Returns the stream object.
+    */
+-  function getStream(
+-    uint256 streamId
+-  )
++  function getStream(uint256 streamId)
+     external
+     view
+     returns (
+@@ -616,13 +862,468 @@ interface ICollector {
    function getNextStreamId() external view returns (uint256);
  }
  
@@ -1562,7 +1646,7 @@ index 23f6219..ad36cab 100644
   * contract returns false). Tokens that return no value (and instead revert or
   * throw on failure) are also supported, non-reverting calls are assumed to be
   * successful.
-@@ -621,45 +1331,131 @@ interface ICollector {
+@@ -630,54 +1331,131 @@ interface ICollector {
   * which allows you to call the safe operations as `token.safeTransfer(...)`, etc.
   */
  library SafeERC20 {
@@ -1591,7 +1675,10 @@ index 23f6219..ad36cab 100644
 +   * calling contract. If `token` returns no value, non-reverting calls are assumed to be successful.
 +   */
    function safeTransferFrom(IERC20 token, address from, address to, uint256 value) internal {
--    _callOptionalReturn(token, abi.encodeWithSelector(token.transferFrom.selector, from, to, value));
+-    _callOptionalReturn(
+-      token,
+-      abi.encodeWithSelector(token.transferFrom.selector, from, to, value)
+-    );
 +    _callOptionalReturn(token, abi.encodeCall(token.transferFrom, (from, to, value)));
    }
  
@@ -1621,7 +1708,10 @@ index 23f6219..ad36cab 100644
 -
    function safeIncreaseAllowance(IERC20 token, address spender, uint256 value) internal {
 -    uint256 newAllowance = token.allowance(address(this), spender) + value;
--    _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
+-    _callOptionalReturn(
+-      token,
+-      abi.encodeWithSelector(token.approve.selector, spender, newAllowance)
+-    );
 +    uint256 oldAllowance = token.allowance(address(this), spender);
 +    forceApprove(token, spender, oldAllowance + value);
    }
@@ -1641,7 +1731,10 @@ index 23f6219..ad36cab 100644
 -      uint256 oldAllowance = token.allowance(address(this), spender);
 -      require(oldAllowance >= value, 'SafeERC20: decreased allowance below zero');
 -      uint256 newAllowance = oldAllowance - value;
--      _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
+-      _callOptionalReturn(
+-        token,
+-        abi.encodeWithSelector(token.approve.selector, spender, newAllowance)
+-      );
 +      uint256 currentAllowance = token.allowance(address(this), spender);
 +      if (currentAllowance < requestedDecrease) {
 +        revert SafeERC20FailedDecreaseAllowance(spender, currentAllowance, requestedDecrease);
@@ -1719,7 +1812,7 @@ index 23f6219..ad36cab 100644
      }
    }
  
-@@ -668,21 +1464,51 @@ library SafeERC20 {
+@@ -686,21 +1464,51 @@ library SafeERC20 {
     * on the return value: the return value is optional (but if data is returned, it must not be false).
     * @param token The token targeted by the call.
     * @param data The call data (encoded using abi.encode or one of its variants).
@@ -1779,32 +1872,35 @@ index 23f6219..ad36cab 100644
  
  /**
   * @title Collector
-@@ -698,23 +1524,27 @@ library SafeERC20 {
+@@ -714,22 +1522,29 @@ library SafeERC20 {
+  * - Adapted codebase to Solidity 0.8.11, mainly removing SafeMath and CarefulMath to use native safe math
+  * - Same as with creation, on Sablier the `sender` and `recipient` can cancel a stream. Here, only fund admin and recipient
   * @author BGD Labs
-  *
-  */
+- **/
 -contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
++ *
++ */
 +contract Collector is AccessControlUpgradeable, ReentrancyGuardUpgradeable, ICollector {
    using SafeERC20 for IERC20;
    using Address for address payable;
  
+-  /*** Storage Properties ***/
+-
    /**
-    * Storage Properties **
-    */
-+  /// @inheritdoc ICollector
-+  address public constant ETH_MOCK_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
- 
--  /**
 -   * @notice Address of the current funds admin.
--   */
++   * Storage Properties **
+    */
 -  address internal _fundsAdmin;
 +  /// @inheritdoc ICollector
-+  bytes32 public constant FUNDS_ADMIN_ROLE = 'FUNDS_ADMIN';
++  address public constant ETH_MOCK_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
  
 -  /**
 -   * @notice Current revision of the contract.
 -   */
 -  uint256 public constant REVISION = 5;
++  /// @inheritdoc ICollector
++  bytes32 public constant FUNDS_ADMIN_ROLE = 'FUNDS_ADMIN';
++
 +  // Reserved storage space to account for deprecated inherited storage
 +  // 0 was lastInitializedRevision
 +  // 1-50 were the ____gap
@@ -1816,16 +1912,17 @@ index 23f6219..ad36cab 100644
  
    /**
     * @notice Counter for new stream ids.
-@@ -726,18 +1556,17 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -741,16 +1556,17 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     */
    mapping(uint256 => Stream) private _streams;
  
 -  /// @inheritdoc ICollector
 -  address public constant ETH_MOCK_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 -
-   /**
-    * Modifiers **
-    */
+-  /*** Modifiers ***/
++  /**
++   * Modifiers **
++   */
  
    /**
 -   * @dev Throws if the caller is not the funds admin.
@@ -1839,7 +1936,7 @@ index 23f6219..ad36cab 100644
      _;
    }
  
-@@ -746,10 +1575,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -759,10 +1575,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     * @param streamId The id of the stream to query.
     */
    modifier onlyAdminOrRecipient(uint256 streamId) {
@@ -1853,7 +1950,7 @@ index 23f6219..ad36cab 100644
      _;
    }
  
-@@ -757,35 +1585,39 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -770,31 +1585,39 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     * @dev Throws if the provided id does not point to a valid stream.
     */
    modifier streamExists(uint256 streamId) {
@@ -1862,16 +1959,17 @@ index 23f6219..ad36cab 100644
      _;
    }
  
+-  /*** Contract Logic Starts Here */
 +  constructor() {
 +    _disableInitializers();
 +  }
-+
-   /**
-    * Contract Logic Starts Here
-    */
  
 -  /// @inheritdoc ICollector
 -  function initialize(address fundsAdmin, uint256 nextStreamId) external initializer {
++  /**
++   * Contract Logic Starts Here
++   */
++
 +  /**
 +   * @notice Initializes the contracts
 +   * @param nextStreamId StreamId to set, applied if greater than 0
@@ -1887,17 +1985,18 @@ index 23f6219..ad36cab 100644
      }
 -
 -    _setFundsAdmin(fundsAdmin);
-   }
- 
-   /**
-    * View Functions **
-    */
+-  }
+-
+-  /*** View Functions ***/
 -
 -  /// @inheritdoc VersionedInitializable
 -  function getRevision() internal pure override returns (uint256) {
 -    return REVISION;
--  }
--
+   }
+ 
++  /**
++   * View Functions **
++   */
    /// @inheritdoc ICollector
 -  function getFundsAdmin() external view returns (address) {
 -    return _fundsAdmin;
@@ -1906,7 +2005,37 @@ index 23f6219..ad36cab 100644
    }
  
    /// @inheritdoc ICollector
-@@ -872,12 +1704,12 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -803,9 +1626,7 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+   }
+ 
+   /// @inheritdoc ICollector
+-  function getStream(
+-    uint256 streamId
+-  )
++  function getStream(uint256 streamId)
+     external
+     view
+     streamExists(streamId)
+@@ -852,10 +1673,7 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+   }
+ 
+   /// @inheritdoc ICollector
+-  function balanceOf(
+-    uint256 streamId,
+-    address who
+-  ) public view streamExists(streamId) returns (uint256 balance) {
++  function balanceOf(uint256 streamId, address who) public view streamExists(streamId) returns (uint256 balance) {
+     Stream memory stream = _streams[streamId];
+     BalanceOfLocalVars memory vars;
+ 
+@@ -880,16 +1698,18 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+     return 0;
+   }
+ 
+-  /*** Public Effects & Interactions Functions ***/
++  /**
++   * Public Effects & Interactions Functions **
++   */
  
    /// @inheritdoc ICollector
    function approve(IERC20 token, address recipient, uint256 amount) external onlyFundsAdmin {
@@ -1921,7 +2050,7 @@ index 23f6219..ad36cab 100644
  
      if (address(token) == ETH_MOCK_ADDRESS) {
        payable(recipient).sendValue(amount);
-@@ -886,18 +1718,8 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -898,18 +1718,8 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      }
    }
  
@@ -1942,16 +2071,28 @@ index 23f6219..ad36cab 100644
    }
  
    struct CreateStreamLocalVars {
-@@ -924,21 +1746,21 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
-     onlyFundsAdmin
-     returns (uint256)
-   {
+@@ -931,28 +1741,26 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+    *  Throws if the contract is not allowed to transfer enough tokens.
+    *  Throws if there is a token transfer failure.
+    */
+-  function createStream(
+-    address recipient,
+-    uint256 deposit,
+-    address tokenAddress,
+-    uint256 startTime,
+-    uint256 stopTime
+-  ) external onlyFundsAdmin returns (uint256) {
 -    require(recipient != address(0), 'stream to the zero address');
 -    require(recipient != address(this), 'stream to the contract itself');
 -    require(recipient != msg.sender, 'stream to the caller');
 -    require(deposit > 0, 'deposit is zero');
 -    require(startTime >= block.timestamp, 'start time before block.timestamp');
 -    require(stopTime > startTime, 'stop time before the start time');
++  function createStream(address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime)
++    external
++    onlyFundsAdmin
++    returns (uint256)
++  {
 +    if (recipient == address(0)) revert InvalidZeroAddress();
 +    if (recipient == address(this)) revert InvalidRecipient();
 +    if (recipient == msg.sender) revert InvalidRecipient();
@@ -1972,11 +2113,39 @@ index 23f6219..ad36cab 100644
  
      vars.ratePerSecond = deposit / vars.duration;
  
-@@ -977,11 +1799,11 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
-     onlyAdminOrRecipient(streamId)
-     returns (bool)
-   {
+@@ -973,15 +1781,7 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+     /* Increment the next stream id. */
+     _nextStreamId++;
+ 
+-    emit CreateStream(
+-      streamId,
+-      address(this),
+-      recipient,
+-      deposit,
+-      tokenAddress,
+-      startTime,
+-      stopTime
+-    );
++    emit CreateStream(streamId, address(this), recipient, deposit, tokenAddress, startTime, stopTime);
+     return streamId;
+   }
+ 
+@@ -992,15 +1792,18 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+    *  Throws if the amount exceeds the available balance.
+    *  Throws if there is a token transfer failure.
+    */
+-  function withdrawFromStream(
+-    uint256 streamId,
+-    uint256 amount
+-  ) external nonReentrant streamExists(streamId) onlyAdminOrRecipient(streamId) returns (bool) {
 -    require(amount > 0, 'amount is zero');
++  function withdrawFromStream(uint256 streamId, uint256 amount)
++    external
++    nonReentrant
++    streamExists(streamId)
++    onlyAdminOrRecipient(streamId)
++    returns (bool)
++  {
 +    if (amount == 0) revert InvalidZeroAmount();
      Stream memory stream = _streams[streamId];
  
@@ -1986,7 +2155,24 @@ index 23f6219..ad36cab 100644
  
      _streams[streamId].remainingBalance = stream.remainingBalance - amount;
  
-@@ -1017,4 +1839,32 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+@@ -1017,9 +1820,13 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
+    *  Throws if the caller is not the funds admin or the recipient of the stream.
+    *  Throws if there is a token transfer failure.
+    */
+-  function cancelStream(
+-    uint256 streamId
+-  ) external nonReentrant streamExists(streamId) onlyAdminOrRecipient(streamId) returns (bool) {
++  function cancelStream(uint256 streamId)
++    external
++    nonReentrant
++    streamExists(streamId)
++    onlyAdminOrRecipient(streamId)
++    returns (bool)
++  {
+     Stream memory stream = _streams[streamId];
+     uint256 senderBalance = balanceOf(streamId, stream.sender);
+     uint256 recipientBalance = balanceOf(streamId, stream.recipient);
+@@ -1032,4 +1839,32 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
      emit CancelStream(streamId, stream.sender, stream.recipient, senderBalance, recipientBalance);
      return true;
    }

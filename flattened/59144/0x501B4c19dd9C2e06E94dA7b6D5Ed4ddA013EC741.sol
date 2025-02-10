@@ -1,76 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0 ^0.8.10;
 
-// src/contracts/dependencies/openzeppelin/ReentrancyGuard.sol
-
-// OpenZeppelin Contracts v4.4.1 (security/ReentrancyGuard.sol)
-
-/**
- * @dev Contract module that helps prevent reentrant calls to a function.
- *
- * Inheriting from `ReentrancyGuard` will make the {nonReentrant} modifier
- * available, which can be applied to functions to make sure there are no nested
- * (reentrant) calls to them.
- *
- * Note that because there is a single `nonReentrant` guard, functions marked as
- * `nonReentrant` may not call one another. This can be worked around by making
- * those functions `private`, and then adding `external` `nonReentrant` entry
- * points to them.
- *
- * TIP: If you would like to learn more about reentrancy and alternative ways
- * to protect against it, check out our blog post
- * https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].
- */
-abstract contract ReentrancyGuard {
-  // Booleans are more expensive than uint256 or any type that takes up a full
-  // word because each write operation emits an extra SLOAD to first read the
-  // slot's contents, replace the bits taken up by the boolean, and then write
-  // back. This is the compiler's defense against contract upgrades and
-  // pointer aliasing, and it cannot be disabled.
-
-  // The values being non-zero value makes deployment a bit more expensive,
-  // but in exchange the refund on every call to nonReentrant will be lower in
-  // amount. Since refunds are capped to a percentage of the total
-  // transaction's gas, it is best to keep them low in cases like this one, to
-  // increase the likelihood of the full refund coming into effect.
-  uint256 private constant _NOT_ENTERED = 1;
-  uint256 private constant _ENTERED = 2;
-
-  uint256 private _status;
-
-  constructor() {
-    _status = _NOT_ENTERED;
-  }
-
-  /**
-   * @dev Prevents a contract from calling itself, directly or indirectly.
-   * Calling a `nonReentrant` function from another `nonReentrant`
-   * function is not supported. It is possible to prevent this from happening
-   * by making the `nonReentrant` function external, and making it call a
-   * `private` function that does the actual work.
-   */
-  modifier nonReentrant() {
-    // On the first call to nonReentrant, _notEntered will be true
-    require(_status != _ENTERED, 'ReentrancyGuard: reentrant call');
-
-    // Any calls to nonReentrant after this point will fail
-    _status = _ENTERED;
-
-    _;
-
-    // By storing the original value once again, a refund is triggered (see
-    // https://eips.ethereum.org/EIPS/eip-2200)
-    _status = _NOT_ENTERED;
-  }
-
-  /**
-   * @dev As we use the guard with the proxy we need to init it with the empty value
-   */
-  function _initGuard() internal {
-    _status = _NOT_ENTERED;
-  }
-}
-
 // src/contracts/dependencies/openzeppelin/contracts/Address.sol
 
 // OpenZeppelin Contracts v4.4.1 (utils/Address.sol)
@@ -127,7 +57,7 @@ library Address {
   function sendValue(address payable recipient, uint256 amount) internal {
     require(address(this).balance >= amount, 'Address: insufficient balance');
 
-    (bool success,) = recipient.call{value: amount}('');
+    (bool success, ) = recipient.call{value: amount}('');
     require(success, 'Address: unable to send value, recipient may have reverted');
   }
 
@@ -159,7 +89,11 @@ library Address {
    *
    * _Available since v3.1._
    */
-  function functionCall(address target, bytes memory data, string memory errorMessage) internal returns (bytes memory) {
+  function functionCall(
+    address target,
+    bytes memory data,
+    string memory errorMessage
+  ) internal returns (bytes memory) {
     return functionCallWithValue(target, data, 0, errorMessage);
   }
 
@@ -174,7 +108,11 @@ library Address {
    *
    * _Available since v3.1._
    */
-  function functionCallWithValue(address target, bytes memory data, uint256 value) internal returns (bytes memory) {
+  function functionCallWithValue(
+    address target,
+    bytes memory data,
+    uint256 value
+  ) internal returns (bytes memory) {
     return functionCallWithValue(target, data, value, 'Address: low-level call with value failed');
   }
 
@@ -184,10 +122,12 @@ library Address {
    *
    * _Available since v3.1._
    */
-  function functionCallWithValue(address target, bytes memory data, uint256 value, string memory errorMessage)
-    internal
-    returns (bytes memory)
-  {
+  function functionCallWithValue(
+    address target,
+    bytes memory data,
+    uint256 value,
+    string memory errorMessage
+  ) internal returns (bytes memory) {
     require(address(this).balance >= value, 'Address: insufficient balance for call');
     require(isContract(target), 'Address: call to non-contract');
 
@@ -201,7 +141,10 @@ library Address {
    *
    * _Available since v3.3._
    */
-  function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {
+  function functionStaticCall(
+    address target,
+    bytes memory data
+  ) internal view returns (bytes memory) {
     return functionStaticCall(target, data, 'Address: low-level static call failed');
   }
 
@@ -211,11 +154,11 @@ library Address {
    *
    * _Available since v3.3._
    */
-  function functionStaticCall(address target, bytes memory data, string memory errorMessage)
-    internal
-    view
-    returns (bytes memory)
-  {
+  function functionStaticCall(
+    address target,
+    bytes memory data,
+    string memory errorMessage
+  ) internal view returns (bytes memory) {
     require(isContract(target), 'Address: static call to non-contract');
 
     (bool success, bytes memory returndata) = target.staticcall(data);
@@ -238,10 +181,11 @@ library Address {
    *
    * _Available since v3.4._
    */
-  function functionDelegateCall(address target, bytes memory data, string memory errorMessage)
-    internal
-    returns (bytes memory)
-  {
+  function functionDelegateCall(
+    address target,
+    bytes memory data,
+    string memory errorMessage
+  ) internal returns (bytes memory) {
     require(isContract(target), 'Address: delegate call to non-contract');
 
     (bool success, bytes memory returndata) = target.delegatecall(data);
@@ -254,11 +198,11 @@ library Address {
    *
    * _Available since v4.3._
    */
-  function verifyCallResult(bool success, bytes memory returndata, string memory errorMessage)
-    internal
-    pure
-    returns (bytes memory)
-  {
+  function verifyCallResult(
+    bool success,
+    bytes memory returndata,
+    string memory errorMessage
+  ) internal pure returns (bytes memory) {
     if (success) {
       return returndata;
     } else {
@@ -353,6 +297,76 @@ interface IERC20 {
   event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
+// src/contracts/dependencies/openzeppelin/ReentrancyGuard.sol
+
+// OpenZeppelin Contracts v4.4.1 (security/ReentrancyGuard.sol)
+
+/**
+ * @dev Contract module that helps prevent reentrant calls to a function.
+ *
+ * Inheriting from `ReentrancyGuard` will make the {nonReentrant} modifier
+ * available, which can be applied to functions to make sure there are no nested
+ * (reentrant) calls to them.
+ *
+ * Note that because there is a single `nonReentrant` guard, functions marked as
+ * `nonReentrant` may not call one another. This can be worked around by making
+ * those functions `private`, and then adding `external` `nonReentrant` entry
+ * points to them.
+ *
+ * TIP: If you would like to learn more about reentrancy and alternative ways
+ * to protect against it, check out our blog post
+ * https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].
+ */
+abstract contract ReentrancyGuard {
+  // Booleans are more expensive than uint256 or any type that takes up a full
+  // word because each write operation emits an extra SLOAD to first read the
+  // slot's contents, replace the bits taken up by the boolean, and then write
+  // back. This is the compiler's defense against contract upgrades and
+  // pointer aliasing, and it cannot be disabled.
+
+  // The values being non-zero value makes deployment a bit more expensive,
+  // but in exchange the refund on every call to nonReentrant will be lower in
+  // amount. Since refunds are capped to a percentage of the total
+  // transaction's gas, it is best to keep them low in cases like this one, to
+  // increase the likelihood of the full refund coming into effect.
+  uint256 private constant _NOT_ENTERED = 1;
+  uint256 private constant _ENTERED = 2;
+
+  uint256 private _status;
+
+  constructor() {
+    _status = _NOT_ENTERED;
+  }
+
+  /**
+   * @dev Prevents a contract from calling itself, directly or indirectly.
+   * Calling a `nonReentrant` function from another `nonReentrant`
+   * function is not supported. It is possible to prevent this from happening
+   * by making the `nonReentrant` function external, and making it call a
+   * `private` function that does the actual work.
+   */
+  modifier nonReentrant() {
+    // On the first call to nonReentrant, _notEntered will be true
+    require(_status != _ENTERED, 'ReentrancyGuard: reentrant call');
+
+    // Any calls to nonReentrant after this point will fail
+    _status = _ENTERED;
+
+    _;
+
+    // By storing the original value once again, a refund is triggered (see
+    // https://eips.ethereum.org/EIPS/eip-2200)
+    _status = _NOT_ENTERED;
+  }
+
+  /**
+   * @dev As we use the guard with the proxy we need to init it with the empty value
+   */
+  function _initGuard() internal {
+    _status = _NOT_ENTERED;
+  }
+}
+
 // src/contracts/misc/aave-upgradeability/VersionedInitializable.sol
 
 /**
@@ -445,15 +459,12 @@ interface ICollector {
     bool isEntity;
   }
 
-  /**
-   * @notice Emitted when the funds admin changes
+  /** @notice Emitted when the funds admin changes
    * @param fundsAdmin The new funds admin.
-   *
-   */
+   **/
   event NewFundsAdmin(address indexed fundsAdmin);
 
-  /**
-   * @notice Emitted when the new stream is created
+  /** @notice Emitted when the new stream is created
    * @param streamId The identifier of the stream.
    * @param sender The address of the collector.
    * @param recipient The address towards which the money is streamed.
@@ -461,8 +472,7 @@ interface ICollector {
    * @param tokenAddress The ERC20 token to use as streaming currency.
    * @param startTime The unix timestamp for when the stream starts.
    * @param stopTime The unix timestamp for when the stream stops.
-   *
-   */
+   **/
   event CreateStream(
     uint256 indexed streamId,
     address indexed sender,
@@ -497,26 +507,21 @@ interface ICollector {
     uint256 recipientBalance
   );
 
-  /**
-   * @notice Returns the mock ETH reference address
+  /** @notice Returns the mock ETH reference address
    * @return address The address
-   *
-   */
+   **/
   function ETH_MOCK_ADDRESS() external pure returns (address);
 
-  /**
-   * @notice Initializes the contracts
+  /** @notice Initializes the contracts
    * @param fundsAdmin Funds admin address
    * @param nextStreamId StreamId to set, applied if greater than 0
-   *
-   */
+   **/
   function initialize(address fundsAdmin, uint256 nextStreamId) external;
 
   /**
    * @notice Return the funds admin, only entity to be able to interact with this contract (controller of reserve)
    * @return address The address of the funds admin
-   *
-   */
+   **/
   function getFundsAdmin() external view returns (address);
 
   /**
@@ -532,8 +537,7 @@ interface ICollector {
    * @param token The address of the token to give allowance from
    * @param recipient Allowance's recipient
    * @param amount Allowance to approve
-   *
-   */
+   **/
   function approve(IERC20 token, address recipient, uint256 amount) external;
 
   /**
@@ -541,13 +545,12 @@ interface ICollector {
    * @param token The address of the token to transfer
    * @param recipient Transfer's recipient
    * @param amount Amount to transfer
-   *
-   */
+   **/
   function transfer(IERC20 token, address recipient, uint256 amount) external;
 
   /**
    * @dev Transfer the ownership of the funds administrator role.
-   *         This function should only be callable by the current funds administrator.
+          This function should only be callable by the current funds administrator.
    * @param admin The address of the new funds administrator
    */
   function setFundsAdmin(address admin) external;
@@ -561,9 +564,13 @@ interface ICollector {
    * @param stopTime The unix timestamp for when the stream stops.
    * @return streamId the uint256 id of the newly created stream.
    */
-  function createStream(address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime)
-    external
-    returns (uint256 streamId);
+  function createStream(
+    address recipient,
+    uint256 deposit,
+    address tokenAddress,
+    uint256 startTime,
+    uint256 stopTime
+  ) external returns (uint256 streamId);
 
   /**
    * @notice Returns the stream with all its properties.
@@ -571,7 +578,9 @@ interface ICollector {
    * @param streamId The id of the stream to query.
    * @notice Returns the stream object.
    */
-  function getStream(uint256 streamId)
+  function getStream(
+    uint256 streamId
+  )
     external
     view
     returns (
@@ -628,7 +637,10 @@ library SafeERC20 {
   }
 
   function safeTransferFrom(IERC20 token, address from, address to, uint256 value) internal {
-    _callOptionalReturn(token, abi.encodeWithSelector(token.transferFrom.selector, from, to, value));
+    _callOptionalReturn(
+      token,
+      abi.encodeWithSelector(token.transferFrom.selector, from, to, value)
+    );
   }
 
   /**
@@ -651,7 +663,10 @@ library SafeERC20 {
 
   function safeIncreaseAllowance(IERC20 token, address spender, uint256 value) internal {
     uint256 newAllowance = token.allowance(address(this), spender) + value;
-    _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
+    _callOptionalReturn(
+      token,
+      abi.encodeWithSelector(token.approve.selector, spender, newAllowance)
+    );
   }
 
   function safeDecreaseAllowance(IERC20 token, address spender, uint256 value) internal {
@@ -659,7 +674,10 @@ library SafeERC20 {
       uint256 oldAllowance = token.allowance(address(this), spender);
       require(oldAllowance >= value, 'SafeERC20: decreased allowance below zero');
       uint256 newAllowance = oldAllowance - value;
-      _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
+      _callOptionalReturn(
+        token,
+        abi.encodeWithSelector(token.approve.selector, spender, newAllowance)
+      );
     }
   }
 
@@ -696,15 +714,12 @@ library SafeERC20 {
  * - Adapted codebase to Solidity 0.8.11, mainly removing SafeMath and CarefulMath to use native safe math
  * - Same as with creation, on Sablier the `sender` and `recipient` can cancel a stream. Here, only fund admin and recipient
  * @author BGD Labs
- *
- */
+ **/
 contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
   using SafeERC20 for IERC20;
   using Address for address payable;
 
-  /**
-   * Storage Properties **
-   */
+  /*** Storage Properties ***/
 
   /**
    * @notice Address of the current funds admin.
@@ -729,9 +744,7 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
   /// @inheritdoc ICollector
   address public constant ETH_MOCK_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
-  /**
-   * Modifiers **
-   */
+  /*** Modifiers ***/
 
   /**
    * @dev Throws if the caller is not the funds admin.
@@ -761,9 +774,7 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     _;
   }
 
-  /**
-   * Contract Logic Starts Here
-   */
+  /*** Contract Logic Starts Here */
 
   /// @inheritdoc ICollector
   function initialize(address fundsAdmin, uint256 nextStreamId) external initializer {
@@ -774,9 +785,7 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     _setFundsAdmin(fundsAdmin);
   }
 
-  /**
-   * View Functions **
-   */
+  /*** View Functions ***/
 
   /// @inheritdoc VersionedInitializable
   function getRevision() internal pure override returns (uint256) {
@@ -794,7 +803,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
   }
 
   /// @inheritdoc ICollector
-  function getStream(uint256 streamId)
+  function getStream(
+    uint256 streamId
+  )
     external
     view
     streamExists(streamId)
@@ -841,7 +852,10 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
   }
 
   /// @inheritdoc ICollector
-  function balanceOf(uint256 streamId, address who) public view streamExists(streamId) returns (uint256 balance) {
+  function balanceOf(
+    uint256 streamId,
+    address who
+  ) public view streamExists(streamId) returns (uint256 balance) {
     Stream memory stream = _streams[streamId];
     BalanceOfLocalVars memory vars;
 
@@ -866,9 +880,7 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     return 0;
   }
 
-  /**
-   * Public Effects & Interactions Functions **
-   */
+  /*** Public Effects & Interactions Functions ***/
 
   /// @inheritdoc ICollector
   function approve(IERC20 token, address recipient, uint256 amount) external onlyFundsAdmin {
@@ -919,11 +931,13 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
    *  Throws if the contract is not allowed to transfer enough tokens.
    *  Throws if there is a token transfer failure.
    */
-  function createStream(address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime)
-    external
-    onlyFundsAdmin
-    returns (uint256)
-  {
+  function createStream(
+    address recipient,
+    uint256 deposit,
+    address tokenAddress,
+    uint256 startTime,
+    uint256 stopTime
+  ) external onlyFundsAdmin returns (uint256) {
     require(recipient != address(0), 'stream to the zero address');
     require(recipient != address(this), 'stream to the contract itself');
     require(recipient != msg.sender, 'stream to the caller');
@@ -959,7 +973,15 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     /* Increment the next stream id. */
     _nextStreamId++;
 
-    emit CreateStream(streamId, address(this), recipient, deposit, tokenAddress, startTime, stopTime);
+    emit CreateStream(
+      streamId,
+      address(this),
+      recipient,
+      deposit,
+      tokenAddress,
+      startTime,
+      stopTime
+    );
     return streamId;
   }
 
@@ -970,13 +992,10 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
    *  Throws if the amount exceeds the available balance.
    *  Throws if there is a token transfer failure.
    */
-  function withdrawFromStream(uint256 streamId, uint256 amount)
-    external
-    nonReentrant
-    streamExists(streamId)
-    onlyAdminOrRecipient(streamId)
-    returns (bool)
-  {
+  function withdrawFromStream(
+    uint256 streamId,
+    uint256 amount
+  ) external nonReentrant streamExists(streamId) onlyAdminOrRecipient(streamId) returns (bool) {
     require(amount > 0, 'amount is zero');
     Stream memory stream = _streams[streamId];
 
@@ -998,13 +1017,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
    *  Throws if the caller is not the funds admin or the recipient of the stream.
    *  Throws if there is a token transfer failure.
    */
-  function cancelStream(uint256 streamId)
-    external
-    nonReentrant
-    streamExists(streamId)
-    onlyAdminOrRecipient(streamId)
-    returns (bool)
-  {
+  function cancelStream(
+    uint256 streamId
+  ) external nonReentrant streamExists(streamId) onlyAdminOrRecipient(streamId) returns (bool) {
     Stream memory stream = _streams[streamId];
     uint256 senderBalance = balanceOf(streamId, stream.sender);
     uint256 recipientBalance = balanceOf(streamId, stream.recipient);
