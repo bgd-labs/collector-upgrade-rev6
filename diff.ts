@@ -53,7 +53,7 @@ async function snapshotPool({ CHAIN_ID, COLLECTOR }) {
   );
   const destination = `flattened/${CHAIN_ID}/${impl}.sol`;
   if (!existsSync(destination)) {
-    const sourceCommand = `cast etherscan-source --flatten --chain ${CHAIN_ID} -d ${destination} ${impl} --etherscan-api-key ${CHAIN_ID_API_KEY_MAP[CHAIN_ID]}`;
+    const sourceCommand = `cast source --flatten --chain ${CHAIN_ID} -d ${destination} ${impl} --etherscan-api-key ${CHAIN_ID_API_KEY_MAP[CHAIN_ID]}`;
     execSync(sourceCommand);
   }
 
