@@ -63,7 +63,7 @@ library Address {
   function sendValue(address payable recipient, uint256 amount) internal {
     require(address(this).balance >= amount, 'Address: insufficient balance');
 
-    (bool success, ) = recipient.call{value: amount}('');
+    (bool success,) = recipient.call{value: amount}('');
     require(success, 'Address: unable to send value, recipient may have reverted');
   }
 
@@ -95,11 +95,7 @@ library Address {
    *
    * _Available since v3.1._
    */
-  function functionCall(
-    address target,
-    bytes memory data,
-    string memory errorMessage
-  ) internal returns (bytes memory) {
+  function functionCall(address target, bytes memory data, string memory errorMessage) internal returns (bytes memory) {
     return functionCallWithValue(target, data, 0, errorMessage);
   }
 
@@ -114,11 +110,7 @@ library Address {
    *
    * _Available since v3.1._
    */
-  function functionCallWithValue(
-    address target,
-    bytes memory data,
-    uint256 value
-  ) internal returns (bytes memory) {
+  function functionCallWithValue(address target, bytes memory data, uint256 value) internal returns (bytes memory) {
     return functionCallWithValue(target, data, value, 'Address: low-level call with value failed');
   }
 
@@ -128,12 +120,10 @@ library Address {
    *
    * _Available since v3.1._
    */
-  function functionCallWithValue(
-    address target,
-    bytes memory data,
-    uint256 value,
-    string memory errorMessage
-  ) internal returns (bytes memory) {
+  function functionCallWithValue(address target, bytes memory data, uint256 value, string memory errorMessage)
+    internal
+    returns (bytes memory)
+  {
     require(address(this).balance >= value, 'Address: insufficient balance for call');
     (bool success, bytes memory returndata) = target.call{value: value}(data);
     return verifyCallResultFromTarget(target, success, returndata, errorMessage);
@@ -145,11 +135,7 @@ library Address {
    *
    * _Available since v3.3._
    */
-  function functionStaticCall(address target, bytes memory data)
-    internal
-    view
-    returns (bytes memory)
-  {
+  function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {
     return functionStaticCall(target, data, 'Address: low-level static call failed');
   }
 
@@ -159,11 +145,11 @@ library Address {
    *
    * _Available since v3.3._
    */
-  function functionStaticCall(
-    address target,
-    bytes memory data,
-    string memory errorMessage
-  ) internal view returns (bytes memory) {
+  function functionStaticCall(address target, bytes memory data, string memory errorMessage)
+    internal
+    view
+    returns (bytes memory)
+  {
     (bool success, bytes memory returndata) = target.staticcall(data);
     return verifyCallResultFromTarget(target, success, returndata, errorMessage);
   }
@@ -184,11 +170,10 @@ library Address {
    *
    * _Available since v3.4._
    */
-  function functionDelegateCall(
-    address target,
-    bytes memory data,
-    string memory errorMessage
-  ) internal returns (bytes memory) {
+  function functionDelegateCall(address target, bytes memory data, string memory errorMessage)
+    internal
+    returns (bytes memory)
+  {
     (bool success, bytes memory returndata) = target.delegatecall(data);
     return verifyCallResultFromTarget(target, success, returndata, errorMessage);
   }
@@ -199,12 +184,11 @@ library Address {
    *
    * _Available since v4.8._
    */
-  function verifyCallResultFromTarget(
-    address target,
-    bool success,
-    bytes memory returndata,
-    string memory errorMessage
-  ) internal view returns (bytes memory) {
+  function verifyCallResultFromTarget(address target, bool success, bytes memory returndata, string memory errorMessage)
+    internal
+    view
+    returns (bytes memory)
+  {
     if (success) {
       if (returndata.length == 0) {
         // only check isContract if the call was successful and the return data is empty
@@ -223,11 +207,11 @@ library Address {
    *
    * _Available since v4.3._
    */
-  function verifyCallResult(
-    bool success,
-    bytes memory returndata,
-    string memory errorMessage
-  ) internal pure returns (bytes memory) {
+  function verifyCallResult(bool success, bytes memory returndata, string memory errorMessage)
+    internal
+    pure
+    returns (bytes memory)
+  {
     if (success) {
       return returndata;
     } else {
@@ -259,78 +243,74 @@ library Address {
  * @dev Interface of the ERC20 standard as defined in the EIP.
  */
 interface IERC20 {
-    /**
-     * @dev Emitted when `value` tokens are moved from one account (`from`) to
-     * another (`to`).
-     *
-     * Note that `value` may be zero.
-     */
-    event Transfer(address indexed from, address indexed to, uint256 value);
+  /**
+   * @dev Emitted when `value` tokens are moved from one account (`from`) to
+   * another (`to`).
+   *
+   * Note that `value` may be zero.
+   */
+  event Transfer(address indexed from, address indexed to, uint256 value);
 
-    /**
-     * @dev Emitted when the allowance of a `spender` for an `owner` is set by
-     * a call to {approve}. `value` is the new allowance.
-     */
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+  /**
+   * @dev Emitted when the allowance of a `spender` for an `owner` is set by
+   * a call to {approve}. `value` is the new allowance.
+   */
+  event Approval(address indexed owner, address indexed spender, uint256 value);
 
-    /**
-     * @dev Returns the amount of tokens in existence.
-     */
-    function totalSupply() external view returns (uint256);
+  /**
+   * @dev Returns the amount of tokens in existence.
+   */
+  function totalSupply() external view returns (uint256);
 
-    /**
-     * @dev Returns the amount of tokens owned by `account`.
-     */
-    function balanceOf(address account) external view returns (uint256);
+  /**
+   * @dev Returns the amount of tokens owned by `account`.
+   */
+  function balanceOf(address account) external view returns (uint256);
 
-    /**
-     * @dev Moves `amount` tokens from the caller's account to `to`.
-     *
-     * Returns a boolean value indicating whether the operation succeeded.
-     *
-     * Emits a {Transfer} event.
-     */
-    function transfer(address to, uint256 amount) external returns (bool);
+  /**
+   * @dev Moves `amount` tokens from the caller's account to `to`.
+   *
+   * Returns a boolean value indicating whether the operation succeeded.
+   *
+   * Emits a {Transfer} event.
+   */
+  function transfer(address to, uint256 amount) external returns (bool);
 
-    /**
-     * @dev Returns the remaining number of tokens that `spender` will be
-     * allowed to spend on behalf of `owner` through {transferFrom}. This is
-     * zero by default.
-     *
-     * This value changes when {approve} or {transferFrom} are called.
-     */
-    function allowance(address owner, address spender) external view returns (uint256);
+  /**
+   * @dev Returns the remaining number of tokens that `spender` will be
+   * allowed to spend on behalf of `owner` through {transferFrom}. This is
+   * zero by default.
+   *
+   * This value changes when {approve} or {transferFrom} are called.
+   */
+  function allowance(address owner, address spender) external view returns (uint256);
 
-    /**
-     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
-     *
-     * Returns a boolean value indicating whether the operation succeeded.
-     *
-     * IMPORTANT: Beware that changing an allowance with this method brings the risk
-     * that someone may use both the old and the new allowance by unfortunate
-     * transaction ordering. One possible solution to mitigate this race
-     * condition is to first reduce the spender's allowance to 0 and set the
-     * desired value afterwards:
-     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
-     *
-     * Emits an {Approval} event.
-     */
-    function approve(address spender, uint256 amount) external returns (bool);
+  /**
+   * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
+   *
+   * Returns a boolean value indicating whether the operation succeeded.
+   *
+   * IMPORTANT: Beware that changing an allowance with this method brings the risk
+   * that someone may use both the old and the new allowance by unfortunate
+   * transaction ordering. One possible solution to mitigate this race
+   * condition is to first reduce the spender's allowance to 0 and set the
+   * desired value afterwards:
+   * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+   *
+   * Emits an {Approval} event.
+   */
+  function approve(address spender, uint256 amount) external returns (bool);
 
-    /**
-     * @dev Moves `amount` tokens from `from` to `to` using the
-     * allowance mechanism. `amount` is then deducted from the caller's
-     * allowance.
-     *
-     * Returns a boolean value indicating whether the operation succeeded.
-     *
-     * Emits a {Transfer} event.
-     */
-    function transferFrom(
-        address from,
-        address to,
-        uint256 amount
-    ) external returns (bool);
+  /**
+   * @dev Moves `amount` tokens from `from` to `to` using the
+   * allowance mechanism. `amount` is then deducted from the caller's
+   * allowance.
+   *
+   * Returns a boolean value indicating whether the operation succeeded.
+   *
+   * Emits a {Transfer} event.
+   */
+  function transferFrom(address from, address to, uint256 amount) external returns (bool);
 }
 
 // lib/aave-collector-unification/src/libs/ReentrancyGuard.sol
@@ -459,51 +439,44 @@ abstract contract VersionedInitializable {
  * need to send a transaction, and thus is not required to hold Ether at all.
  */
 interface IERC20Permit {
-    /**
-     * @dev Sets `value` as the allowance of `spender` over ``owner``'s tokens,
-     * given ``owner``'s signed approval.
-     *
-     * IMPORTANT: The same issues {IERC20-approve} has related to transaction
-     * ordering also apply here.
-     *
-     * Emits an {Approval} event.
-     *
-     * Requirements:
-     *
-     * - `spender` cannot be the zero address.
-     * - `deadline` must be a timestamp in the future.
-     * - `v`, `r` and `s` must be a valid `secp256k1` signature from `owner`
-     * over the EIP712-formatted function arguments.
-     * - the signature must use ``owner``'s current nonce (see {nonces}).
-     *
-     * For more information on the signature format, see the
-     * https://eips.ethereum.org/EIPS/eip-2612#specification[relevant EIP
-     * section].
-     */
-    function permit(
-        address owner,
-        address spender,
-        uint256 value,
-        uint256 deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external;
+  /**
+   * @dev Sets `value` as the allowance of `spender` over ``owner``'s tokens,
+   * given ``owner``'s signed approval.
+   *
+   * IMPORTANT: The same issues {IERC20-approve} has related to transaction
+   * ordering also apply here.
+   *
+   * Emits an {Approval} event.
+   *
+   * Requirements:
+   *
+   * - `spender` cannot be the zero address.
+   * - `deadline` must be a timestamp in the future.
+   * - `v`, `r` and `s` must be a valid `secp256k1` signature from `owner`
+   * over the EIP712-formatted function arguments.
+   * - the signature must use ``owner``'s current nonce (see {nonces}).
+   *
+   * For more information on the signature format, see the
+   * https://eips.ethereum.org/EIPS/eip-2612#specification[relevant EIP
+   * section].
+   */
+  function permit(address owner, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+    external;
 
-    /**
-     * @dev Returns the current nonce for `owner`. This value must be
-     * included whenever a signature is generated for {permit}.
-     *
-     * Every successful call to {permit} increases ``owner``'s nonce by one. This
-     * prevents a signature from being used multiple times.
-     */
-    function nonces(address owner) external view returns (uint256);
+  /**
+   * @dev Returns the current nonce for `owner`. This value must be
+   * included whenever a signature is generated for {permit}.
+   *
+   * Every successful call to {permit} increases ``owner``'s nonce by one. This
+   * prevents a signature from being used multiple times.
+   */
+  function nonces(address owner) external view returns (uint256);
 
-    /**
-     * @dev Returns the domain separator used in the encoding of the signature for {permit}, as defined by {EIP712}.
-     */
-    // solhint-disable-next-line func-name-mixedcase
-    function DOMAIN_SEPARATOR() external view returns (bytes32);
+  /**
+   * @dev Returns the domain separator used in the encoding of the signature for {permit}, as defined by {EIP712}.
+   */
+  // solhint-disable-next-line func-name-mixedcase
+  function DOMAIN_SEPARATOR() external view returns (bytes32);
 }
 
 // lib/aave-collector-unification/src/interfaces/ICollector.sol
@@ -521,12 +494,15 @@ interface ICollector {
     bool isEntity;
   }
 
-  /** @notice Emitted when the funds admin changes
+  /**
+   * @notice Emitted when the funds admin changes
    * @param fundsAdmin The new funds admin.
-   **/
+   *
+   */
   event NewFundsAdmin(address indexed fundsAdmin);
 
-  /** @notice Emitted when the new stream is created
+  /**
+   * @notice Emitted when the new stream is created
    * @param streamId The identifier of the stream.
    * @param sender The address of the collector.
    * @param recipient The address towards which the money is streamed.
@@ -534,7 +510,8 @@ interface ICollector {
    * @param tokenAddress The ERC20 token to use as streaming currency.
    * @param startTime The unix timestamp for when the stream starts.
    * @param stopTime The unix timestamp for when the stream stops.
-   **/
+   *
+   */
   event CreateStream(
     uint256 indexed streamId,
     address indexed sender,
@@ -569,21 +546,26 @@ interface ICollector {
     uint256 recipientBalance
   );
 
-  /** @notice Returns the mock ETH reference address
+  /**
+   * @notice Returns the mock ETH reference address
    * @return address The address
-   **/
+   *
+   */
   function ETH_MOCK_ADDRESS() external pure returns (address);
 
-  /** @notice Initializes the contracts
+  /**
+   * @notice Initializes the contracts
    * @param fundsAdmin Funds admin address
    * @param nextStreamId StreamId to set, applied if greater than 0
-   **/
+   *
+   */
   function initialize(address fundsAdmin, uint256 nextStreamId) external;
 
   /**
    * @notice Return the funds admin, only entity to be able to interact with this contract (controller of reserve)
    * @return address The address of the funds admin
-   **/
+   *
+   */
   function getFundsAdmin() external view returns (address);
 
   /**
@@ -599,7 +581,8 @@ interface ICollector {
    * @param token The address of the token to give allowance from
    * @param recipient Allowance's recipient
    * @param amount Allowance to approve
-   **/
+   *
+   */
   function approve(IERC20 token, address recipient, uint256 amount) external;
 
   /**
@@ -607,12 +590,13 @@ interface ICollector {
    * @param token The address of the token to transfer
    * @param recipient Transfer's recipient
    * @param amount Amount to transfer
-   **/
+   *
+   */
   function transfer(IERC20 token, address recipient, uint256 amount) external;
 
   /**
    * @dev Transfer the ownership of the funds administrator role.
-          This function should only be callable by the current funds administrator.
+   *         This function should only be callable by the current funds administrator.
    * @param admin The address of the new funds administrator
    */
   function setFundsAdmin(address admin) external;
@@ -626,13 +610,9 @@ interface ICollector {
    * @param stopTime The unix timestamp for when the stream stops.
    * @return streamId the uint256 id of the newly created stream.
    */
-  function createStream(
-    address recipient,
-    uint256 deposit,
-    address tokenAddress,
-    uint256 startTime,
-    uint256 stopTime
-  ) external returns (uint256 streamId);
+  function createStream(address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime)
+    external
+    returns (uint256 streamId);
 
   /**
    * @notice Returns the stream with all its properties.
@@ -640,9 +620,7 @@ interface ICollector {
    * @param streamId The id of the stream to query.
    * @notice Returns the stream object.
    */
-  function getStream(
-    uint256 streamId
-  )
+  function getStream(uint256 streamId)
     external
     view
     returns (
@@ -693,102 +671,81 @@ interface ICollector {
  * which allows you to call the safe operations as `token.safeTransfer(...)`, etc.
  */
 library SafeERC20 {
-    using Address for address;
+  using Address for address;
 
-    function safeTransfer(
-        IERC20 token,
-        address to,
-        uint256 value
-    ) internal {
-        _callOptionalReturn(token, abi.encodeWithSelector(token.transfer.selector, to, value));
+  function safeTransfer(IERC20 token, address to, uint256 value) internal {
+    _callOptionalReturn(token, abi.encodeWithSelector(token.transfer.selector, to, value));
+  }
+
+  function safeTransferFrom(IERC20 token, address from, address to, uint256 value) internal {
+    _callOptionalReturn(token, abi.encodeWithSelector(token.transferFrom.selector, from, to, value));
+  }
+
+  /**
+   * @dev Deprecated. This function has issues similar to the ones found in
+   * {IERC20-approve}, and its usage is discouraged.
+   *
+   * Whenever possible, use {safeIncreaseAllowance} and
+   * {safeDecreaseAllowance} instead.
+   */
+  function safeApprove(IERC20 token, address spender, uint256 value) internal {
+    // safeApprove should only be called when setting an initial allowance,
+    // or when resetting it to zero. To increase and decrease it, use
+    // 'safeIncreaseAllowance' and 'safeDecreaseAllowance'
+    require(
+      (value == 0) || (token.allowance(address(this), spender) == 0),
+      'SafeERC20: approve from non-zero to non-zero allowance'
+    );
+    _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, value));
+  }
+
+  function safeIncreaseAllowance(IERC20 token, address spender, uint256 value) internal {
+    uint256 newAllowance = token.allowance(address(this), spender) + value;
+    _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
+  }
+
+  function safeDecreaseAllowance(IERC20 token, address spender, uint256 value) internal {
+    unchecked {
+      uint256 oldAllowance = token.allowance(address(this), spender);
+      require(oldAllowance >= value, 'SafeERC20: decreased allowance below zero');
+      uint256 newAllowance = oldAllowance - value;
+      _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
     }
+  }
 
-    function safeTransferFrom(
-        IERC20 token,
-        address from,
-        address to,
-        uint256 value
-    ) internal {
-        _callOptionalReturn(token, abi.encodeWithSelector(token.transferFrom.selector, from, to, value));
+  function safePermit(
+    IERC20Permit token,
+    address owner,
+    address spender,
+    uint256 value,
+    uint256 deadline,
+    uint8 v,
+    bytes32 r,
+    bytes32 s
+  ) internal {
+    uint256 nonceBefore = token.nonces(owner);
+    token.permit(owner, spender, value, deadline, v, r, s);
+    uint256 nonceAfter = token.nonces(owner);
+    require(nonceAfter == nonceBefore + 1, 'SafeERC20: permit did not succeed');
+  }
+
+  /**
+   * @dev Imitates a Solidity high-level call (i.e. a regular function call to a contract), relaxing the requirement
+   * on the return value: the return value is optional (but if data is returned, it must not be false).
+   * @param token The token targeted by the call.
+   * @param data The call data (encoded using abi.encode or one of its variants).
+   */
+  function _callOptionalReturn(IERC20 token, bytes memory data) private {
+    // We need to perform a low level call here, to bypass Solidity's return data size checking mechanism, since
+    // we're implementing it ourselves. We use {Address.functionCall} to perform this call, which verifies that
+    // the target address contains contract code and also asserts for success in the low-level call.
+
+    bytes memory returndata = address(token).functionCall(data, 'SafeERC20: low-level call failed');
+    if (returndata.length > 0) {
+      // Return data is optional
+      require(abi.decode(returndata, (bool)), 'SafeERC20: ERC20 operation did not succeed');
     }
-
-    /**
-     * @dev Deprecated. This function has issues similar to the ones found in
-     * {IERC20-approve}, and its usage is discouraged.
-     *
-     * Whenever possible, use {safeIncreaseAllowance} and
-     * {safeDecreaseAllowance} instead.
-     */
-    function safeApprove(
-        IERC20 token,
-        address spender,
-        uint256 value
-    ) internal {
-        // safeApprove should only be called when setting an initial allowance,
-        // or when resetting it to zero. To increase and decrease it, use
-        // 'safeIncreaseAllowance' and 'safeDecreaseAllowance'
-        require(
-            (value == 0) || (token.allowance(address(this), spender) == 0),
-            "SafeERC20: approve from non-zero to non-zero allowance"
-        );
-        _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, value));
-    }
-
-    function safeIncreaseAllowance(
-        IERC20 token,
-        address spender,
-        uint256 value
-    ) internal {
-        uint256 newAllowance = token.allowance(address(this), spender) + value;
-        _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
-    }
-
-    function safeDecreaseAllowance(
-        IERC20 token,
-        address spender,
-        uint256 value
-    ) internal {
-        unchecked {
-            uint256 oldAllowance = token.allowance(address(this), spender);
-            require(oldAllowance >= value, "SafeERC20: decreased allowance below zero");
-            uint256 newAllowance = oldAllowance - value;
-            _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
-        }
-    }
-
-    function safePermit(
-        IERC20Permit token,
-        address owner,
-        address spender,
-        uint256 value,
-        uint256 deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) internal {
-        uint256 nonceBefore = token.nonces(owner);
-        token.permit(owner, spender, value, deadline, v, r, s);
-        uint256 nonceAfter = token.nonces(owner);
-        require(nonceAfter == nonceBefore + 1, "SafeERC20: permit did not succeed");
-    }
-
-    /**
-     * @dev Imitates a Solidity high-level call (i.e. a regular function call to a contract), relaxing the requirement
-     * on the return value: the return value is optional (but if data is returned, it must not be false).
-     * @param token The token targeted by the call.
-     * @param data The call data (encoded using abi.encode or one of its variants).
-     */
-    function _callOptionalReturn(IERC20 token, bytes memory data) private {
-        // We need to perform a low level call here, to bypass Solidity's return data size checking mechanism, since
-        // we're implementing it ourselves. We use {Address.functionCall} to perform this call, which verifies that
-        // the target address contains contract code and also asserts for success in the low-level call.
-
-        bytes memory returndata = address(token).functionCall(data, "SafeERC20: low-level call failed");
-        if (returndata.length > 0) {
-            // Return data is optional
-            require(abi.decode(returndata, (bool)), "SafeERC20: ERC20 operation did not succeed");
-        }
-    }
+  }
 }
 
 // lib/aave-collector-unification/src/contracts/Collector.sol
@@ -805,12 +762,15 @@ library SafeERC20 {
  * - Adapted codebase to Solidity 0.8.11, mainly removing SafeMath and CarefulMath to use native safe math
  * - Same as with creation, on Sablier the `sender` and `recipient` can cancel a stream. Here, only fund admin and recipient
  * @author BGD Labs
- **/
+ *
+ */
 contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
   using SafeERC20 for IERC20;
   using Address for address payable;
 
-  /*** Storage Properties ***/
+  /**
+   * Storage Properties **
+   */
 
   /**
    * @notice Address of the current funds admin.
@@ -835,7 +795,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
   /// @inheritdoc ICollector
   address public constant ETH_MOCK_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
-  /*** Modifiers ***/
+  /**
+   * Modifiers **
+   */
 
   /**
    * @dev Throws if the caller is not the funds admin.
@@ -865,7 +827,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     _;
   }
 
-  /*** Contract Logic Starts Here */
+  /**
+   * Contract Logic Starts Here
+   */
 
   /// @inheritdoc ICollector
   function initialize(address fundsAdmin, uint256 nextStreamId) external initializer {
@@ -878,7 +842,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     _setFundsAdmin(fundsAdmin);
   }
 
-  /*** View Functions ***/
+  /**
+   * View Functions **
+   */
 
   /// @inheritdoc VersionedInitializable
   function getRevision() internal pure override returns (uint256) {
@@ -896,9 +862,7 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
   }
 
   /// @inheritdoc ICollector
-  function getStream(
-    uint256 streamId
-  )
+  function getStream(uint256 streamId)
     external
     view
     streamExists(streamId)
@@ -945,10 +909,7 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
   }
 
   /// @inheritdoc ICollector
-  function balanceOf(
-    uint256 streamId,
-    address who
-  ) public view streamExists(streamId) returns (uint256 balance) {
+  function balanceOf(uint256 streamId, address who) public view streamExists(streamId) returns (uint256 balance) {
     Stream memory stream = _streams[streamId];
     BalanceOfLocalVars memory vars;
 
@@ -973,7 +934,9 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     return 0;
   }
 
-  /*** Public Effects & Interactions Functions ***/
+  /**
+   * Public Effects & Interactions Functions **
+   */
 
   /// @inheritdoc ICollector
   function approve(IERC20 token, address recipient, uint256 amount) external onlyFundsAdmin {
@@ -1027,13 +990,11 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
    *  Throws if the contract is not allowed to transfer enough tokens.
    *  Throws if there is a token transfer failure.
    */
-  function createStream(
-    address recipient,
-    uint256 deposit,
-    address tokenAddress,
-    uint256 startTime,
-    uint256 stopTime
-  ) external onlyFundsAdmin returns (uint256) {
+  function createStream(address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime)
+    external
+    onlyFundsAdmin
+    returns (uint256)
+  {
     require(recipient != address(0), 'stream to the zero address');
     require(recipient != address(this), 'stream to the contract itself');
     require(recipient != msg.sender, 'stream to the caller');
@@ -1069,15 +1030,7 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
     /* Increment the next stream id. */
     _nextStreamId++;
 
-    emit CreateStream(
-      streamId,
-      address(this),
-      recipient,
-      deposit,
-      tokenAddress,
-      startTime,
-      stopTime
-    );
+    emit CreateStream(streamId, address(this), recipient, deposit, tokenAddress, startTime, stopTime);
     return streamId;
   }
 
@@ -1088,10 +1041,13 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
    *  Throws if the amount exceeds the available balance.
    *  Throws if there is a token transfer failure.
    */
-  function withdrawFromStream(
-    uint256 streamId,
-    uint256 amount
-  ) external nonReentrant streamExists(streamId) onlyAdminOrRecipient(streamId) returns (bool) {
+  function withdrawFromStream(uint256 streamId, uint256 amount)
+    external
+    nonReentrant
+    streamExists(streamId)
+    onlyAdminOrRecipient(streamId)
+    returns (bool)
+  {
     require(amount > 0, 'amount is zero');
     Stream memory stream = _streams[streamId];
 
@@ -1113,9 +1069,13 @@ contract Collector is VersionedInitializable, ICollector, ReentrancyGuard {
    *  Throws if the caller is not the funds admin or the recipient of the stream.
    *  Throws if there is a token transfer failure.
    */
-  function cancelStream(
-    uint256 streamId
-  ) external nonReentrant streamExists(streamId) onlyAdminOrRecipient(streamId) returns (bool) {
+  function cancelStream(uint256 streamId)
+    external
+    nonReentrant
+    streamExists(streamId)
+    onlyAdminOrRecipient(streamId)
+    returns (bool)
+  {
     Stream memory stream = _streams[streamId];
     uint256 senderBalance = balanceOf(streamId, stream.sender);
     uint256 recipientBalance = balanceOf(streamId, stream.recipient);
